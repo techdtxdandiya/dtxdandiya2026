@@ -2,22 +2,23 @@ import React from 'react';
 
 export default function AboutUs() {
   return (
-    <div className="relative w-full py-24 overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/90"></div>
-      
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="flex flex-col items-center">
-          {/* Image Section */}
-          <div className="relative group mb-16 w-full max-w-4xl">
+    <section className="py-20 bg-black relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-5xl text-center mb-16 font-['Harry_Potter'] text-white glow-text">
+          About Us
+        </h2>
+        
+        <div className="relative">
+          {/* Team Image */}
+          <div className="mb-8 relative">
+            <img 
+              src="/assets/team/team.JPG" 
+              alt="DTX Dandiya Team" 
+              className="w-full rounded-lg shadow-2xl"
+            />
             {/* Magical Frame */}
             <div className="absolute -inset-1 bg-gradient-to-r from-[#C5A572]/0 via-[#C5A572]/50 to-[#C5A572]/0 rounded-lg blur"></div>
             <div className="relative">
-              <img 
-                src="/src/components/assets/team/team.JPG" 
-                alt="DTX Dandiya Team" 
-                className="w-full h-auto rounded-lg shadow-[0_0_15px_rgba(197,165,114,0.3)] transition-all duration-500 group-hover:shadow-[0_0_25px_rgba(197,165,114,0.5)]"
-              />
               {/* Corner Decorations */}
               <div className="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-[#C5A572] rounded-tl-lg"></div>
               <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#C5A572] rounded-tr-lg"></div>
@@ -58,6 +59,6 @@ export default function AboutUs() {
         <div className="absolute bottom-1/4 right-20 w-3 h-3 bg-[#C5A572]/20 rounded-full animate-twinkle" style={{ animationDelay: '1s' }}></div>
         <div className="absolute top-1/2 left-1/3 w-3 h-3 bg-[#C5A572]/20 rounded-full animate-twinkle" style={{ animationDelay: '2s' }}></div>
       </div>
-    </div>
+    </section>
   );
 } 

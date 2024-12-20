@@ -39,7 +39,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center bg-cover bg-center"
-         style={{ backgroundImage: "url('/src/components/assets/backgrounds/home_page.jpg')" }}>
+         style={{ backgroundImage: "url('/assets/backgrounds/home_page.jpg')" }}>
       <div className="max-w-md w-full mx-4">
         {/* Back Button */}
         <button

@@ -1,21 +1,21 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const sponsors = [
-  { 
-    name: 'Apple', 
-    image: '/src/components/assets/sponsors/apple.png',
-    website: 'https://www.apple.com'
+const SPONSORS = [
+  {
+    name: "Apple",
+    logo: "/assets/sponsors/apple.png",
+    url: "https://www.apple.com"
   },
-  { 
-    name: 'Google', 
-    image: '/src/components/assets/sponsors/google_logo.png',
-    website: 'https://www.google.com'
+  {
+    name: "Google",
+    logo: "/assets/sponsors/google_logo.png",
+    url: "https://www.google.com"
   },
-  { 
-    name: 'Meta', 
-    image: '/src/components/assets/sponsors/Meta-Logo.png',
-    website: 'https://www.meta.com'
+  {
+    name: "Meta",
+    logo: "/assets/sponsors/Meta-Logo.png",
+    url: "https://www.meta.com"
   }
 ];
 
@@ -105,7 +105,7 @@ export default function Sponsors() {
         {/* Sponsors Grid */}
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {sponsors.map((sponsor, index) => (
+            {SPONSORS.map((sponsor, index) => (
               <motion.div
                 key={sponsor.name}
                 className="relative group"
@@ -119,7 +119,7 @@ export default function Sponsors() {
                 
                 {/* Content Container */}
                 <a 
-                  href={sponsor.website}
+                  href={sponsor.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block relative bg-black/40 backdrop-blur-sm rounded-lg p-6 transition-transform duration-500 group-hover:scale-[1.02]"
@@ -132,7 +132,7 @@ export default function Sponsors() {
                   {/* Image */}
                   <div className="relative w-32 h-32 mx-auto flex items-center justify-center">
                     <img 
-                      src={sponsor.image}
+                      src={sponsor.logo}
                       alt={sponsor.name}
                       className="max-w-full max-h-full object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                     />

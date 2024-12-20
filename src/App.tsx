@@ -16,7 +16,7 @@ function HomePage() {
       {/* Hero Section */}
       <div 
         className="min-h-screen flex flex-col items-center bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/src/components/assets/backgrounds/home_page.jpg')" }}
+        style={{ backgroundImage: "url('/assets/backgrounds/home_page.jpg')" }}
       >
         <div className="text-center flex flex-col items-center mt-[65vh]">
           <div className="mb-16">

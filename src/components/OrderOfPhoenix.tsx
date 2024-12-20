@@ -7,16 +7,16 @@ interface Committee {
 }
 
 const committees: Committee[] = [
-  { name: "Directors", image: "/src/components/assets/team/Directors.jpeg", title: "The Grand Wizards" },
-  { name: "Logistics", image: "/src/components/assets/team/Logistics.jpeg", title: "Masters of Movement" },
-  { name: "Registration", image: "/src/components/assets/team/Registration.jpeg", title: "Keepers of Records" },
-  { name: "Head Liaison", image: "/src/components/assets/team/HeadLiasions.jpeg", title: "The Diplomats" },
-  { name: "Tech/External", image: "/src/components/assets/team/Tech.JPG", title: "Tech Sorcerers" },
-  { name: "Fundraising", image: "/src/components/assets/team/Fundraising.jpeg", title: "Treasure Hunters" },
-  { name: "Hospitality", image: "/src/components/assets/team/Hospitality.JPG", title: "Comfort Charmers" },
-  { name: "Mixer/Social", image: "/src/components/assets/team/Mixer.JPG", title: "Social Enchanters" },
-  { name: "Marketing", image: "/src/components/assets/team/Marketing.jpeg", title: "Message Mages" },
-  { name: "Afterparty", image: "/src/components/assets/team/Afterparty.jpeg", title: "Night Mystics" },
+  { name: "Directors", image: "/assets/team/Directors.jpeg", title: "The Grand Wizards" },
+  { name: "Logistics", image: "/assets/team/Logistics.jpeg", title: "Masters of Movement" },
+  { name: "Registration", image: "/assets/team/Registration.jpeg", title: "Keepers of Records" },
+  { name: "Head Liaison", image: "/assets/team/HeadLiasions.jpeg", title: "The Diplomats" },
+  { name: "Tech/External", image: "/assets/team/Tech.JPG", title: "Tech Sorcerers" },
+  { name: "Fundraising", image: "/assets/team/Fundraising.jpeg", title: "Treasure Hunters" },
+  { name: "Hospitality", image: "/assets/team/Hospitality.JPG", title: "Comfort Charmers" },
+  { name: "Mixer/Social", image: "/assets/team/Mixer.JPG", title: "Social Enchanters" },
+  { name: "Marketing", image: "/assets/team/Marketing.jpeg", title: "Message Mages" },
+  { name: "Afterparty", image: "/assets/team/Afterparty.jpeg", title: "Night Mystics" },
 ];
 
 export default function OrderOfPhoenix() {
