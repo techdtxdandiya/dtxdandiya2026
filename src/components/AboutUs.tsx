@@ -8,17 +8,16 @@ export default function AboutUs() {
           About Us
         </h2>
         
-        <div className="relative">
+        <div className="flex flex-col items-center">
           {/* Team Image */}
-          <div className="mb-8 relative">
+          <div className="mb-12 relative w-full max-w-4xl">
             <img 
               src="/assets/team/team.JPG" 
               alt="DTX Dandiya Team" 
               className="w-full rounded-lg shadow-2xl"
             />
             {/* Magical Frame */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#C5A572]/0 via-[#C5A572]/50 to-[#C5A572]/0 rounded-lg blur"></div>
-            <div className="relative">
+            <div className="absolute -inset-1">
               {/* Corner Decorations */}
               <div className="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-[#C5A572] rounded-tl-lg"></div>
               <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#C5A572] rounded-tr-lg"></div>
@@ -28,16 +27,10 @@ export default function AboutUs() {
           </div>
 
           {/* Text Section */}
-          <div className="relative max-w-3xl text-center">
-            {/* Decorative Line */}
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent"></div>
-            
+          <div className="max-w-3xl mx-auto text-center">
             {/* Text Content */}
             <div className="relative px-8 py-6">
-              {/* Magical Glow Effect */}
-              <div className="absolute inset-0 bg-black/40 rounded-xl backdrop-blur-sm"></div>
-              
-              <p className="relative text-lg leading-relaxed text-white/90 font-['Crimson_Text'] tracking-wide">
+              <p className="text-lg leading-relaxed text-white/90 font-['Crimson_Text'] tracking-wide">
                 We welcome you to <span className="font-['Harry_Potter'] text-[#C5A572] text-2xl">DTX Dandiya</span>. 
                 We are Dallas's premier Raas Garba competition, bringing together some of the very best collegiate Raas teams 
                 from around the country. With every graceful twirl and resonating drumbeat, we aim to create an immersive 
@@ -46,9 +39,6 @@ export default function AboutUs() {
                 our shared heritage.
               </p>
             </div>
-
-            {/* Bottom Decorative Line */}
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent"></div>
           </div>
         </div>
       </div>
