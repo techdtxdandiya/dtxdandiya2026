@@ -23,13 +23,13 @@ function HomePage() {
             <CountdownTimer />
           </div>
           
-          <div className="flex gap-12">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
             <a 
               href="https://linktr.ee/DTXDANDIYA?utm_source=linktree_profile_share&ltsid=83104a72-202d-42ed-a536-7d9f7b69d75b" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="
-                relative px-12 py-4 text-2xl text-white uppercase tracking-[0.2em]
+                relative px-6 sm:px-12 py-3 sm:py-4 text-lg sm:text-2xl text-white uppercase tracking-[0.2em]
                 before:content-[''] before:absolute before:-inset-1
                 before:border before:border-white/30 before:rounded-lg
                 after:content-[''] after:absolute after:-inset-2
@@ -47,7 +47,7 @@ function HomePage() {
             <a 
               href="/team-login"
               className="
-                relative px-12 py-4 text-2xl text-white uppercase tracking-[0.2em]
+                relative px-6 sm:px-12 py-3 sm:py-4 text-lg sm:text-2xl text-white uppercase tracking-[0.2em]
                 before:content-[''] before:absolute before:-inset-1
                 before:border before:border-white/30 before:rounded-lg
                 after:content-[''] after:absolute after:-inset-2
