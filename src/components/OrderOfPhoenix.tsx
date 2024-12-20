@@ -11,7 +11,7 @@ const committees: Committee[] = [
   { name: "Logistics", image: "/assets/team/Logistics.jpeg", title: "Masters of Movement" },
   { name: "Registration", image: "/assets/team/Registration.jpeg", title: "Keepers of Records" },
   { name: "Head Liaison", image: "/assets/team/HeadLiasions.jpeg", title: "The Diplomats" },
-  { name: "Tech/External", image: "/assets/team/Tech.JPG", title: "Tech Sorcerers" },
+  { name: "Tech/External", image: "/assets/team/Tech.JPG", title: "The Alchemists" },
   { name: "Fundraising", image: "/assets/team/Fundraising.jpeg", title: "Treasure Hunters" },
   { name: "Hospitality", image: "/assets/team/Hospitality.JPG", title: "Comfort Charmers" },
   { name: "Mixer/Social", image: "/assets/team/Mixer.JPG", title: "Social Enchanters" },
