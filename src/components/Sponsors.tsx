@@ -3,19 +3,9 @@ import { motion } from 'framer-motion';
 
 const SPONSORS = [
   {
-    name: "Apple",
-    logo: "/assets/sponsors/apple.png",
-    url: "https://www.apple.com"
-  },
-  {
-    name: "Google",
-    logo: "/assets/sponsors/google_logo.png",
-    url: "https://www.google.com"
-  },
-  {
-    name: "Meta",
-    logo: "/assets/sponsors/Meta-Logo.png",
-    url: "https://www.meta.com"
+    name: "City of Richardson",
+    logo: "/assets/sponsors/image.png",
+    url: "https://www.cor.net/home"
   }
 ];
 
