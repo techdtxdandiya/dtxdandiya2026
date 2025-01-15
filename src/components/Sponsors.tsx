@@ -63,14 +63,14 @@ export default function Sponsors() {
                   href={sponsor.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block relative bg-black/40 backdrop-blur-sm rounded-lg p-6 transition-transform duration-500 group-hover:scale-[1.02]"
+                  className="block relative bg-white/5 backdrop-blur-sm rounded-lg p-6 transition-transform duration-500 group-hover:scale-[1.02]"
                 >
                   {/* Image */}
                   <div className="relative aspect-square flex items-center justify-center p-4">
                     <img 
                       src={sponsor.logo}
                       alt={sponsor.name}
-                      className="max-w-full max-h-full object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="max-w-full max-h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                     />
                   </div>
                 </a>
