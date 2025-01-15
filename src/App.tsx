@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import MagicalCursor from './components/MagicalCursor';
 import Login from './components/TeamPortal/Login';
 import Dashboard from './components/TeamPortal/Dashboard';
+import Locations from './components/Locations';
 
 function HomePage() {
   return (
@@ -72,6 +73,9 @@ function HomePage() {
         </h2>
         <Schedule />
       </section>
+
+      {/* Locations Section */}
+      <Locations />
 
       {/* About Us Section */}
       <AboutUs />
