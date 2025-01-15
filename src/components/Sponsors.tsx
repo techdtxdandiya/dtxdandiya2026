@@ -4,9 +4,24 @@ import { motion } from 'framer-motion';
 const SPONSORS = [
   {
     name: "City of Richardson",
-    logo: "/assets/sponsors/image.png",
+    logo: "/assets/sponsors/richardson.png",
     url: "https://www.cor.net/home"
-  }
+  },
+  {
+    name: "Raising Cane's Chicken Fingers",
+    logo: "/assets/sponsors/canes.png",
+    url: "https://www.raisingcanes.com/home/"
+  },
+  {
+    name: "Dunkin'",
+    logo: "/assets/sponsors/dunkin.png",
+    url: "https://www.dunkindonuts.com"
+  },
+  {
+    name: "Gopal Veg Restaurant",
+    logo: "/assets/sponsors/gopal.png",
+    url: "https://www.newgopal.com/"
+  },
 ];
 
 // Magical particle effect

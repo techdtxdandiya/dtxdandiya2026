@@ -25,7 +25,7 @@ function HomePage() {
           
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
             <a 
-              href="https://linktr.ee/DTXDANDIYA?utm_source=linktree_profile_share&ltsid=83104a72-202d-42ed-a536-7d9f7b69d75b" 
+              href="https://ticketscandy.com/e/dtx-dandiya-2025-raasgarba-dance-competition-6505" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="

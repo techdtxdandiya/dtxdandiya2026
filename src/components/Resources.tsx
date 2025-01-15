@@ -102,9 +102,9 @@ export default function Resources() {
                   <div>
                     <h4 className="text-emerald-400 font-['Harry_Potter'] text-xl mb-2">Location</h4>
                     <p className="text-white/80 font-['Harry_Potter']">
-                      TBD
+                      VYB Lounge
                       <br />
-                      To be announced
+                      104 W McKinney St, Denton, TX 76201
                     </p>
                   </div>
                 </motion.div>

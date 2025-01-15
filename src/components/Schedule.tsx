@@ -8,21 +8,21 @@ interface ScheduleItem {
 }
 
 const fridaySchedule: ScheduleItem[] = [
-  { what: "Registration", where: "TBD", when: "12:00 PM" },
-  { what: "Check-In", where: "TBD", when: "2:45 PM" },
-  { what: "Dinner", where: "TBD", when: "5:00 PM" },
-  { what: "Mixer", where: "TBD", when: "5:45 PM" },
-  { what: "Practice", where: "TBD", when: "8:00 PM" },
-  { what: "Optional Props", where: "TBD", when: "8:00 PM" },
+  { what: "Registration", where: "Oak Room", when: "12:00 PM" },
+  { what: "Check-In", where: "Hotel Lobby", when: "2:45 PM" },
+  { what: "Dinner", where: "Garden Terrace", when: "4:30 PM" },
+  { what: "Mixer", where: "Garden Terrace", when: "5:30 PM" },
+  { what: "Practice", where: "Event Rooms", when: "7:30 PM" },
 ];
 
 const saturdaySchedule: ScheduleItem[] = [
-  { what: "Props", where: "TBD", when: "6:00 AM" },
-  { what: "Tech Times", where: "TBD", when: "8:00 AM" },
-  { what: "Photoshoots", where: "TBD", when: "4:30 PM" },
-  { what: "Showtime", where: "TBD", when: "6:00 PM" },
-  { what: "Awards", where: "TBD", when: "9:30 PM" },
-  { what: "Afterparty", where: "TBD", when: "11:00 PM" },
+  { what: "Props", where: "Marshall Center", when: "6:00 AM" },
+  { what: "Tech Time", where: "Marshall Center", when: "8:35 AM" },
+  { what: "Photoshoot", where: "Marshall Center", when: "3:50 PM" },
+  { what: "Doors Open", where: "Marshall Center", when: "5:00 PM" },
+  { what: "Showtime", where: "Marshall Center", when: "5:30 PM" },
+  { what: "Awards", where: "Marshall Center", when: "9:00 PM" },
+  { what: "Afterparty", where: "VYB Lounge", when: "10:00 PM" },
 ];
 
 // Magical floating element
