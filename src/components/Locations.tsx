@@ -5,21 +5,21 @@ import { FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
 const locations = [
   {
     name: "DoubleTree by Hilton",
-    description: "The Grand Common Room - Where teams gather and prepare for the magical weekend",
+    description: "Where teams gather and prepare for the magical weekend",
     address: "4099 Valley View Ln, Dallas, TX 75244",
     mapsUrl: "https://maps.google.com/?q=4099+Valley+View+Ln,+Dallas,+TX+75244",
     type: "Hotel & Registration"
   },
   {
     name: "Marshall Family Performing Arts Center",
-    description: "The Great Hall - Where the competition's magic unfolds",
+    description: "Where the competition's magic unfolds",
     address: "4141 Spring Valley Rd, Addison, TX 75001",
     mapsUrl: "https://maps.google.com/?q=4141+Spring+Valley+Rd,+Addison,+TX+75001",
     type: "Main Event Venue"
   },
   {
     name: "VYB Lounge",
-    description: "The Celebration Chamber - Where victors and participants unite in revelry",
+    description: "Where victors and participants unite in revelry",
     address: "104 W McKinney St, Denton, TX 76201",
     mapsUrl: "https://maps.google.com/?q=104+W+McKinney+St,+Denton,+TX+76201",
     type: "Afterparty Venue"
