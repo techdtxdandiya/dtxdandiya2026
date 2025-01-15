@@ -40,7 +40,7 @@ export default function Sponsors() {
           viewport={{ once: true }}
           transition={{ duration: 1 }}
         >
-          Our Magical Patrons
+          Magical Patrons
         </motion.h2>
 
         {/* Sponsors Grid */}
