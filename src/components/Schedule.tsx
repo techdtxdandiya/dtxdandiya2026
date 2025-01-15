@@ -8,11 +8,11 @@ interface ScheduleItem {
 }
 
 const fridaySchedule: ScheduleItem[] = [
-  { what: "Registration", where: "Oak Room", when: "12:00 PM" },
+  { what: "Registration", where: "Hotel Oak Room", when: "12:00 PM" },
   { what: "Check-In", where: "Hotel Lobby", when: "2:45 PM" },
-  { what: "Dinner", where: "Garden Terrace", when: "4:30 PM" },
-  { what: "Mixer", where: "Garden Terrace", when: "5:30 PM" },
-  { what: "Practice", where: "Event Rooms", when: "7:30 PM" },
+  { what: "Dinner", where: "Hotel Garden Terrace", when: "4:30 PM" },
+  { what: "Mixer", where: "Hotel Garden Terrace", when: "5:30 PM" },
+  { what: "Practice", where: "Hotel Event Rooms", when: "7:30 PM" },
 ];
 
 const saturdaySchedule: ScheduleItem[] = [
