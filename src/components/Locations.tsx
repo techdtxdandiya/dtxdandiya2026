@@ -28,25 +28,14 @@ const locations = [
 
 export default function Locations() {
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-black"></div>
-      </div>
+    <div className="bg-black relative overflow-hidden py-16">
+      {/* Title */}
+      <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-16 glow-text-white mx-auto">
+        Enchanted Venues
+      </h2>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4">
-        {/* Title */}
-        <motion.h2 
-          className="text-4xl md:text-6xl font-['Harry_Potter'] text-white glow-text-intense relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-        >
-          Enchanted Venues
-        </motion.h2>
-
-        {/* Locations Grid */}
+      {/* Grid Container */}
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {locations.map((location, index) => (
             <motion.div
@@ -113,6 +102,6 @@ export default function Locations() {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(147,51,234,0.1)_0%,_transparent_60%)]"></div>
       </div>
-    </section>
+    </div>
   );
 } 
