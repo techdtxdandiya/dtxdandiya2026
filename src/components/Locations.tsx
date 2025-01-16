@@ -36,9 +36,15 @@ export default function Locations() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4">
         {/* Title */}
-        <h2 className="text-5xl text-center mb-16 font-['Harry_Potter'] text-white glow-text">
-          Magical Locations
-        </h2>
+        <motion.h2 
+          className="text-4xl md:text-6xl font-['Harry_Potter'] text-white glow-text-intense relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+        >
+          Enchanted Venues
+        </motion.h2>
 
         {/* Locations Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
