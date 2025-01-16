@@ -34,14 +34,10 @@ export default function NotFound() {
             Page Not Found
           </h2>
 
-          <p className="text-white/80 font-['Harry_Potter'] text-xl mb-6">
-            "Mischief managed... but perhaps too well!"
-          </p>
-
           <p className="text-white/60 font-['Harry_Potter'] text-lg mb-8">
-            It seems this page has vanished like a wizard's apparition.
+            This page has vanished. Even the Marauder's Map couldn't locate it!
             <br />
-            Even the Marauder's Map couldn't locate it!
+            
           </p>
 
           <button
