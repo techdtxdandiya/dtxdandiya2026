@@ -9,13 +9,20 @@ interface Contact {
 }
 
 const contacts: Contact[] = [
-  { position: "Director", name: "Chinmayi Mohite", phone: "(469) 987-3581" },
+  // Directors (alphabetical by first name)
   { position: "Director", name: "Aryan Patel", phone: "(845) 502-0766" },
+  { position: "Director", name: "Chinmayi Mohite", phone: "(469) 987-3581" },
   { position: "Director", name: "Naishada Kotte", phone: "(412) 689-3539" },
-  { position: "Logistics", name: "Anisha Thakkar", phone: "(214) 843-2977" },
-  { position: "Logistics", name: "Rishil Uppaluru", phone: "(512) 521-9355" },
+  
+  // Head Liasons (alphabetical by first name)
   { position: "Head Liason", name: "Devanshi Patel", phone: "(469) 525-8760" },
   { position: "Head Liason", name: "Paneri Patel", phone: "(682) 347-9582" },
+  
+  // Logistics (alphabetical by first name)
+  { position: "Logistics", name: "Anisha Thakkar", phone: "(214) 843-2977" },
+  { position: "Logistics", name: "Rishil Uppaluru", phone: "(512) 521-9355" },
+  
+  // Tech (alphabetical by first name)
   { position: "Tech", name: "Dev Patel", phone: "(972) 258-4904" },
   { position: "Tech", name: "Shashank Kumar", phone: "(469) 386-2373" },
 ];
