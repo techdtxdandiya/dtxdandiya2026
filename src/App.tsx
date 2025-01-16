@@ -47,7 +47,7 @@ function HomePage() {
             </a>
 
             <a 
-              href="/team-login"
+              href="/team-portal/login"
               className="
                 relative px-6 sm:px-12 py-3 sm:py-4 text-lg sm:text-2xl text-white uppercase tracking-[0.2em]
                 before:content-[''] before:absolute before:-inset-1
@@ -101,8 +101,8 @@ function App() {
       <MagicalCursor />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/team-login" element={<Login />} />
-        <Route path="/team-dashboard" element={<Dashboard />} />
+        <Route path="/team-portal/login" element={<Login />} />
+        <Route path="/team-portal/dashboard" element={<Dashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
