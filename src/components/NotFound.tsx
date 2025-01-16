@@ -1,0 +1,66 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IoArrowBack } from "react-icons/io5";
+
+export default function NotFound() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center bg-cover bg-center relative overflow-hidden"
+         style={{ backgroundImage: "url('/assets/backgrounds/home_page.jpg')" }}>
+      
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+      <div className="relative z-10 max-w-2xl mx-4 text-center">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/')}
+          className="mb-8 px-4 py-2 text-white/80 font-['Harry_Potter'] text-lg
+                   hover:text-white transition-colors duration-300 flex items-center
+                   group mx-auto"
+        >
+          <IoArrowBack className="mr-2 text-xl transition-transform duration-300 
+                                group-hover:-translate-x-1" />
+          Return to Platform 9¾
+        </button>
+
+        <div className="bg-black/40 backdrop-blur-lg p-8 rounded-lg border border-white/10">
+          <h1 className="text-6xl md:text-7xl font-['Harry_Potter'] text-white mb-6 glow-text">
+            404
+          </h1>
+          
+          <h2 className="text-3xl md:text-4xl font-['Harry_Potter'] text-white mb-8">
+            Page Not Found
+          </h2>
+
+          <p className="text-white/80 font-['Harry_Potter'] text-xl mb-6">
+            "Mischief managed... but perhaps too well!"
+          </p>
+
+          <p className="text-white/60 font-['Harry_Potter'] text-lg mb-8">
+            It seems this page has vanished like a wizard's apparition.
+            <br />
+            Even the Marauder's Map couldn't locate it!
+          </p>
+
+          <button
+            onClick={() => navigate('/')}
+            className="px-8 py-3 text-xl text-white font-['Harry_Potter'] 
+                     bg-black/40 border border-white/20 rounded-lg
+                     hover:bg-white/10 transition-colors duration-300
+                     magical-border"
+          >
+            Lumos
+          </button>
+
+          {/* Decorative Corner Elements */}
+          <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-white/20 rounded-tl-lg"></div>
+          <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-white/20 rounded-tr-lg"></div>
+          <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-white/20 rounded-bl-lg"></div>
+          <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-white/20 rounded-br-lg"></div>
+        </div>
+      </div>
+    </div>
+  );
+} 

@@ -10,6 +10,7 @@ import MagicalCursor from './components/MagicalCursor';
 import Login from './components/TeamPortal/Login';
 import Dashboard from './components/TeamPortal/Dashboard';
 import Locations from './components/Locations';
+import NotFound from './components/NotFound';
 
 function HomePage() {
   return (
@@ -102,6 +103,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/team-login" element={<Login />} />
         <Route path="/team-dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
