@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBack } from "react-icons/io5";
 
-// Predefined team passwords
+// Team passwords with Harry Potter theme
 const TEAM_PASSWORDS: { [key: string]: string } = {
-  'gryffindor': 'lion123',
-  'slytherin': 'snake123',
-  'hufflepuff': 'badger123',
-  'ravenclaw': 'eagle123',
-  'phoenix': 'fire123',
-  // Add more team passwords as needed
+  "tamu": "quidditch", // The magical sport of flying
+  "texas": "hogsmeade", // The magical village
+  "michigan": "butterbeer", // The beloved wizarding drink
+  "ucd": "azkaban", // The wizard prison
+  "unc": "hogwarts", // The school of magic
+  "iu": "diagonalley", // The magical shopping street
+  "berkeley": "gringotts", // The wizard bank
+  "msu": "hufflepuff" // One of the four houses
 };
 
 export default function Login() {
