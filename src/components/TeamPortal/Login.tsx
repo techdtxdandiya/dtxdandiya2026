@@ -11,7 +11,8 @@ const TEAM_PASSWORDS: { [key: string]: string } = {
   "unc": "hogwarts", // The school of magic
   "iu": "diagonalley", // The magical shopping street
   "berkeley": "gringotts", // The wizard bank
-  "msu": "hufflepuff" // One of the four houses
+  "msu": "hufflepuff", // One of the four houses
+  "admin": "dumbledore" // The admin password
 };
 
 export default function Login() {
@@ -28,7 +29,13 @@ export default function Login() {
     if (team) {
       // Store team info in sessionStorage
       sessionStorage.setItem('team', team[0]);
-      navigate('/team-portal/dashboard');
+      
+      // Navigate based on whether it's admin or team
+      if (team[0] === 'admin') {
+        navigate('/team-portal/admin');
+      } else {
+        navigate('/team-portal/dashboard');
+      }
     } else {
       setError('Invalid password. Please try again.');
       setTimeout(() => setError(''), 3000);

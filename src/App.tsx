@@ -11,6 +11,7 @@ import Login from './components/TeamPortal/Login';
 import Dashboard from './components/TeamPortal/Dashboard';
 import Locations from './components/Locations';
 import NotFound from './components/NotFound';
+import AdminDashboard from './components/TeamPortal/AdminDashboard';
 
 function HomePage() {
   return (
@@ -103,6 +104,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/team-portal/login" element={<Login />} />
         <Route path="/team-portal/dashboard" element={<Dashboard />} />
+        <Route path="/team-portal/admin" element={<AdminDashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
