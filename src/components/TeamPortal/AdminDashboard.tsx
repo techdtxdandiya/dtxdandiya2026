@@ -4,29 +4,44 @@ import { db } from '../../config/firebase';
 import { ref, onValue, update } from 'firebase/database';
 
 interface TeamInfo {
-  generalInfo: string;
+  displayName: string;
+  announcements: Array<{
+    id: string;
+    title: string;
+    content: string;
+    timestamp: number;
+  }>;
+  generalInfo: {
+    practiceArea: string;
+    liasonContact: string;
+    specialInstructions: string;
+    additionalInfo: string;
+  };
   techVideo: {
     title: string;
-    url: string;
+    youtubeUrl: string;
+    description?: string;
   };
   schedule: {
+    showOrder: number;
+    isPublished: boolean;
     events: Array<{
+      id: string;
       name: string;
-      time: string;
+      startTime: string;
+      endTime: string;
       location: string;
+      type: 'Practice' | 'Performance' | 'Meeting' | 'Other';
       notes?: string;
     }>;
   };
   nearbyLocations: Array<{
+    id: string;
     name: string;
     address: string;
-    type: 'Food' | 'Practice' | 'Hotel' | 'Other';
+    type: 'Food' | 'Practice' | 'Hotel' | 'Emergency' | 'Other';
+    distance?: string;
     notes?: string;
-  }>;
-  announcements: Array<{
-    title: string;
-    content: string;
-    timestamp: number;
   }>;
 }
 
@@ -92,6 +107,64 @@ const AdminDashboard: React.FC = () => {
       console.error('Error updating team data:', error);
       setUpdateMessage('Error saving updates. Please try again.');
       setTimeout(() => setUpdateMessage(''), 3000);
+    }
+  };
+
+  const handleAddAnnouncement = (teamId: TeamId) => {
+    const newAnnouncement = {
+      id: Date.now().toString(),
+      title: '',
+      content: '',
+      timestamp: Date.now()
+    };
+    
+    const currentAnnouncements = teamData[teamId].announcements || [];
+    handleUpdateTeamData(teamId, {
+      announcements: [...currentAnnouncements, newAnnouncement]
+    });
+  };
+
+  const handleUpdateSchedule = (teamId: TeamId, newEvent: TeamInfo['schedule']['events'][0]) => {
+    const currentEvents = teamData[teamId].schedule?.events || [];
+    const eventIndex = currentEvents.findIndex(e => e.id === newEvent.id);
+    
+    if (eventIndex === -1) {
+      handleUpdateTeamData(teamId, {
+        schedule: {
+          ...teamData[teamId].schedule,
+          events: [...currentEvents, newEvent]
+        }
+      });
+    } else {
+      const updatedEvents = [...currentEvents];
+      updatedEvents[eventIndex] = newEvent;
+      handleUpdateTeamData(teamId, {
+        schedule: {
+          ...teamData[teamId].schedule,
+          events: updatedEvents
+        }
+      });
+    }
+  };
+
+  const handleUpdateTechVideo = (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
+    handleUpdateTeamData(teamId, { techVideo: videoData });
+  };
+
+  const handleUpdateLocation = (teamId: TeamId, location: TeamInfo['nearbyLocations'][0]) => {
+    const currentLocations = teamData[teamId].nearbyLocations || [];
+    const locationIndex = currentLocations.findIndex(l => l.id === location.id);
+    
+    if (locationIndex === -1) {
+      handleUpdateTeamData(teamId, {
+        nearbyLocations: [...currentLocations, location]
+      });
+    } else {
+      const updatedLocations = [...currentLocations];
+      updatedLocations[locationIndex] = location;
+      handleUpdateTeamData(teamId, {
+        nearbyLocations: updatedLocations
+      });
     }
   };
 
@@ -199,18 +272,21 @@ const AdminDashboard: React.FC = () => {
                       <div key={teamId} className="mb-8">
                         <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
                         <div className="space-y-4">
-                          {teamData[teamId]?.announcements?.map((announcement, index) => (
-                            <div key={index} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                          {teamData[teamId]?.announcements?.map((announcement) => (
+                            <div key={announcement.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
                               <input
                                 type="text"
                                 value={announcement.title}
                                 onChange={(e) => {
-                                  const newAnnouncements = [...(teamData[teamId].announcements || [])];
-                                  newAnnouncements[index] = {
+                                  const updatedAnnouncement = {
                                     ...announcement,
                                     title: e.target.value
                                   };
-                                  handleUpdateTeamData(teamId, { announcements: newAnnouncements });
+                                  const currentAnnouncements = teamData[teamId].announcements || [];
+                                  const updatedAnnouncements = currentAnnouncements.map(a =>
+                                    a.id === announcement.id ? updatedAnnouncement : a
+                                  );
+                                  handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
                                 }}
                                 className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2 mb-2"
                                 placeholder="Announcement title..."
@@ -218,12 +294,15 @@ const AdminDashboard: React.FC = () => {
                               <textarea
                                 value={announcement.content}
                                 onChange={(e) => {
-                                  const newAnnouncements = [...(teamData[teamId].announcements || [])];
-                                  newAnnouncements[index] = {
+                                  const updatedAnnouncement = {
                                     ...announcement,
                                     content: e.target.value
                                   };
-                                  handleUpdateTeamData(teamId, { announcements: newAnnouncements });
+                                  const currentAnnouncements = teamData[teamId].announcements || [];
+                                  const updatedAnnouncements = currentAnnouncements.map(a =>
+                                    a.id === announcement.id ? updatedAnnouncement : a
+                                  );
+                                  handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
                                 }}
                                 className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                                 placeholder="Announcement content..."
@@ -234,10 +313,10 @@ const AdminDashboard: React.FC = () => {
                                 </span>
                                 <button
                                   onClick={() => {
-                                    const newAnnouncements = teamData[teamId].announcements.filter(
-                                      (_, i) => i !== index
+                                    const updatedAnnouncements = teamData[teamId].announcements.filter(
+                                      a => a.id !== announcement.id
                                     );
-                                    handleUpdateTeamData(teamId, { announcements: newAnnouncements });
+                                    handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
                                   }}
                                   className="text-red-500 hover:text-red-400"
                                 >
@@ -247,19 +326,7 @@ const AdminDashboard: React.FC = () => {
                             </div>
                           ))}
                           <button
-                            onClick={() => {
-                              const newAnnouncement = {
-                                title: '',
-                                content: '',
-                                timestamp: Date.now()
-                              };
-                              handleUpdateTeamData(teamId, {
-                                announcements: [
-                                  ...(teamData[teamId].announcements || []),
-                                  newAnnouncement
-                                ]
-                              });
-                            }}
+                            onClick={() => handleAddAnnouncement(teamId)}
                             className="text-purple-400 hover:text-purple-300"
                           >
                             + Add Announcement
@@ -272,18 +339,74 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'general' && (
                   <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">General Competition Information</h2>
+                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">General Information</h2>
                     {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-6">
-                        <h3 className="text-xl mb-2">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <textarea
-                          value={teamData[teamId].generalInfo}
-                          onChange={(e) => {
-                            handleUpdateTeamData(teamId, { generalInfo: e.target.value });
-                          }}
-                          className="w-full h-48 bg-black/40 border border-purple-500/30 rounded-lg p-4"
-                          placeholder="Enter general competition information..."
-                        />
+                      <div key={teamId} className="mb-8">
+                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                        <div className="space-y-4">
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Practice Area</label>
+                            <input
+                              type="text"
+                              value={teamData[teamId]?.generalInfo?.practiceArea || ''}
+                              onChange={(e) => {
+                                handleUpdateTeamData(teamId, {
+                                  generalInfo: {
+                                    ...teamData[teamId]?.generalInfo,
+                                    practiceArea: e.target.value
+                                  }
+                                });
+                              }}
+                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                            />
+                          </div>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Liaison Contact</label>
+                            <input
+                              type="text"
+                              value={teamData[teamId]?.generalInfo?.liasonContact || ''}
+                              onChange={(e) => {
+                                handleUpdateTeamData(teamId, {
+                                  generalInfo: {
+                                    ...teamData[teamId]?.generalInfo,
+                                    liasonContact: e.target.value
+                                  }
+                                });
+                              }}
+                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                            />
+                          </div>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Special Instructions</label>
+                            <textarea
+                              value={teamData[teamId]?.generalInfo?.specialInstructions || ''}
+                              onChange={(e) => {
+                                handleUpdateTeamData(teamId, {
+                                  generalInfo: {
+                                    ...teamData[teamId]?.generalInfo,
+                                    specialInstructions: e.target.value
+                                  }
+                                });
+                              }}
+                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                            />
+                          </div>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Additional Information</label>
+                            <textarea
+                              value={teamData[teamId]?.generalInfo?.additionalInfo || ''}
+                              onChange={(e) => {
+                                handleUpdateTeamData(teamId, {
+                                  generalInfo: {
+                                    ...teamData[teamId]?.generalInfo,
+                                    additionalInfo: e.target.value
+                                  }
+                                });
+                              }}
+                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -291,56 +414,52 @@ const AdminDashboard: React.FC = () => {
 
                 {activeTab === 'tech' && (
                   <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Tech Time Video</h2>
+                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Tech Video</h2>
                     {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-6">
-                        <h3 className="text-xl mb-2">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                      <div key={teamId} className="mb-8">
+                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
                         <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm mb-2">Video Title</label>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Video Title</label>
                             <input
                               type="text"
-                              value={teamData[teamId].techVideo.title}
+                              value={teamData[teamId]?.techVideo?.title || ''}
                               onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  techVideo: {
-                                    ...teamData[teamId].techVideo,
-                                    title: e.target.value
-                                  }
+                                handleUpdateTechVideo(teamId, {
+                                  ...teamData[teamId]?.techVideo,
+                                  title: e.target.value
                                 });
                               }}
                               className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                              placeholder="Enter video title..."
                             />
                           </div>
-                          <div>
-                            <label className="block text-sm mb-2">Video URL (YouTube Embed)</label>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">YouTube URL</label>
                             <input
                               type="text"
-                              value={teamData[teamId].techVideo.url}
+                              value={teamData[teamId]?.techVideo?.youtubeUrl || ''}
                               onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  techVideo: {
-                                    ...teamData[teamId].techVideo,
-                                    url: e.target.value
-                                  }
+                                handleUpdateTechVideo(teamId, {
+                                  ...teamData[teamId]?.techVideo,
+                                  youtubeUrl: e.target.value
                                 });
                               }}
                               className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                              placeholder="Enter YouTube embed URL..."
                             />
                           </div>
-                          {teamData[teamId].techVideo.url && (
-                            <div className="aspect-w-16 aspect-h-9">
-                              <iframe
-                                src={teamData[teamId].techVideo.url}
-                                title={teamData[teamId].techVideo.title}
-                                className="w-full rounded-lg"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              />
-                            </div>
-                          )}
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <label className="block mb-2">Description</label>
+                            <textarea
+                              value={teamData[teamId]?.techVideo?.description || ''}
+                              onChange={(e) => {
+                                handleUpdateTechVideo(teamId, {
+                                  ...teamData[teamId]?.techVideo,
+                                  description: e.target.value
+                                });
+                              }}
+                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -354,113 +473,167 @@ const AdminDashboard: React.FC = () => {
                       <div key={teamId} className="mb-8">
                         <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
                         <div className="space-y-4">
-                          <div className="overflow-x-auto">
-                            <table className="w-full">
-                              <thead>
-                                <tr>
-                                  <th className="px-4 py-2 bg-purple-900/40 text-left">Event</th>
-                                  <th className="px-4 py-2 bg-purple-900/40 text-left">Time</th>
-                                  <th className="px-4 py-2 bg-purple-900/40 text-left">Location</th>
-                                  <th className="px-4 py-2 bg-purple-900/40 text-left">Notes</th>
-                                  <th className="px-4 py-2 bg-purple-900/40 text-left">Actions</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {teamData[teamId].schedule.events.map((event, index) => (
-                                  <tr key={index}>
-                                    <td className="px-4 py-2">
-                                      <input
-                                        type="text"
-                                        value={event.name}
-                                        onChange={(e) => {
-                                          const newEvents = [...teamData[teamId].schedule.events];
-                                          newEvents[index] = { ...event, name: e.target.value };
-                                          handleUpdateTeamData(teamId, {
-                                            schedule: { ...teamData[teamId].schedule, events: newEvents }
-                                          });
-                                        }}
-                                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                      />
-                                    </td>
-                                    <td className="px-4 py-2">
-                                      <input
-                                        type="text"
-                                        value={event.time}
-                                        onChange={(e) => {
-                                          const newEvents = [...teamData[teamId].schedule.events];
-                                          newEvents[index] = { ...event, time: e.target.value };
-                                          handleUpdateTeamData(teamId, {
-                                            schedule: { ...teamData[teamId].schedule, events: newEvents }
-                                          });
-                                        }}
-                                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                      />
-                                    </td>
-                                    <td className="px-4 py-2">
-                                      <input
-                                        type="text"
-                                        value={event.location}
-                                        onChange={(e) => {
-                                          const newEvents = [...teamData[teamId].schedule.events];
-                                          newEvents[index] = { ...event, location: e.target.value };
-                                          handleUpdateTeamData(teamId, {
-                                            schedule: { ...teamData[teamId].schedule, events: newEvents }
-                                          });
-                                        }}
-                                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                      />
-                                    </td>
-                                    <td className="px-4 py-2">
-                                      <input
-                                        type="text"
-                                        value={event.notes || ''}
-                                        onChange={(e) => {
-                                          const newEvents = [...teamData[teamId].schedule.events];
-                                          newEvents[index] = { ...event, notes: e.target.value };
-                                          handleUpdateTeamData(teamId, {
-                                            schedule: { ...teamData[teamId].schedule, events: newEvents }
-                                          });
-                                        }}
-                                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                      />
-                                    </td>
-                                    <td className="px-4 py-2">
-                                      <button
-                                        onClick={() => {
-                                          const newEvents = teamData[teamId].schedule.events.filter((_, i) => i !== index);
-                                          handleUpdateTeamData(teamId, {
-                                            schedule: { ...teamData[teamId].schedule, events: newEvents }
-                                          });
-                                        }}
-                                        className="text-red-500 hover:text-red-400"
-                                      >
-                                        Remove
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <label className="block mb-2">Show Order</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={teamData[teamId]?.schedule?.showOrder || 1}
+                                  onChange={(e) => {
+                                    handleUpdateTeamData(teamId, {
+                                      schedule: {
+                                        ...teamData[teamId]?.schedule,
+                                        showOrder: parseInt(e.target.value)
+                                      }
+                                    });
+                                  }}
+                                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                />
+                              </div>
+                              <div className="flex items-center">
+                                <label className="mr-2">Published</label>
+                                <input
+                                  type="checkbox"
+                                  checked={teamData[teamId]?.schedule?.isPublished || false}
+                                  onChange={(e) => {
+                                    handleUpdateTeamData(teamId, {
+                                      schedule: {
+                                        ...teamData[teamId]?.schedule,
+                                        isPublished: e.target.checked
+                                      }
+                                    });
+                                  }}
+                                  className="w-4 h-4"
+                                />
+                              </div>
+                            </div>
+                            {teamData[teamId]?.schedule?.events?.map((event) => (
+                              <div key={event.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg mb-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="block mb-2">Event Name</label>
+                                    <input
+                                      type="text"
+                                      value={event.name}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          name: e.target.value
+                                        });
+                                      }}
+                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block mb-2">Event Type</label>
+                                    <select
+                                      value={event.type}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          type: e.target.value as TeamInfo['schedule']['events'][0]['type']
+                                        });
+                                      }}
+                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    >
+                                      <option value="Practice">Practice</option>
+                                      <option value="Performance">Performance</option>
+                                      <option value="Meeting">Meeting</option>
+                                      <option value="Other">Other</option>
+                                    </select>
+                                  </div>
+                                  <div>
+                                    <label className="block mb-2">Start Time</label>
+                                    <input
+                                      type="datetime-local"
+                                      value={event.startTime}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          startTime: e.target.value
+                                        });
+                                      }}
+                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block mb-2">End Time</label>
+                                    <input
+                                      type="datetime-local"
+                                      value={event.endTime}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          endTime: e.target.value
+                                        });
+                                      }}
+                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    />
+                                  </div>
+                                  <div className="col-span-2">
+                                    <label className="block mb-2">Location</label>
+                                    <input
+                                      type="text"
+                                      value={event.location}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          location: e.target.value
+                                        });
+                                      }}
+                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    />
+                                  </div>
+                                  <div className="col-span-2">
+                                    <label className="block mb-2">Notes</label>
+                                    <textarea
+                                      value={event.notes || ''}
+                                      onChange={(e) => {
+                                        handleUpdateSchedule(teamId, {
+                                          ...event,
+                                          notes: e.target.value
+                                        });
+                                      }}
+                                      className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    const updatedEvents = teamData[teamId].schedule.events.filter(e => e.id !== event.id);
+                                    handleUpdateTeamData(teamId, {
+                                      schedule: {
+                                        ...teamData[teamId].schedule,
+                                        events: updatedEvents
+                                      }
+                                    });
+                                  }}
+                                  className="mt-4 text-red-500 hover:text-red-400"
+                                >
+                                  Remove Event
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => {
+                                const newEvent = {
+                                  id: Date.now().toString(),
+                                  name: '',
+                                  type: 'Other' as const,
+                                  startTime: new Date().toISOString().slice(0, 16),
+                                  endTime: new Date().toISOString().slice(0, 16),
+                                  location: '',
+                                  notes: ''
+                                };
+                                handleUpdateSchedule(teamId, newEvent);
+                              }}
+                              className="text-purple-400 hover:text-purple-300"
+                            >
+                              + Add Event
+                            </button>
                           </div>
-                          <button
-                            onClick={() => {
-                              const newEvent = {
-                                name: '',
-                                time: '',
-                                location: '',
-                                notes: ''
-                              };
-                              handleUpdateTeamData(teamId, {
-                                schedule: {
-                                  ...teamData[teamId].schedule,
-                                  events: [...teamData[teamId].schedule.events, newEvent]
-                                }
-                              });
-                            }}
-                            className="text-purple-400 hover:text-purple-300"
-                          >
-                            + Add Event
-                          </button>
                         </div>
                       </div>
                     ))}
@@ -474,70 +647,91 @@ const AdminDashboard: React.FC = () => {
                       <div key={teamId} className="mb-8">
                         <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
                         <div className="space-y-4">
-                          {teamData[teamId].nearbyLocations.map((location, index) => (
-                            <div key={index} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg space-y-4">
-                              <div>
-                                <label className="block text-sm mb-2">Location Name</label>
-                                <input
-                                  type="text"
-                                  value={location.name}
-                                  onChange={(e) => {
-                                    const newLocations = [...teamData[teamId].nearbyLocations];
-                                    newLocations[index] = { ...location, name: e.target.value };
-                                    handleUpdateTeamData(teamId, { nearbyLocations: newLocations });
-                                  }}
-                                  className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-sm mb-2">Address</label>
-                                <input
-                                  type="text"
-                                  value={location.address}
-                                  onChange={(e) => {
-                                    const newLocations = [...teamData[teamId].nearbyLocations];
-                                    newLocations[index] = { ...location, address: e.target.value };
-                                    handleUpdateTeamData(teamId, { nearbyLocations: newLocations });
-                                  }}
-                                  className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-sm mb-2">Type</label>
-                                <select
-                                  value={location.type}
-                                  onChange={(e) => {
-                                    const newLocations = [...teamData[teamId].nearbyLocations];
-                                    newLocations[index] = { ...location, type: e.target.value as any };
-                                    handleUpdateTeamData(teamId, { nearbyLocations: newLocations });
-                                  }}
-                                  className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                >
-                                  <option value="Food">Food</option>
-                                  <option value="Practice">Practice</option>
-                                  <option value="Hotel">Hotel</option>
-                                  <option value="Other">Other</option>
-                                </select>
-                              </div>
-                              <div>
-                                <label className="block text-sm mb-2">Notes</label>
-                                <input
-                                  type="text"
-                                  value={location.notes || ''}
-                                  onChange={(e) => {
-                                    const newLocations = [...teamData[teamId].nearbyLocations];
-                                    newLocations[index] = { ...location, notes: e.target.value };
-                                    handleUpdateTeamData(teamId, { nearbyLocations: newLocations });
-                                  }}
-                                  className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
+                          {teamData[teamId]?.nearbyLocations?.map((location) => (
+                            <div key={location.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label className="block mb-2">Name</label>
+                                  <input
+                                    type="text"
+                                    value={location.name}
+                                    onChange={(e) => {
+                                      handleUpdateLocation(teamId, {
+                                        ...location,
+                                        name: e.target.value
+                                      });
+                                    }}
+                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block mb-2">Type</label>
+                                  <select
+                                    value={location.type}
+                                    onChange={(e) => {
+                                      handleUpdateLocation(teamId, {
+                                        ...location,
+                                        type: e.target.value as TeamInfo['nearbyLocations'][0]['type']
+                                      });
+                                    }}
+                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                  >
+                                    <option value="Food">Food</option>
+                                    <option value="Practice">Practice</option>
+                                    <option value="Hotel">Hotel</option>
+                                    <option value="Emergency">Emergency</option>
+                                    <option value="Other">Other</option>
+                                  </select>
+                                </div>
+                                <div className="col-span-2">
+                                  <label className="block mb-2">Address</label>
+                                  <input
+                                    type="text"
+                                    value={location.address}
+                                    onChange={(e) => {
+                                      handleUpdateLocation(teamId, {
+                                        ...location,
+                                        address: e.target.value
+                                      });
+                                    }}
+                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block mb-2">Distance</label>
+                                  <input
+                                    type="text"
+                                    value={location.distance || ''}
+                                    onChange={(e) => {
+                                      handleUpdateLocation(teamId, {
+                                        ...location,
+                                        distance: e.target.value
+                                      });
+                                    }}
+                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                    placeholder="e.g. 0.5 miles"
+                                  />
+                                </div>
+                                <div className="col-span-2">
+                                  <label className="block mb-2">Notes</label>
+                                  <textarea
+                                    value={location.notes || ''}
+                                    onChange={(e) => {
+                                      handleUpdateLocation(teamId, {
+                                        ...location,
+                                        notes: e.target.value
+                                      });
+                                    }}
+                                    className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                  />
+                                </div>
                               </div>
                               <button
                                 onClick={() => {
-                                  const newLocations = teamData[teamId].nearbyLocations.filter((_, i) => i !== index);
-                                  handleUpdateTeamData(teamId, { nearbyLocations: newLocations });
+                                  const updatedLocations = teamData[teamId].nearbyLocations.filter(l => l.id !== location.id);
+                                  handleUpdateTeamData(teamId, { nearbyLocations: updatedLocations });
                                 }}
-                                className="text-red-500 hover:text-red-400"
+                                className="mt-4 text-red-500 hover:text-red-400"
                               >
                                 Remove Location
                               </button>
@@ -546,14 +740,13 @@ const AdminDashboard: React.FC = () => {
                           <button
                             onClick={() => {
                               const newLocation = {
+                                id: Date.now().toString(),
                                 name: '',
                                 address: '',
                                 type: 'Other' as const,
                                 notes: ''
                               };
-                              handleUpdateTeamData(teamId, {
-                                nearbyLocations: [...teamData[teamId].nearbyLocations, newLocation]
-                              });
+                              handleUpdateLocation(teamId, newLocation);
                             }}
                             className="text-purple-400 hover:text-purple-300"
                           >

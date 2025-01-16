@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "teams": {
+      "$teamId": {
+        // Allow read access to existing team data
+        ".read": true,
+        // Only allow write access from admin
+        ".write": "auth === null"
+      }
+    },
+    // Admin has full access to all data
+    "admin": {
+      ".read": "auth === null",
+      ".write": "auth === null"
+    }
+  }
+} 

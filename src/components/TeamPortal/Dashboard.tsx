@@ -1,87 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../../config/firebase';
+import { ref, onValue } from 'firebase/database';
 
 interface TeamInfo {
   displayName: string;
-  practiceArea: string;
-  liasonContact: string;
-  specialInstructions: string;
+  announcements: Array<{
+    id: string;
+    title: string;
+    content: string;
+    timestamp: number;
+  }>;
+  generalInfo: {
+    practiceArea: string;
+    liasonContact: string;
+    specialInstructions: string;
+    additionalInfo: string;
+  };
+  techVideo: {
+    title: string;
+    youtubeUrl: string;
+    description?: string;
+  };
+  schedule: {
+    showOrder: number;
+    isPublished: boolean;
+    events: Array<{
+      id: string;
+      name: string;
+      startTime: string;
+      endTime: string;
+      location: string;
+      type: 'Practice' | 'Performance' | 'Meeting' | 'Other';
+      notes?: string;
+    }>;
+  };
+  nearbyLocations: Array<{
+    id: string;
+    name: string;
+    address: string;
+    type: 'Food' | 'Practice' | 'Hotel' | 'Emergency' | 'Other';
+    distance?: string;
+    notes?: string;
+  }>;
 }
 
-type TeamId = "tamu" | "texas" | "michigan" | "ucd" | "unc" | "iu" | "berkeley" | "msu";
-
-// Team information mapping
-export const TEAM_INFO: Record<TeamId, TeamInfo> = {
-  "tamu": {
-    displayName: "TAMU Wreckin' Raas",
-    practiceArea: "Great Hall - Main Practice Arena",
-    liasonContact: "Devanshi Patel - (469) 525-8760",
-    specialInstructions: "Please arrive 15 minutes before your scheduled practice time."
-  },
-  "texas": {
-    displayName: "Texas Raas",
-    practiceArea: "Room of Requirement - Practice Room B",
-    liasonContact: "Paneri Patel - (682) 347-9582",
-    specialInstructions: "Bring your own water bottles and practice attire."
-  },
-  "michigan": {
-    displayName: "Michigan Wolveraas",
-    practiceArea: "Astronomy Tower - Upper Level Studio",
-    liasonContact: "Devanshi Patel - (469) 525-8760",
-    specialInstructions: "Check in at the front desk upon arrival."
-  },
-  "ucd": {
-    displayName: "UCD Raasleela",
-    practiceArea: "Transfiguration Courtyard - Practice Area C",
-    liasonContact: "Paneri Patel - (682) 347-9582",
-    specialInstructions: "Please maintain noise levels during evening practices."
-  },
-  "unc": {
-    displayName: "UNC Tar Heel Raas",
-    practiceArea: "Defense Against Dark Arts Chamber - Studio D",
-    liasonContact: "Devanshi Patel - (469) 525-8760",
-    specialInstructions: "Follow marked pathways to practice area."
-  },
-  "iu": {
-    displayName: "IU HoosierRaas",
-    practiceArea: "Charms Classroom - Practice Space E",
-    liasonContact: "Paneri Patel - (682) 347-9582",
-    specialInstructions: "Store equipment in designated areas after practice."
-  },
-  "berkeley": {
-    displayName: "UC Berkeley Raas Ramzat",
-    practiceArea: "Potions Dungeon - Lower Level Studio",
-    liasonContact: "Devanshi Patel - (469) 525-8760",
-    specialInstructions: "Use service elevator for equipment transport."
-  },
-  "msu": {
-    displayName: "MSU RaaSparty",
-    practiceArea: "Quidditch Pitch - Indoor Practice Arena",
-    liasonContact: "Paneri Patel - (682) 347-9582",
-    specialInstructions: "Keep all emergency exits clear during practice."
-  }
-};
+type TeamId = "tamu" | "texas" | "michigan" | "ucd" | "unc" | "iu" | "berkeley" | "msu" | "admin";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<TeamId | null>(null);
+  const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule' | 'locations'>('announcements');
 
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as TeamId | null;
     
-    if (!storedTeam || !TEAM_INFO[storedTeam]) {
+    if (!storedTeam || storedTeam === 'admin') {
       navigate("/team-portal/login");
       return;
     }
 
     setTeamId(storedTeam);
-    setTeamInfo(TEAM_INFO[storedTeam]);
+    
+    const teamRef = ref(db, `teams/${storedTeam}`);
+    const unsubscribe = onValue(teamRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setTeamInfo(snapshot.val());
+      }
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("team");
-    navigate("/");
+    navigate("/team-portal/login");
   };
 
   if (!teamInfo || !teamId) {
@@ -118,25 +112,221 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Practice Area */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-            <h2 className="text-2xl font-['Harry_Potter'] text-white mb-4">Practice Area</h2>
-            <p className="text-blue-200/80">{teamInfo.practiceArea}</p>
+        {/* Navigation Tabs */}
+        <div className="mb-8">
+          <div className="flex space-x-4 border-b border-blue-500/30">
+            <button
+              onClick={() => setActiveTab('announcements')}
+              className={`px-4 py-2 ${
+                activeTab === 'announcements'
+                  ? 'border-b-2 border-blue-500 text-white'
+                  : 'text-blue-200/60 hover:text-white'
+              }`}
+            >
+              Announcements
+            </button>
+            <button
+              onClick={() => setActiveTab('general')}
+              className={`px-4 py-2 ${
+                activeTab === 'general'
+                  ? 'border-b-2 border-blue-500 text-white'
+                  : 'text-blue-200/60 hover:text-white'
+              }`}
+            >
+              General Info
+            </button>
+            <button
+              onClick={() => setActiveTab('tech')}
+              className={`px-4 py-2 ${
+                activeTab === 'tech'
+                  ? 'border-b-2 border-blue-500 text-white'
+                  : 'text-blue-200/60 hover:text-white'
+              }`}
+            >
+              Tech Video
+            </button>
+            <button
+              onClick={() => setActiveTab('schedule')}
+              className={`px-4 py-2 ${
+                activeTab === 'schedule'
+                  ? 'border-b-2 border-blue-500 text-white'
+                  : 'text-blue-200/60 hover:text-white'
+              }`}
+            >
+              Schedule
+            </button>
+            <button
+              onClick={() => setActiveTab('locations')}
+              className={`px-4 py-2 ${
+                activeTab === 'locations'
+                  ? 'border-b-2 border-blue-500 text-white'
+                  : 'text-blue-200/60 hover:text-white'
+              }`}
+            >
+              Locations
+            </button>
           </div>
+        </div>
 
-          {/* Liason Contact */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-            <h2 className="text-2xl font-['Harry_Potter'] text-white mb-4">Liason Contact</h2>
-            <p className="text-blue-200/80">{teamInfo.liasonContact}</p>
-          </div>
+        {/* Content */}
+        <div className="space-y-8">
+          {activeTab === 'announcements' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Announcements</h2>
+              <div className="space-y-4">
+                {teamInfo.announcements?.length > 0 ? (
+                  teamInfo.announcements.map((announcement) => (
+                    <div key={announcement.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                      <h3 className="text-xl text-white mb-2">{announcement.title}</h3>
+                      <p className="text-blue-200/80 whitespace-pre-wrap mb-4">{announcement.content}</p>
+                      <p className="text-sm text-blue-200/60">
+                        Posted: {new Date(announcement.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-blue-200/60">No announcements at this time.</p>
+                )}
+              </div>
+            </div>
+          )}
 
-          {/* Special Instructions */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 md:col-span-2">
-            <h2 className="text-2xl font-['Harry_Potter'] text-white mb-4">Special Instructions</h2>
-            <p className="text-blue-200/80">{teamInfo.specialInstructions}</p>
-          </div>
+          {activeTab === 'general' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">General Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-xl text-white mb-4">Practice Area</h3>
+                  <p className="text-blue-200/80">{teamInfo.generalInfo?.practiceArea}</p>
+                </div>
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-xl text-white mb-4">Liaison Contact</h3>
+                  <p className="text-blue-200/80">{teamInfo.generalInfo?.liasonContact}</p>
+                </div>
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 md:col-span-2">
+                  <h3 className="text-xl text-white mb-4">Special Instructions</h3>
+                  <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.generalInfo?.specialInstructions}</p>
+                </div>
+                {teamInfo.generalInfo?.additionalInfo && (
+                  <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 md:col-span-2">
+                    <h3 className="text-xl text-white mb-4">Additional Information</h3>
+                    <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.generalInfo.additionalInfo}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'tech' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Tech Video</h2>
+              {teamInfo.techVideo?.youtubeUrl ? (
+                <div className="space-y-6">
+                  <div className="aspect-w-16 aspect-h-9">
+                    <iframe
+                      src={teamInfo.techVideo.youtubeUrl.replace('watch?v=', 'embed/')}
+                      title={teamInfo.techVideo.title}
+                      className="w-full rounded-xl"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                    <h3 className="text-xl text-white mb-4">{teamInfo.techVideo.title}</h3>
+                    {teamInfo.techVideo.description && (
+                      <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.techVideo.description}</p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-blue-200/60">Tech video will be available soon.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'schedule' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
+              {teamInfo.schedule?.isPublished ? (
+                <div className="space-y-4">
+                  {teamInfo.schedule.events.map((event) => (
+                    <div key={event.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                        <h3 className="text-xl text-white">{event.name}</h3>
+                        <span className={`text-sm px-3 py-1 rounded-full ${
+                          event.type === 'Performance' ? 'bg-purple-500/20 text-purple-200' :
+                          event.type === 'Practice' ? 'bg-green-500/20 text-green-200' :
+                          event.type === 'Meeting' ? 'bg-yellow-500/20 text-yellow-200' :
+                          'bg-blue-500/20 text-blue-200'
+                        }`}>
+                          {event.type}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-200/80">
+                        <div>
+                          <p className="text-blue-200/60">Start Time:</p>
+                          <p>{new Date(event.startTime).toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-blue-200/60">End Time:</p>
+                          <p>{new Date(event.endTime).toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-blue-200/60">Location:</p>
+                          <p>{event.location}</p>
+                        </div>
+                        {event.notes && (
+                          <div className="md:col-span-2">
+                            <p className="text-blue-200/60">Notes:</p>
+                            <p className="whitespace-pre-wrap">{event.notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <p className="text-blue-200/80 text-center">
+                    The schedule will be published soon. Please check back later.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'locations' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Nearby Locations</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {teamInfo.nearbyLocations?.map((location) => (
+                  <div key={location.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl text-white">{location.name}</h3>
+                      <span className={`text-sm px-3 py-1 rounded-full ${
+                        location.type === 'Food' ? 'bg-green-500/20 text-green-200' :
+                        location.type === 'Practice' ? 'bg-blue-500/20 text-blue-200' :
+                        location.type === 'Hotel' ? 'bg-yellow-500/20 text-yellow-200' :
+                        location.type === 'Emergency' ? 'bg-red-500/20 text-red-200' :
+                        'bg-purple-500/20 text-purple-200'
+                      }`}>
+                        {location.type}
+                      </span>
+                    </div>
+                    <div className="space-y-2 text-blue-200/80">
+                      <p>{location.address}</p>
+                      {location.distance && (
+                        <p className="text-blue-200/60">Distance: {location.distance}</p>
+                      )}
+                      {location.notes && (
+                        <p className="text-blue-200/60 whitespace-pre-wrap">{location.notes}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
