@@ -27,8 +27,8 @@ export default function Login() {
     
     if (team) {
       // Store team info in sessionStorage
-      sessionStorage.setItem('teamName', team[0]);
-      navigate('/team-dashboard');
+      sessionStorage.setItem('team', team[0]);
+      navigate('/team-portal/dashboard');
     } else {
       setError('Invalid password. Please try again.');
       setTimeout(() => setError(''), 3000);

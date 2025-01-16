@@ -15,14 +15,14 @@ const locations = [
     description: "Where the competition's magic unfolds",
     address: "4141 Spring Valley Rd, Addison, TX 75001",
     mapsUrl: "https://maps.google.com/?q=4141+Spring+Valley+Rd,+Addison,+TX+75001",
-    type: "Main Event Venue"
+    type: "Main Event"
   },
   {
     name: "VYB Lounge",
     description: "Where victors and participants unite in revelry",
     address: "104 W McKinney St, Denton, TX 76201",
     mapsUrl: "https://maps.google.com/?q=104+W+McKinney+St,+Denton,+TX+76201",
-    type: "Afterparty Venue"
+    type: "Afterparty"
   }
 ];
 
