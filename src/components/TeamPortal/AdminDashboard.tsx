@@ -604,31 +604,86 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
+    // Initialize teams if they don't exist
+    Object.keys(TEAM_DISPLAY_NAMES).forEach(teamId => {
+      initializeTeamData(teamId as TeamId);
+    });
+
     const teamsRef = ref(db, 'teams');
+    console.log('Setting up Firebase listener at:', teamsRef);
+
     const unsubscribe = onValue(teamsRef, (snapshot) => {
+      console.log('Firebase snapshot received, exists:', snapshot.exists());
+      
       if (snapshot.exists()) {
         const data = snapshot.val();
+        console.log('Raw Firebase data:', JSON.stringify(data, null, 2));
+        
         // Process the data and ensure announcements are arrays
         const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+          console.log(`\nProcessing team ${teamId}:`);
+          console.log('Raw team data:', rawTeamData);
+          
           // Cast the raw data to our expected type
           const teamData = rawTeamData as TeamInfo;
           
+          // Ensure announcements exist and are in the correct format
+          let announcements: TeamInfo['announcements'] = [];
+          if (teamData.announcements) {
+            console.log('Found announcements:', teamData.announcements);
+            if (Array.isArray(teamData.announcements)) {
+              announcements = teamData.announcements;
+              console.log('Announcements is already an array');
+            } else if (typeof teamData.announcements === 'object') {
+              announcements = Object.values(teamData.announcements) as TeamInfo['announcements'];
+              console.log('Converted announcements object to array:', announcements);
+            }
+          } else {
+            console.log('No announcements found for team');
+          }
+          
+          // Filter out any invalid announcements and sort by timestamp
+          announcements = announcements
+            .filter((announcement): announcement is TeamInfo['announcements'][0] => {
+              const isValid = announcement && 
+                typeof announcement === 'object' && 
+                'id' in announcement &&
+                'title' in announcement &&
+                'content' in announcement &&
+                'timestamp' in announcement;
+              if (!isValid) {
+                console.log('Filtered out invalid announcement:', announcement);
+              }
+              return isValid;
+            })
+            .sort((a, b) => b.timestamp - a.timestamp);
+          
+          console.log('Final processed announcements:', announcements);
+          
           // Create a new team info object with processed announcements
           const processedTeamData: TeamInfo = {
-            ...teamData,
-            // Ensure announcements is always an array and sort by timestamp
-            announcements: (Array.isArray(teamData.announcements) 
-              ? teamData.announcements 
-              : teamData.announcements 
-                ? (Object.values(teamData.announcements) as TeamInfo['announcements'])
-                : []
-            ).sort((a, b) => b.timestamp - a.timestamp)
+            displayName: teamData.displayName || TEAM_DISPLAY_NAMES[teamId as TeamId],
+            announcements,
+            generalInfo: teamData.generalInfo || {
+              practiceArea: '',
+              liasonContact: '',
+              specialInstructions: '',
+              additionalInfo: ''
+            },
+            techVideo: teamData.techVideo || {
+              title: '',
+              youtubeUrl: '',
+              description: ''
+            },
+            schedule: teamData.schedule || INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]],
+            nearbyLocations: teamData.nearbyLocations || []
           };
           
           acc[teamId as TeamId] = processedTeamData;
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
         
+        console.log('\nFinal processed team data:', processedData);
         setTeamData(processedData);
       }
     });
@@ -741,17 +796,25 @@ const AdminDashboard: React.FC = () => {
         targetTeams: selectedTeams
       };
 
+      console.log('Sending announcement:', newAnnouncement);
+      console.log('Target teams:', selectedTeams);
+
       await Promise.all(selectedTeams.map(async teamId => {
         const teamRef = ref(db, `teams/${teamId}`);
         const snapshot = await get(teamRef);
         if (snapshot.exists()) {
           const teamData = snapshot.val();
-          const currentAnnouncements = teamData.announcements || [];
+          let currentAnnouncements = teamData.announcements || [];
+          if (!Array.isArray(currentAnnouncements)) {
+            currentAnnouncements = Object.values(currentAnnouncements);
+          }
           
-          // If editing, remove the old announcement from all target teams
+          // If editing, remove the old announcement
           const filteredAnnouncements = announcementForm.id 
             ? currentAnnouncements.filter((a: any) => a.id !== announcementForm.id)
             : currentAnnouncements;
+          
+          console.log(`Updating announcements for team ${teamId}:`, [...filteredAnnouncements, newAnnouncement]);
           
           await set(teamRef, {
             ...teamData,
@@ -760,20 +823,20 @@ const AdminDashboard: React.FC = () => {
         }
       }));
 
-      setUpdateMessage('Announcement sent successfully!');
+      toast.success(announcementForm.id ? 'Announcement updated successfully' : 'Announcement sent successfully');
       setAnnouncementForm({ title: '', content: '' });
       setSelectedTeams([]);
       setActiveAnnouncementTab('manage');
-      setTimeout(() => setUpdateMessage(''), 3000);
     } catch (error) {
       console.error('Error sending announcement:', error);
-      setErrorMessage('Failed to send announcement. Please try again.');
+      toast.error('Failed to send announcement');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleEditAnnouncement = (announcement: TeamInfo['announcements'][0]) => {
+    console.log('Editing announcement:', announcement);
     setAnnouncementForm({
       id: announcement.id,
       title: announcement.title,
@@ -785,25 +848,43 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleDeleteAnnouncement = async (announcementId: string, teamId: TeamId) => {
+    if (!teamId) {
+      console.error('No team selected for deletion');
+      toast.error('Please select a team first');
+      return;
+    }
+    
     try {
+      console.log(`Deleting announcement ${announcementId} from team ${teamId}`);
       const teamRef = ref(db, `teams/${teamId}`);
       const snapshot = await get(teamRef);
+      
       if (snapshot.exists()) {
         const teamData = snapshot.val();
-        const currentAnnouncements = teamData.announcements || [];
+        console.log('Current team data:', teamData);
+        
+        let currentAnnouncements = teamData.announcements || [];
+        if (!Array.isArray(currentAnnouncements)) {
+          currentAnnouncements = Object.values(currentAnnouncements);
+        }
+        
+        console.log('Current announcements:', currentAnnouncements);
         const updatedAnnouncements = currentAnnouncements.filter((a: any) => a.id !== announcementId);
+        console.log('Updated announcements:', updatedAnnouncements);
         
         await set(teamRef, {
           ...teamData,
           announcements: updatedAnnouncements
         });
         
-        setUpdateMessage('Announcement deleted successfully!');
-        setTimeout(() => setUpdateMessage(''), 3000);
+        toast.success('Announcement deleted successfully');
+      } else {
+        console.error('Team data not found');
+        toast.error('Team data not found');
       }
     } catch (error) {
       console.error('Error deleting announcement:', error);
-      setErrorMessage('Failed to delete announcement. Please try again.');
+      toast.error('Failed to delete announcement');
     }
   };
 
@@ -988,9 +1069,15 @@ const AdminDashboard: React.FC = () => {
   );
 
   const renderManageAnnouncementsSection = () => {
+    console.log('\nRendering manage announcements section');
+    console.log('Selected team:', selectedTeamForAnnouncements);
+    console.log('Team data:', teamData);
+    
     const selectedTeamAnnouncements = selectedTeamForAnnouncements 
       ? teamData[selectedTeamForAnnouncements]?.announcements || []
       : [];
+
+    console.log('Selected team announcements:', selectedTeamAnnouncements);
 
     return (
       <div className="space-y-6">
@@ -1000,7 +1087,12 @@ const AdminDashboard: React.FC = () => {
             <div className="w-full sm:w-auto">
               <select
                 value={selectedTeamForAnnouncements || ''}
-                onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
+                onChange={(e) => {
+                  const teamId = e.target.value as TeamId;
+                  console.log('Team selection changed to:', teamId);
+                  console.log('Current team data:', teamData[teamId]);
+                  setSelectedTeamForAnnouncements(teamId);
+                }}
                 className="w-full sm:w-64 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
               >
                 <option value="">Select a team</option>
@@ -1047,7 +1139,10 @@ const AdminDashboard: React.FC = () => {
                             <FiEdit2 className="text-blue-400" />
                           </button>
                           <button
-                            onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements)}
+                            onClick={() => {
+                              console.log('Deleting announcement:', announcement.id);
+                              handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements);
+                            }}
                             className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                             title="Delete announcement"
                           >
