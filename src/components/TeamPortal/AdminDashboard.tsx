@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
-import { FirebaseError } from 'firebase/app';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
@@ -18,11 +17,29 @@ interface TeamInfo {
     timestamp: number;
     targetTeams?: TeamId[];
   }>;
-  generalInfo: {
-    practiceArea: string;
-    liasonContact: string;
-    specialInstructions: string;
-    additionalInfo: string;
+  information: {
+    liaisons: Array<{
+      name: string;
+      phone: string;
+    }>;
+    tech: {
+      danceableSpace: string;
+      backdropSpace: string;
+      apronSpace: string;
+      propsBox: string;
+      additionalNotes?: string;
+    };
+    venue: {
+      name: string;
+      address: string;
+      seatingCapacity: string;
+      additionalNotes?: string;
+    };
+    hotel: {
+      name: string;
+      address: string;
+      additionalNotes?: string;
+    };
   };
   techVideo: {
     title: string;
@@ -549,11 +566,24 @@ const initializeTeamData = async (teamId: TeamId) => {
     await set(teamRef, {
       displayName: TEAM_DISPLAY_NAMES[teamId],
       announcements: [],
-      generalInfo: {
-        practiceArea: '',
-        liasonContact: '',
-        specialInstructions: '',
-        additionalInfo: ''
+      information: {
+        liaisons: [],
+        tech: {
+          danceableSpace: "42' x 28'",
+          backdropSpace: "4 ft",
+          apronSpace: "4 ft",
+          propsBox: "7ft (length) x 5ft (depth) x 10ft (height)",
+          additionalNotes: "*There will be NO RIGGING this year at Marshall Arts Center*"
+        },
+        venue: {
+          name: "Marshall Family Performing Arts Center",
+          address: "4141 Spring Valley Rd, Addison, TX 75001",
+          seatingCapacity: "600 seat auditorium"
+        },
+        hotel: {
+          name: "DoubleTree by Hilton Hotel Dallas",
+          address: "4099 Valley View Ln, Dallas, TX 75244"
+        }
       },
       techVideo: {
         title: '',
@@ -564,11 +594,29 @@ const initializeTeamData = async (teamId: TeamId) => {
       nearbyLocations: []
     });
   } else {
-    // Ensure schedule exists
+    // Ensure information exists with default values
     const data = snapshot.val();
-    if (!data.schedule || Object.keys(data.schedule).length === 0) {
+    if (!data.information) {
       await update(teamRef, {
-        schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId]] || INITIAL_SCHEDULES[1]
+        information: {
+          liaisons: [],
+          tech: {
+            danceableSpace: "42' x 28'",
+            backdropSpace: "4 ft",
+            apronSpace: "4 ft",
+            propsBox: "7ft (length) x 5ft (depth) x 10ft (height)",
+            additionalNotes: "*There will be NO RIGGING this year at Marshall Arts Center*"
+          },
+          venue: {
+            name: "Marshall Family Performing Arts Center",
+            address: "4141 Spring Valley Rd, Addison, TX 75001",
+            seatingCapacity: "600 seat auditorium"
+          },
+          hotel: {
+            name: "DoubleTree by Hilton Hotel Dallas",
+            address: "4099 Valley View Ln, Dallas, TX 75244"
+          }
+        }
       });
     }
   }
@@ -583,7 +631,7 @@ interface AnnouncementFormData {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule'>('announcements');
   const [teamData, setTeamData] = useState<Record<TeamId, TeamInfo>>({} as Record<TeamId, TeamInfo>);
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
@@ -597,7 +645,6 @@ const AdminDashboard: React.FC = () => {
   const [activeAnnouncementTab, setActiveAnnouncementTab] = useState<'new' | 'manage'>('new');
   const [selectedTeamForAnnouncements, setSelectedTeamForAnnouncements] = useState<TeamId | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
     const team = sessionStorage.getItem('team');
@@ -609,22 +656,34 @@ const AdminDashboard: React.FC = () => {
     // Initialize teams if they don't exist
     const initializeTeams = async () => {
       try {
-        console.log('Attempting to initialize teams data...');
-        const teamsRef = ref(db, 'teams');
+    const teamsRef = ref(db, 'teams');
         const snapshot = await get(teamsRef);
         
         if (!snapshot.exists()) {
-          console.log('No teams data found, creating initial structure...');
+          console.log('Initializing teams data...');
           const initialData = Object.keys(TEAM_DISPLAY_NAMES).reduce((acc, teamId) => ({
             ...acc,
             [teamId]: {
               displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
               announcements: [],
-              generalInfo: {
-                practiceArea: '',
-                liasonContact: '',
-                specialInstructions: '',
-                additionalInfo: ''
+              information: {
+                liaisons: [],
+                tech: {
+                  danceableSpace: "42' x 28'",
+                  backdropSpace: "4 ft",
+                  apronSpace: "4 ft",
+                  propsBox: "7ft (length) x 5ft (depth) x 10ft (height)",
+                  additionalNotes: "*There will be NO RIGGING this year at Marshall Arts Center*"
+                },
+                venue: {
+                  name: "Marshall Family Performing Arts Center",
+                  address: "4141 Spring Valley Rd, Addison, TX 75001",
+                  seatingCapacity: "600 seat auditorium"
+                },
+                hotel: {
+                  name: "DoubleTree by Hilton Hotel Dallas",
+                  address: "4099 Valley View Ln, Dallas, TX 75244"
+                }
               },
               techVideo: {
                 title: '',
@@ -638,89 +697,56 @@ const AdminDashboard: React.FC = () => {
           
           await set(teamsRef, initialData);
           console.log('Teams initialized successfully');
-          return true;
         }
-        console.log('Teams data already exists');
-        return false;
       } catch (error) {
-        console.error('Error during initialization:', error);
-        if (error instanceof FirebaseError) {
-          if (error.code === 'PERMISSION_DENIED') {
-            console.log('Permission denied during initialization');
-            toast.error('Permission denied. Please log out and log back in as admin.');
-            sessionStorage.removeItem('team');
-            navigate('/team-portal/login');
-          } else {
-            toast.error(`Firebase error: ${error.message}`);
-          }
-        } else {
-          toast.error('Error initializing data. Please try again.');
-        }
-        return false;
-      } finally {
-        setIsInitializing(false);
+        console.error('Error initializing teams:', error);
+        toast.error('Error initializing data');
       }
     };
 
-    // Set up Firebase listener with better error handling
+    // Set up Firebase listener
     const setupFirebaseListener = () => {
-      console.log('Setting up Firebase listener...');
       const teamsRef = ref(db, 'teams');
+      console.log('Setting up Firebase listener at:', teamsRef.toString());
 
       return onValue(teamsRef, 
-        async (snapshot) => {
-          try {
-            if (snapshot.exists()) {
-              const data = snapshot.val();
-              console.log('Received Firebase data for teams:', Object.keys(data));
+        (snapshot) => {
+      if (snapshot.exists()) {
+            const data = snapshot.val();
+            console.log('Received Firebase data:', Object.keys(data));
+            
+            const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+              const teamData = rawTeamData as TeamInfo;
+              let announcements: TeamInfo['announcements'] = [];
               
-              const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-                const teamData = rawTeamData as TeamInfo;
-                let announcements: TeamInfo['announcements'] = [];
-                
-                if (teamData.announcements) {
-                  announcements = Array.isArray(teamData.announcements) 
-                    ? teamData.announcements 
-                    : Object.values(teamData.announcements);
-                }
-
-                acc[teamId as TeamId] = {
-                  ...teamData,
-                  announcements
-                };
-                return acc;
-              }, {} as Record<TeamId, TeamInfo>);
-
-              setTeamData(processedData);
-            } else {
-              console.log('No data found, attempting initialization...');
-              const initialized = await initializeTeams();
-              if (!initialized) {
-                console.log('Initialization failed or was not needed');
+              if (teamData.announcements) {
+                announcements = Array.isArray(teamData.announcements) 
+                  ? teamData.announcements 
+                  : Object.values(teamData.announcements);
               }
-            }
-          } catch (error) {
-            console.error('Error processing Firebase data:', error);
-            if (error instanceof FirebaseError) {
-              if (error.code === 'PERMISSION_DENIED') {
-                toast.error('Permission denied. Please log out and log back in as admin.');
-                sessionStorage.removeItem('team');
-                navigate('/team-portal/login');
-              } else {
-                toast.error(`Firebase error: ${error.message}`);
-              }
-            } else {
-              toast.error('Error loading data. Please refresh the page.');
-            }
+
+              acc[teamId as TeamId] = {
+                ...teamData,
+                announcements
+              };
+              return acc;
+            }, {} as Record<TeamId, TeamInfo>);
+
+            setTeamData(processedData);
+          } else {
+            console.log('No data in Firebase, initializing...');
+            initializeTeams();
           }
         },
-        (error: Error) => {
-          console.error('Firebase listener error:', error);
-          if (error instanceof FirebaseError && error.code === 'PERMISSION_DENIED') {
-            console.log('Permission denied, attempting reinitialization...');
+        (error) => {
+          console.error('Firebase error:', error);
+          if (error.message.includes('permission_denied')) {
+            console.log('Permission denied, attempting to reinitialize...');
             initializeTeams();
           } else {
-            toast.error('Error accessing data. Please refresh the page.');
+            toast.error('Error accessing data');
+            sessionStorage.removeItem('team');
+            navigate('/team-portal/login');
           }
         }
       );
@@ -960,20 +986,16 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleUpdateGeneralInfo = async (updates: Partial<TeamInfo['generalInfo']>, targetTeams: TeamId[]) => {
+  const handleUpdateInformation = async (updates: Partial<TeamInfo['information']>, teamId: TeamId) => {
     try {
-      await Promise.all(targetTeams.map(async teamId => {
-        const teamRef = ref(db, `teams/${teamId}/generalInfo`);
-        const snapshot = await get(teamRef);
-        const currentInfo = snapshot.val() || {};
-        await set(teamRef, { ...currentInfo, ...updates });
-      }));
-      setUpdateMessage('General info updated successfully!');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      const teamRef = ref(db, `teams/${teamId}/information`);
+      const snapshot = await get(teamRef);
+      const currentInfo = snapshot.val() || {};
+      await set(teamRef, { ...currentInfo, ...updates });
+      toast.success('Information updated successfully!');
     } catch (error) {
-      console.error('Error updating general info:', error);
-      setUpdateMessage('Error updating general info. Please try again.');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      console.error('Error updating information:', error);
+      toast.error('Error updating information');
     }
   };
 
@@ -1457,7 +1479,7 @@ const AdminDashboard: React.FC = () => {
 
         <div className="mb-8">
           <div className="flex space-x-4 border-b border-blue-500/30">
-            {['announcements', 'general', 'tech', 'schedule'].map((tab) => (
+            {['announcements', 'information', 'tech', 'schedule'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -1475,51 +1497,216 @@ const AdminDashboard: React.FC = () => {
 
         <div className="max-w-[1200px] mx-auto">
           {activeTab === 'announcements' && renderAnnouncementsSection()}
-          {activeTab === 'general' && (
+          {activeTab === 'information' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (
-                <div key={teamId} className="mb-8">
-                  <h3 className="text-xl font-semibold mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                  <div className="space-y-4">
-                                  <div>
-                      <label className="block text-sm font-medium mb-1">Practice Area</label>
-                                    <input
-                        type="text"
-                        value={teamData[teamId]?.generalInfo?.practiceArea || ''}
-                        onChange={(e) => handleUpdateGeneralInfo({ practiceArea: e.target.value }, [teamId])}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div>
-                      <label className="block text-sm font-medium mb-1">Liaison Contact</label>
-                                    <input
-                        type="text"
-                        value={teamData[teamId]?.generalInfo?.liasonContact || ''}
-                        onChange={(e) => handleUpdateGeneralInfo({ liasonContact: e.target.value }, [teamId])}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Special Instructions</label>
-                      <textarea
-                        value={teamData[teamId]?.generalInfo?.specialInstructions || ''}
-                        onChange={(e) => handleUpdateGeneralInfo({ specialInstructions: e.target.value }, [teamId])}
-                        className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Additional Information</label>
-                                    <textarea
-                        value={teamData[teamId]?.generalInfo?.additionalInfo || ''}
-                        onChange={(e) => handleUpdateGeneralInfo({ additionalInfo: e.target.value }, [teamId])}
-                                      className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                </div>
-                      </div>
-                    ))}
+                <div key={teamId} className="mb-8 space-y-6">
+                  <h3 className="text-xl font-semibold">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                  
+                  {/* Liaisons Section */}
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                    <h4 className="text-lg font-semibold mb-4">Liaisons Information</h4>
+                    <div className="space-y-4">
+                      {teamData[teamId]?.information?.liaisons.map((liaison, index) => (
+                        <div key={index} className="flex gap-4">
+                          <input
+                            type="text"
+                            value={liaison.name}
+                            placeholder="Name"
+                            onChange={(e) => {
+                              const newLiaisons = [...teamData[teamId].information.liaisons];
+                              newLiaisons[index] = { ...liaison, name: e.target.value };
+                              handleUpdateInformation({ liaisons: newLiaisons }, teamId);
+                            }}
+                            className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                          />
+                          <input
+                            type="text"
+                            value={liaison.phone}
+                            placeholder="Phone"
+                            onChange={(e) => {
+                              const newLiaisons = [...teamData[teamId].information.liaisons];
+                              newLiaisons[index] = { ...liaison, phone: e.target.value };
+                              handleUpdateInformation({ liaisons: newLiaisons }, teamId);
+                            }}
+                            className="w-48 bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                          />
+                          <button
+                            onClick={() => {
+                              const newLiaisons = teamData[teamId].information.liaisons.filter((_, i) => i !== index);
+                              handleUpdateInformation({ liaisons: newLiaisons }, teamId);
+                            }}
+                            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                          >
+                            <FiTrash2 className="text-red-400" />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => {
+                          const newLiaisons = [...(teamData[teamId]?.information?.liaisons || []), { name: '', phone: '' }];
+                          handleUpdateInformation({ liaisons: newLiaisons }, teamId);
+                        }}
+                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-white rounded-lg transition-colors"
+                      >
+                        Add Liaison
+                      </button>
+                    </div>
                   </div>
-                )}
+
+                  {/* Tech Information */}
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                    <h4 className="text-lg font-semibold mb-4">Tech Information</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Danceable Space</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.tech?.danceableSpace}
+                          onChange={(e) => handleUpdateInformation({
+                            tech: { ...teamData[teamId].information.tech, danceableSpace: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Backdrop Space</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.tech?.backdropSpace}
+                          onChange={(e) => handleUpdateInformation({
+                            tech: { ...teamData[teamId].information.tech, backdropSpace: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Apron Space</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.tech?.apronSpace}
+                          onChange={(e) => handleUpdateInformation({
+                            tech: { ...teamData[teamId].information.tech, apronSpace: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Props Box</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.tech?.propsBox}
+                          onChange={(e) => handleUpdateInformation({
+                            tech: { ...teamData[teamId].information.tech, propsBox: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Additional Notes</label>
+                        <textarea
+                          value={teamData[teamId]?.information?.tech?.additionalNotes}
+                          onChange={(e) => handleUpdateInformation({
+                            tech: { ...teamData[teamId].information.tech, additionalNotes: e.target.value }
+                          }, teamId)}
+                          className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Venue Information */}
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                    <h4 className="text-lg font-semibold mb-4">Venue Information</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Name</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.venue?.name}
+                          onChange={(e) => handleUpdateInformation({
+                            venue: { ...teamData[teamId].information.venue, name: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Address</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.venue?.address}
+                          onChange={(e) => handleUpdateInformation({
+                            venue: { ...teamData[teamId].information.venue, address: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Seating Capacity</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.venue?.seatingCapacity}
+                          onChange={(e) => handleUpdateInformation({
+                            venue: { ...teamData[teamId].information.venue, seatingCapacity: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Additional Notes</label>
+                        <textarea
+                          value={teamData[teamId]?.information?.venue?.additionalNotes}
+                          onChange={(e) => handleUpdateInformation({
+                            venue: { ...teamData[teamId].information.venue, additionalNotes: e.target.value }
+                          }, teamId)}
+                          className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hotel Information */}
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                    <h4 className="text-lg font-semibold mb-4">Hotel Information</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Name</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.hotel?.name}
+                          onChange={(e) => handleUpdateInformation({
+                            hotel: { ...teamData[teamId].information.hotel, name: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Address</label>
+                        <input
+                          type="text"
+                          value={teamData[teamId]?.information?.hotel?.address}
+                          onChange={(e) => handleUpdateInformation({
+                            hotel: { ...teamData[teamId].information.hotel, address: e.target.value }
+                          }, teamId)}
+                          className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Additional Notes</label>
+                        <textarea
+                          value={teamData[teamId]?.information?.hotel?.additionalNotes}
+                          onChange={(e) => handleUpdateInformation({
+                            hotel: { ...teamData[teamId].information.hotel, additionalNotes: e.target.value }
+                          }, teamId)}
+                          className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           {activeTab === 'tech' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (

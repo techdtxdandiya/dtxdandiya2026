@@ -12,11 +12,29 @@ interface TeamInfo {
     timestamp: number;
     targetTeams?: TeamId[];
   }>;
-  generalInfo: {
-    practiceArea: string;
-    liasonContact: string;
-    specialInstructions: string;
-    additionalInfo: string;
+  information: {
+    liaisons: Array<{
+      name: string;
+      phone: string;
+    }>;
+    tech: {
+      danceableSpace: string;
+      backdropSpace: string;
+      apronSpace: string;
+      propsBox: string;
+      additionalNotes?: string;
+    };
+    venue: {
+      name: string;
+      address: string;
+      seatingCapacity: string;
+      additionalNotes?: string;
+    };
+    hotel: {
+      name: string;
+      address: string;
+      additionalNotes?: string;
+    };
   };
   techVideo: {
     title: string;
@@ -99,7 +117,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<TeamId | null>(null);
-  const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule' | 'locations'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule' | 'locations'>('announcements');
 
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as TeamId | null;
@@ -190,14 +208,14 @@ export default function Dashboard() {
               Announcements
             </button>
             <button
-              onClick={() => setActiveTab('general')}
+              onClick={() => setActiveTab('information')}
               className={`px-4 py-2 ${
-                activeTab === 'general'
+                activeTab === 'information'
                   ? 'border-b-2 border-blue-500 text-white'
                   : 'text-blue-200/60 hover:text-white'
               }`}
             >
-              General Info
+              Information
             </button>
             <button
               onClick={() => setActiveTab('tech')}
@@ -255,28 +273,117 @@ export default function Dashboard() {
             </div>
           )}
 
-          {activeTab === 'general' && (
+          {activeTab === 'information' && (
             <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">General Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Information</h2>
+              
+              {/* Liaisons Section */}
+              <div className="mb-8">
                 <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-xl text-white mb-4">Practice Area</h3>
-                  <p className="text-blue-200/80">{teamInfo.generalInfo?.practiceArea}</p>
-                </div>
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-xl text-white mb-4">Liaison Contact</h3>
-                  <p className="text-blue-200/80">{teamInfo.generalInfo?.liasonContact}</p>
-                </div>
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 md:col-span-2">
-                  <h3 className="text-xl text-white mb-4">Special Instructions</h3>
-                  <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.generalInfo?.specialInstructions}</p>
-                </div>
-                {teamInfo.generalInfo?.additionalInfo && (
-                  <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 md:col-span-2">
-                    <h3 className="text-xl text-white mb-4">Additional Information</h3>
-                    <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.generalInfo.additionalInfo}</p>
+                  <h3 className="text-2xl text-white mb-4">Liaisons Information</h3>
+                  <div className="space-y-4">
+                    {teamInfo.information?.liaisons.length > 0 ? (
+                      teamInfo.information.liaisons.map((liaison, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <div className="text-blue-200">{liaison.name}</div>
+                          <div className="text-blue-200">{liaison.phone}</div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-blue-200/60">Liaison information will be updated soon.</p>
+                    )}
                   </div>
-                )}
+                </div>
+              </div>
+
+              {/* Tech Information */}
+              <div className="mb-8">
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-2xl text-white mb-4">Tech Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">Danceable Space</h4>
+                      <p className="text-blue-200">{teamInfo.information?.tech?.danceableSpace}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">Backdrop Space</h4>
+                      <p className="text-blue-200">{teamInfo.information?.tech?.backdropSpace}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">Apron Space</h4>
+                      <p className="text-blue-200">{teamInfo.information?.tech?.apronSpace}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">Props Box</h4>
+                      <p className="text-blue-200">{teamInfo.information?.tech?.propsBox}</p>
+                    </div>
+                  </div>
+                  {teamInfo.information?.tech?.additionalNotes && (
+                    <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
+                      <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.tech.additionalNotes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Venue Information */}
+              <div className="mb-8">
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-2xl text-white mb-4">Venue Information</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">{teamInfo.information?.venue?.name}</h4>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information?.venue?.address || '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
+                      >
+                        <span>{teamInfo.information?.venue?.address}</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    </div>
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">Seating Capacity</h4>
+                      <p className="text-blue-200">{teamInfo.information?.venue?.seatingCapacity}</p>
+                    </div>
+                    {teamInfo.information?.venue?.additionalNotes && (
+                      <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
+                        <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.venue.additionalNotes}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Hotel Information */}
+              <div className="mb-8">
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-2xl text-white mb-4">Hotel Information</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-lg text-blue-300 mb-2">{teamInfo.information?.hotel?.name}</h4>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information?.hotel?.address || '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
+                      >
+                        <span>{teamInfo.information?.hotel?.address}</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    </div>
+                    {teamInfo.information?.hotel?.additionalNotes && (
+                      <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
+                        <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.hotel.additionalNotes}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
