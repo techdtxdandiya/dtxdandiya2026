@@ -605,18 +605,19 @@ const AdminDashboard: React.FC = () => {
     const unsubscribe = onValue(teamsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        setTeamData(data);
-        
-        // Initialize data for all teams
-        Object.keys(TEAM_DISPLAY_NAMES).forEach((teamId) => {
-          initializeTeamData(teamId as TeamId);
-        });
+        // Ensure announcements array exists for each team
+        const processedData = Object.entries(data).reduce((acc, [teamId, teamData]) => {
+          acc[teamId as TeamId] = {
+            ...teamData as TeamInfo,
+            announcements: (teamData as TeamInfo).announcements || []
+          };
+          return acc;
+        }, {} as Record<TeamId, TeamInfo>);
+        setTeamData(processedData);
       }
     });
 
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -725,21 +726,28 @@ const AdminDashboard: React.FC = () => {
       };
 
       await Promise.all(selectedTeams.map(async teamId => {
-        const teamRef = ref(db, `teams/${teamId}/announcements`);
+        const teamRef = ref(db, `teams/${teamId}`);
         const snapshot = await get(teamRef);
-        const currentAnnouncements = snapshot.val() || [];
-        
-        // If editing, remove the old announcement
-        const filteredAnnouncements = announcementForm.id 
-          ? currentAnnouncements.filter((a: any) => a.id !== announcementForm.id)
-          : currentAnnouncements;
-        
-        await set(teamRef, [...filteredAnnouncements, newAnnouncement]);
+        if (snapshot.exists()) {
+          const teamData = snapshot.val();
+          const currentAnnouncements = teamData.announcements || [];
+          
+          // If editing, remove the old announcement from all target teams
+          const filteredAnnouncements = announcementForm.id 
+            ? currentAnnouncements.filter((a: any) => a.id !== announcementForm.id)
+            : currentAnnouncements;
+          
+          await set(teamRef, {
+            ...teamData,
+            announcements: [...filteredAnnouncements, newAnnouncement]
+          });
+        }
       }));
 
       setUpdateMessage('Announcement sent successfully!');
       setAnnouncementForm({ title: '', content: '' });
       setSelectedTeams([]);
+      setActiveAnnouncementTab('manage');
       setTimeout(() => setUpdateMessage(''), 3000);
     } catch (error) {
       console.error('Error sending announcement:', error);
@@ -757,17 +765,26 @@ const AdminDashboard: React.FC = () => {
       isEditing: true
     });
     setSelectedTeams(announcement.targetTeams || []);
+    setActiveAnnouncementTab('new');
   };
 
   const handleDeleteAnnouncement = async (announcementId: string, teamId: TeamId) => {
     try {
-      const teamRef = ref(db, `teams/${teamId}/announcements`);
+      const teamRef = ref(db, `teams/${teamId}`);
       const snapshot = await get(teamRef);
-      const currentAnnouncements = snapshot.val() || [];
-      const updatedAnnouncements = currentAnnouncements.filter((a: any) => a.id !== announcementId);
-      await set(teamRef, updatedAnnouncements);
-      setUpdateMessage('Announcement deleted successfully!');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      if (snapshot.exists()) {
+        const teamData = snapshot.val();
+        const currentAnnouncements = teamData.announcements || [];
+        const updatedAnnouncements = currentAnnouncements.filter((a: any) => a.id !== announcementId);
+        
+        await set(teamRef, {
+          ...teamData,
+          announcements: updatedAnnouncements
+        });
+        
+        setUpdateMessage('Announcement deleted successfully!');
+        setTimeout(() => setUpdateMessage(''), 3000);
+      }
     } catch (error) {
       console.error('Error deleting announcement:', error);
       setErrorMessage('Failed to delete announcement. Please try again.');
@@ -954,81 +971,86 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  const renderManageAnnouncementsSection = () => (
-    <div className="space-y-6">
-      <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-white">Manage Announcements</h3>
-          <select
-            value={selectedTeamForAnnouncements || ''}
-            onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
-            className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-          >
-            <option value="">Select a team</option>
-            {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
-              <option key={id} value={id}>{name}</option>
-            ))}
-          </select>
-        </div>
+  const renderManageAnnouncementsSection = () => {
+    const selectedTeamAnnouncements = selectedTeamForAnnouncements 
+      ? (teamData[selectedTeamForAnnouncements]?.announcements || []).sort((a, b) => b.timestamp - a.timestamp)
+      : [];
 
-        {selectedTeamForAnnouncements ? (
-          <div className="space-y-4">
-            <AnimatePresence>
-              {teamData[selectedTeamForAnnouncements]?.announcements?.length > 0 ? (
-                teamData[selectedTeamForAnnouncements].announcements.map((announcement, index) => (
-                  <motion.div
-                    key={announcement.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            handleEditAnnouncement(announcement);
-                            setActiveAnnouncementTab('new');
-                          }}
-                          className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
-                        >
-                          <FiEdit2 className="text-blue-400" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements)}
-                          className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
-                        >
-                          <FiTrash2 className="text-red-400" />
-                        </button>
+    return (
+      <div className="space-y-6">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold text-white">Manage Announcements</h3>
+            <select
+              value={selectedTeamForAnnouncements || ''}
+              onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
+              className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+            >
+              <option value="">Select a team</option>
+              {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
+                <option key={id} value={id}>{name}</option>
+              ))}
+            </select>
+          </div>
+
+          {selectedTeamForAnnouncements ? (
+            <div className="space-y-4">
+              <AnimatePresence>
+                {selectedTeamAnnouncements.length > 0 ? (
+                  selectedTeamAnnouncements.map((announcement, index) => (
+                    <motion.div
+                      key={announcement.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEditAnnouncement(announcement)}
+                            className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                            title="Edit announcement"
+                          >
+                            <FiEdit2 className="text-blue-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements)}
+                            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                            title="Delete announcement"
+                          >
+                            <FiTrash2 className="text-red-400" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
-                    <div className="mt-2 flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
-                      <span>{new Date(announcement.timestamp).toLocaleString()}</span>
-                      {announcement.targetTeams && announcement.targetTeams.length > 0 && (
-                        <>
-                          <span>•</span>
-                          <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
-                        </>
-                      )}
-                    </div>
-                  </motion.div>
-                ))
-              ) : (
-                <p className="text-blue-200/60">No announcements yet.</p>
-              )}
-            </AnimatePresence>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-blue-200/60">Select a team to view and manage their announcements</p>
-          </div>
-        )}
+                      <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
+                      <div className="mt-2 flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
+                        <span>{new Date(announcement.timestamp).toLocaleString()}</span>
+                        {announcement.targetTeams && announcement.targetTeams.length > 0 && (
+                          <>
+                            <span>•</span>
+                            <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
+                          </>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-blue-200/60 text-center py-4">No announcements yet.</p>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-blue-200/60">Select a team to view and manage their announcements</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderAnnouncementsSection = () => (
     <div className="space-y-6">
