@@ -10,6 +10,7 @@ interface TeamInfo {
     title: string;
     content: string;
     timestamp: number;
+    targetTeams?: TeamId[];
   }>;
   generalInfo: {
     practiceArea: string;
@@ -23,17 +24,40 @@ interface TeamInfo {
     description?: string;
   };
   schedule: {
-    showOrder: number;
+    showOrder: number | null;
     isPublished: boolean;
-    events: Array<{
-      id: string;
-      name: string;
-      startTime: string;
-      endTime: string;
+    friday: Array<{
+      time: string;
+      event: string;
       location: string;
-      type: 'Practice' | 'Performance' | 'Meeting' | 'Other';
-      notes?: string;
     }>;
+    saturdayTech: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayPreShow: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayShow: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayPostShow: {
+      placing: Array<{
+        time: string;
+        event: string;
+        location: string;
+      }>;
+      nonPlacing: Array<{
+        time: string;
+        event: string;
+        location: string;
+      }>;
+    };
   };
   nearbyLocations: Array<{
     id: string;
@@ -46,6 +70,30 @@ interface TeamInfo {
 }
 
 type TeamId = "tamu" | "texas" | "michigan" | "ucd" | "unc" | "iu" | "berkeley" | "msu" | "admin";
+
+const renderScheduleSection = (
+  title: string,
+  events: Array<{ time: string; event: string; location: string }> | undefined
+) => {
+  if (!events || events.length === 0) return null;
+
+  return (
+    <div className="mb-8">
+      <h3 className="text-2xl text-white mb-4">{title}</h3>
+      <div className="space-y-3">
+        {events.map((event, index) => (
+          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+              <div className="text-blue-200 font-medium">{event.time}</div>
+              <div className="text-white">{event.event}</div>
+              <div className="text-blue-200/80">{event.location}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -248,48 +296,55 @@ export default function Dashboard() {
             <div>
               <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
               {teamInfo.schedule?.isPublished ? (
-                <div className="space-y-4">
-                  {teamInfo.schedule.events.map((event) => (
-                    <div key={event.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                        <h3 className="text-xl text-white">{event.name}</h3>
-                        <span className={`text-sm px-3 py-1 rounded-full ${
-                          event.type === 'Performance' ? 'bg-purple-500/20 text-purple-200' :
-                          event.type === 'Practice' ? 'bg-green-500/20 text-green-200' :
-                          event.type === 'Meeting' ? 'bg-yellow-500/20 text-yellow-200' :
-                          'bg-blue-500/20 text-blue-200'
-                        }`}>
-                          {event.type}
-                        </span>
+                <div>
+                  {teamInfo.schedule.showOrder && (
+                    <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                      <p className="text-xl text-white">Performance Order: Team {teamInfo.schedule.showOrder}</p>
+                    </div>
+                  )}
+                  
+                  {renderScheduleSection('Friday', teamInfo.schedule.friday)}
+                  {renderScheduleSection('Saturday Tech Time', teamInfo.schedule.saturdayTech)}
+                  {renderScheduleSection('Saturday Pre-Show', teamInfo.schedule.saturdayPreShow)}
+                  {renderScheduleSection('Saturday Show', teamInfo.schedule.saturdayShow)}
+                  
+                  <div className="mb-8">
+                    <h3 className="text-2xl text-white mb-4">Saturday Post-Show</h3>
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <div>
+                        <h4 className="text-xl text-blue-200 mb-4">Placing Teams</h4>
+                        <div className="space-y-3">
+                          {teamInfo.schedule.saturdayPostShow.placing.map((event, index) => (
+                            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                                <div className="text-blue-200 font-medium">{event.time}</div>
+                                <div className="text-white">{event.event}</div>
+                                <div className="text-blue-200/80">{event.location}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-200/80">
-                        <div>
-                          <p className="text-blue-200/60">Start Time:</p>
-                          <p>{new Date(event.startTime).toLocaleString()}</p>
+                      <div>
+                        <h4 className="text-xl text-blue-200 mb-4">Non-Placing Teams</h4>
+                        <div className="space-y-3">
+                          {teamInfo.schedule.saturdayPostShow.nonPlacing.map((event, index) => (
+                            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                                <div className="text-blue-200 font-medium">{event.time}</div>
+                                <div className="text-white">{event.event}</div>
+                                <div className="text-blue-200/80">{event.location}</div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                        <div>
-                          <p className="text-blue-200/60">End Time:</p>
-                          <p>{new Date(event.endTime).toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-blue-200/60">Location:</p>
-                          <p>{event.location}</p>
-                        </div>
-                        {event.notes && (
-                          <div className="md:col-span-2">
-                            <p className="text-blue-200/60">Notes:</p>
-                            <p className="whitespace-pre-wrap">{event.notes}</p>
-                          </div>
-                        )}
                       </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               ) : (
                 <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <p className="text-blue-200/80 text-center">
-                    The schedule will be published soon. Please check back later.
-                  </p>
+                  <p className="text-blue-200/60">Schedule will be published soon.</p>
                 </div>
               )}
             </div>
