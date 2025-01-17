@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
+import { FiEdit2, FiTrash2, FiSend, FiAlertCircle } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TeamInfo {
   displayName: string;
@@ -568,6 +570,13 @@ const initializeTeamData = async (teamId: TeamId) => {
   }
 };
 
+interface AnnouncementFormData {
+  id?: string;
+  title: string;
+  content: string;
+  isEditing?: boolean;
+}
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule'>('announcements');
@@ -575,6 +584,12 @@ const AdminDashboard: React.FC = () => {
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
+  const [announcementForm, setAnnouncementForm] = useState<AnnouncementFormData>({
+    title: '',
+    content: ''
+  });
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const team = sessionStorage.getItem('team');
@@ -683,28 +698,75 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleSendAnnouncement = async (title: string, content: string, targetTeams: TeamId[]) => {
-    const newAnnouncement = {
-      id: Date.now().toString(),
-      title,
-      content,
-      timestamp: Date.now(),
-      targetTeams
-    };
-
+  const handleSendAnnouncement = async () => {
     try {
-      await Promise.all(targetTeams.map(async teamId => {
+      setIsSubmitting(true);
+      setErrorMessage('');
+
+      // Validation
+      if (!announcementForm.title.trim() || !announcementForm.content.trim()) {
+        setErrorMessage('Please fill in both title and content.');
+        return;
+      }
+      if (selectedTeams.length === 0) {
+        setErrorMessage('Please select at least one team.');
+        return;
+      }
+
+      const newAnnouncement = {
+        id: announcementForm.id || Date.now().toString(),
+        title: announcementForm.title.trim(),
+        content: announcementForm.content.trim(),
+        timestamp: Date.now(),
+        targetTeams: selectedTeams
+      };
+
+      await Promise.all(selectedTeams.map(async teamId => {
         const teamRef = ref(db, `teams/${teamId}/announcements`);
         const snapshot = await get(teamRef);
         const currentAnnouncements = snapshot.val() || [];
-        await set(teamRef, [...currentAnnouncements, newAnnouncement]);
+        
+        // If editing, remove the old announcement
+        const filteredAnnouncements = announcementForm.id 
+          ? currentAnnouncements.filter((a: any) => a.id !== announcementForm.id)
+          : currentAnnouncements;
+        
+        await set(teamRef, [...filteredAnnouncements, newAnnouncement]);
       }));
+
       setUpdateMessage('Announcement sent successfully!');
+      setAnnouncementForm({ title: '', content: '' });
       setTimeout(() => setUpdateMessage(''), 3000);
     } catch (error) {
       console.error('Error sending announcement:', error);
-      setUpdateMessage('Error sending announcement. Please try again.');
+      setErrorMessage('Failed to send announcement. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleEditAnnouncement = (announcement: TeamInfo['announcements'][0]) => {
+    setAnnouncementForm({
+      id: announcement.id,
+      title: announcement.title,
+      content: announcement.content,
+      isEditing: true
+    });
+    setSelectedTeams(announcement.targetTeams || []);
+  };
+
+  const handleDeleteAnnouncement = async (announcementId: string, teamId: TeamId) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/announcements`);
+      const snapshot = await get(teamRef);
+      const currentAnnouncements = snapshot.val() || [];
+      const updatedAnnouncements = currentAnnouncements.filter((a: any) => a.id !== announcementId);
+      await set(teamRef, updatedAnnouncements);
+      setUpdateMessage('Announcement deleted successfully!');
       setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+      setErrorMessage('Failed to delete announcement. Please try again.');
     }
   };
 
@@ -771,6 +833,127 @@ const AdminDashboard: React.FC = () => {
       setUpdateMessage('Error updating schedule status. Please try again.');
       setTimeout(() => setUpdateMessage(''), 3000);
     }
+  };
+
+  const renderAnnouncementsSection = () => {
+    const selectedTeamAnnouncements = selectedTeams.length === 1 
+      ? teamData[selectedTeams[0]]?.announcements || []
+      : [];
+
+    return (
+      <div className="space-y-6">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <h3 className="text-xl font-semibold text-white mb-4">
+            {announcementForm.isEditing ? 'Edit Announcement' : 'New Announcement'}
+          </h3>
+          
+          <div className="space-y-4">
+            <div>
+              <input
+                type="text"
+                placeholder="Announcement Title"
+                value={announcementForm.title}
+                onChange={(e) => setAnnouncementForm(prev => ({ ...prev, title: e.target.value }))}
+                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+              />
+            </div>
+            
+            <div>
+              <textarea
+                placeholder="Announcement Content"
+                value={announcementForm.content}
+                onChange={(e) => setAnnouncementForm(prev => ({ ...prev, content: e.target.value }))}
+                rows={4}
+                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
+              />
+            </div>
+
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg"
+              >
+                <FiAlertCircle />
+                <span>{errorMessage}</span>
+              </motion.div>
+            )}
+
+            <div className="flex justify-between items-center">
+              <button
+                onClick={() => {
+                  setAnnouncementForm({ title: '', content: '' });
+                  setErrorMessage('');
+                }}
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+              >
+                Clear
+              </button>
+              
+              <button
+                onClick={handleSendAnnouncement}
+                disabled={isSubmitting}
+                className={`flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <FiSend />
+                {isSubmitting ? 'Sending...' : announcementForm.isEditing ? 'Update' : 'Send to Selected Teams'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {selectedTeams.length === 1 && (
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Current Announcements for {teamData[selectedTeams[0]]?.displayName}
+            </h3>
+            
+            <div className="space-y-4">
+              <AnimatePresence>
+                {selectedTeamAnnouncements.length > 0 ? (
+                  selectedTeamAnnouncements.map((announcement, index) => (
+                    <motion.div
+                      key={announcement.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEditAnnouncement(announcement)}
+                            className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                          >
+                            <FiEdit2 className="text-blue-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeams[0])}
+                            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                          >
+                            <FiTrash2 className="text-red-400" />
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
+                      <div className="mt-2 text-sm text-blue-300/60">
+                        {new Date(announcement.timestamp).toLocaleString()}
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-blue-200/60">No announcements yet.</p>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderScheduleSection = (
@@ -912,8 +1095,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      <div className="relative z-10 container mx-auto px-4 py-12">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-['Harry_Potter']">Admin Dashboard</h1>
           <button
@@ -993,40 +1176,7 @@ const AdminDashboard: React.FC = () => {
             </button>
           </div>
 
-          {activeTab === 'announcements' && (
-            <div className="mt-6">
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-4">New Announcement</h3>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Title"
-                    value={newAnnouncement.title}
-                    onChange={(e) => setNewAnnouncement(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                  />
-                  <textarea
-                    placeholder="Content"
-                    value={newAnnouncement.content}
-                    onChange={(e) => setNewAnnouncement(prev => ({ ...prev, content: e.target.value }))}
-                    className="w-full h-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                  />
-                  <button
-                    onClick={() => {
-                      if (selectedTeams.length > 0 && newAnnouncement.title && newAnnouncement.content) {
-                        handleSendAnnouncement(newAnnouncement.title, newAnnouncement.content, selectedTeams);
-                        setNewAnnouncement({ title: '', content: '' });
-                      }
-                    }}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
-                    disabled={selectedTeams.length === 0 || !newAnnouncement.title || !newAnnouncement.content}
-                  >
-                    Send to Selected Teams
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === 'announcements' && renderAnnouncementsSection()}
 
           {activeTab === 'general' && (
             <div className="mt-6">
