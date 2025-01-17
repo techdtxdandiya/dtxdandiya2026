@@ -10,6 +10,7 @@ interface TeamInfo {
     title: string;
     content: string;
     timestamp: number;
+    targetTeams?: TeamId[];
   }>;
   generalInfo: {
     practiceArea: string;
@@ -23,17 +24,40 @@ interface TeamInfo {
     description?: string;
   };
   schedule: {
-    showOrder: number;
+    showOrder: number | null;
     isPublished: boolean;
-    events: Array<{
-      id: string;
-      name: string;
-      startTime: string;
-      endTime: string;
+    friday: Array<{
+      time: string;
+      event: string;
       location: string;
-      type: 'Practice' | 'Performance' | 'Meeting' | 'Other';
-      notes?: string;
     }>;
+    saturdayTech: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayPreShow: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayShow: Array<{
+      time: string;
+      event: string;
+      location: string;
+    }>;
+    saturdayPostShow: {
+      placing: Array<{
+        time: string;
+        event: string;
+        location: string;
+      }>;
+      nonPlacing: Array<{
+        time: string;
+        event: string;
+        location: string;
+      }>;
+    };
   };
   nearbyLocations: Array<{
     id: string;
@@ -58,12 +82,474 @@ const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   msu: 'MSU RaaSparty'
 };
 
+interface ScheduleEvent {
+  time: string;
+  event: string;
+  location: string;
+}
+
+const TEAM_NUMBER_MAP: Record<TeamId, number> = {
+  tamu: 1,
+  texas: 2,
+  michigan: 3,
+  ucd: 4,
+  unc: 5,
+  iu: 6,
+  berkeley: 7,
+  msu: 8
+};
+
+const INITIAL_SCHEDULES: Record<number, TeamInfo['schedule']> = {
+  1: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '7:30 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '8:00 PM', event: 'Post-Mixer Practice', location: 'Ebony Room' },
+      { time: '8:35 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '7:40 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '8:05 AM', event: 'DR 1, Stretching', location: 'DR 1' },
+      { time: '8:25 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '8:40 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '9:15 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '9:35 AM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '10:00 AM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '12:25 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '12:40 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '3:25 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '3:30 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '3:50 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '5:00 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '5:10 PM', event: 'DR 1, Dressing Room', location: 'DR 1' },
+      { time: '5:25 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '5:45 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '6:00 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  2: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '7:30 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '8:00 PM', event: 'Post-Mixer Practice', location: 'Teak Room' },
+      { time: '8:55 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '8:10 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '8:35 AM', event: 'DR 2, Stretching', location: 'DR 2' },
+      { time: '8:55 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '9:10 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '9:45 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '10:05 AM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '10:30 AM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '12:35 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '12:50 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '3:35 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '3:40 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:00 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '5:15 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '5:25 PM', event: 'DR 2, Dressing Room', location: 'DR 2' },
+      { time: '5:40 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '6:00 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '6:15 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  3: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '7:30 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '8:35 PM', event: 'Post-Mixer Practice', location: 'Ebony Room' },
+      { time: '9:15 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '8:40 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '9:05 AM', event: 'DR 1, Stretching', location: 'DR 1' },
+      { time: '9:25 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '9:40 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '10:15 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '10:35 AM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '11:00 AM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '12:45 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:00 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '3:45 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '3:50 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:10 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '5:30 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '5:40 PM', event: 'DR 1, Dressing Room', location: 'DR 1' },
+      { time: '5:55 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '6:15 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '6:30 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  4: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '7:30 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '8:35 PM', event: 'Post-Mixer Practice', location: 'Teak Room' },
+      { time: '9:35 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '9:10 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '9:35 AM', event: 'DR 2, Stretching', location: 'DR 2' },
+      { time: '9:55 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '10:10 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '10:45 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '11:05 AM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '11:30 AM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '12:55 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:10 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '3:55 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '4:00 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:20 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '5:45 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '5:55 PM', event: 'DR 2, Dressing Room', location: 'DR 2' },
+      { time: '6:10 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '6:30 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '6:45 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  5: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '8:00 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '9:10 PM', event: 'Post-Mixer Practice', location: 'Ebony Room' },
+      { time: '9:55 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '9:40 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '10:05 AM', event: 'DR 1, Stretching', location: 'DR 1' },
+      { time: '10:25 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '10:40 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '11:15 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '11:35 AM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '12:00 PM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '1:05 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:20 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '4:05 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '4:10 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:30 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '6:15 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '6:25 PM', event: 'DR 1, Dressing Room', location: 'DR 1' },
+      { time: '6:40 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '7:00 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '7:15 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  6: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '8:00 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '9:10 PM', event: 'Post-Mixer Practice', location: 'Teak Room' },
+      { time: '10:15 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '10:10 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '10:35 AM', event: 'DR 2, Stretching', location: 'DR 2' },
+      { time: '10:55 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '11:10 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '11:45 AM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '12:05 PM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '12:30 PM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '1:15 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:30 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '4:15 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '4:20 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:40 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '6:30 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '6:40 PM', event: 'DR 2, Dressing Room', location: 'DR 2' },
+      { time: '6:55 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '7:15 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '7:30 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  7: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '8:00 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '9:45 PM', event: 'Post-Mixer Practice', location: 'Ebony Room' },
+      { time: '10:35 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '10:40 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '11:05 AM', event: 'DR 1, Stretching', location: 'DR 1' },
+      { time: '11:25 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '11:40 AM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '12:15 PM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '12:35 PM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '1:00 PM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '1:25 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:40 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '4:25 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '4:30 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '4:50 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '6:45 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '6:55 PM', event: 'DR 1, Dressing Room', location: 'DR 1' },
+      { time: '7:10 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '7:30 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '7:45 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  },
+  8: {
+    showOrder: null,
+    isPublished: false,
+    friday: [
+      { time: '12:00 PM', event: 'Registration', location: 'Oak Room' },
+      { time: '2:45 PM', event: 'Check-In', location: 'Oak Room' },
+      { time: '4:30 PM', event: 'Dinner', location: 'Garden Terrace' },
+      { time: '5:30 PM', event: 'Mixer', location: 'Garden Terrace' },
+      { time: '8:00 PM', event: 'Captains Meeting', location: 'Near Room' },
+      { time: '9:45 PM', event: 'Post-Mixer Practice', location: 'Teak Room' },
+      { time: '10:55 PM', event: 'Optional Practice', location: 'Garden Terrace' }
+    ],
+    saturdayTech: [
+      { time: '11:10 AM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '11:35 AM', event: 'DR 2, Stretching', location: 'DR 2' },
+      { time: '11:55 AM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '12:10 PM', event: 'Stage, Tech Time (20 Mins)', location: 'Stage' },
+      { time: '12:45 PM', event: 'Viewing Room, Video Review (10 Mins)', location: 'Viewing Room' },
+      { time: '1:05 PM', event: 'Dance and Choral Hall, Post Tech', location: 'Dance and Choral Hall' },
+      { time: '1:30 PM', event: 'Venue Lobby, Travel to Hotel', location: 'Venue Lobby' },
+      { time: '1:35 PM', event: 'Hotel Lobby, Captains Travel to Venue', location: 'Hotel Lobby' },
+      { time: '1:50 PM', event: 'Auditorium, Lighting Cues', location: 'Auditorium' }
+    ],
+    saturdayPreShow: [
+      { time: '4:35 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+      { time: '4:40 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '5:00 PM', event: 'Outside Venue, Photo Shoot', location: 'Outside Venue' }
+    ],
+    saturdayShow: [
+      { time: '7:00 PM', event: 'Hotel Lobby, Travel to Venue', location: 'Hotel Lobby' },
+      { time: '7:10 PM', event: 'DR 2, Dressing Room', location: 'DR 2' },
+      { time: '7:25 PM', event: 'Side Stage, Hold', location: 'Side Stage' },
+      { time: '7:45 PM', event: 'Stage, Team Performance', location: 'Stage' },
+      { time: '8:00 PM', event: 'Audience, Post Performance', location: 'Audience' }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:20 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '10:30 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '10:50 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:30 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ],
+      placing: [
+        { time: '9:40 PM', event: 'Venue, Travel to Hotel', location: 'Venue' },
+        { time: '9:40 PM', event: 'Hotel, Dinner Distribution', location: 'Hotel' },
+        { time: '10:50 PM', event: 'Hotel Lobby, Last Call', location: 'Hotel Lobby' },
+        { time: '11:10 PM', event: 'Van, Travel to Afterparty', location: 'Van' },
+        { time: '11:30 PM', event: 'VYB Lounge, Afterparty', location: 'VYB Lounge' },
+        { time: '1:40 AM', event: 'Outside VYB Lounge, Bus Departs', location: 'Outside VYB Lounge' }
+      ]
+    }
+  }
+};
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule' | 'locations'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule'>('announcements');
   const [teamData, setTeamData] = useState<Record<TeamId, TeamInfo>>({} as Record<TeamId, TeamInfo>);
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
+  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
+
+  const initializeTeamSchedule = async (teamId: TeamId) => {
+    const currentSchedule = teamData[teamId]?.schedule;
+    if (!currentSchedule || Object.keys(currentSchedule).length === 0) {
+      handleUpdateTeamData(teamId, {
+        schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId]] || INITIAL_SCHEDULES[1]
+      });
+    }
+  };
 
   useEffect(() => {
     const team = sessionStorage.getItem('team');
@@ -75,7 +561,15 @@ const AdminDashboard: React.FC = () => {
     const teamsRef = ref(db, 'teams');
     const unsubscribe = onValue(teamsRef, (snapshot) => {
       if (snapshot.exists()) {
-        setTeamData(snapshot.val());
+        const data = snapshot.val();
+        setTeamData(data);
+        
+        // Initialize schedules for teams that don't have them
+        Object.keys(TEAM_DISPLAY_NAMES).forEach((teamId) => {
+          if (!data[teamId]?.schedule || Object.keys(data[teamId]?.schedule).length === 0) {
+            initializeTeamSchedule(teamId as TeamId);
+          }
+        });
       }
     });
 
@@ -124,27 +618,54 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
-  const handleUpdateSchedule = (teamId: TeamId, newEvent: TeamInfo['schedule']['events'][0]) => {
-    const currentEvents = teamData[teamId].schedule?.events || [];
-    const eventIndex = currentEvents.findIndex(e => e.id === newEvent.id);
-    
-    if (eventIndex === -1) {
+  const handleUpdateSchedule = (
+    teamId: TeamId,
+    scheduleSection: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
+    data: ScheduleEvent[] | { placing: ScheduleEvent[]; nonPlacing: ScheduleEvent[] }
+  ) => {
+    handleUpdateTeamData(teamId, {
+      schedule: {
+        ...teamData[teamId].schedule,
+        [scheduleSection]: data
+      }
+    });
+  };
+
+  const handleUpdateShowOrder = (teamId: TeamId, order: number | null) => {
+    handleUpdateTeamData(teamId, {
+      schedule: {
+        ...teamData[teamId].schedule,
+        showOrder: order
+      }
+    });
+  };
+
+  const handleSendAnnouncement = (title: string, content: string, targetTeams: TeamId[]) => {
+    const newAnnouncement = {
+      id: Date.now().toString(),
+      title,
+      content,
+      timestamp: Date.now(),
+      targetTeams
+    };
+
+    targetTeams.forEach(teamId => {
+      const currentAnnouncements = teamData[teamId].announcements || [];
       handleUpdateTeamData(teamId, {
-        schedule: {
-          ...teamData[teamId].schedule,
-          events: [...currentEvents, newEvent]
+        announcements: [...currentAnnouncements, newAnnouncement]
+      });
+    });
+  };
+
+  const handleUpdateGeneralInfo = (updates: Partial<TeamInfo['generalInfo']>, targetTeams: TeamId[]) => {
+    targetTeams.forEach(teamId => {
+      handleUpdateTeamData(teamId, {
+        generalInfo: {
+          ...teamData[teamId].generalInfo,
+          ...updates
         }
       });
-    } else {
-      const updatedEvents = [...currentEvents];
-      updatedEvents[eventIndex] = newEvent;
-      handleUpdateTeamData(teamId, {
-        schedule: {
-          ...teamData[teamId].schedule,
-          events: updatedEvents
-        }
-      });
-    }
+    });
   };
 
   const handleUpdateTechVideo = (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
@@ -166,6 +687,153 @@ const AdminDashboard: React.FC = () => {
         nearbyLocations: updatedLocations
       });
     }
+  };
+
+  const handleUpdateSchedulePublished = (teamId: TeamId, isPublished: boolean) => {
+    handleUpdateTeamData(teamId, {
+      schedule: {
+        ...teamData[teamId].schedule,
+        isPublished
+      }
+    });
+  };
+
+  const renderScheduleSection = (
+    teamId: TeamId,
+    section: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
+    title: string
+  ) => {
+    const events = section === 'saturdayPostShow' 
+      ? teamData[teamId]?.schedule?.[section]
+      : teamData[teamId]?.schedule?.[section] || [];
+
+    return (
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        {section === 'saturdayPostShow' ? (
+          <>
+            <div className="mb-4">
+              <h4 className="text-lg mb-2">Placing Teams</h4>
+              {(teamData[teamId]?.schedule?.saturdayPostShow?.placing || []).map((event, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    value={event.time}
+                    onChange={(e) => {
+                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
+                      newPlacing[index] = { ...event, time: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        placing: newPlacing
+                      });
+                    }}
+                    className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <input
+                    value={event.event}
+                    onChange={(e) => {
+                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
+                      newPlacing[index] = { ...event, event: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        placing: newPlacing
+                      });
+                    }}
+                    className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <input
+                    value={event.location}
+                    onChange={(e) => {
+                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
+                      newPlacing[index] = { ...event, location: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        placing: newPlacing
+                      });
+                    }}
+                    className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <h4 className="text-lg mb-2">Non-Placing Teams</h4>
+              {(teamData[teamId]?.schedule?.saturdayPostShow?.nonPlacing || []).map((event, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    value={event.time}
+                    onChange={(e) => {
+                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
+                      newNonPlacing[index] = { ...event, time: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        nonPlacing: newNonPlacing
+                      });
+                    }}
+                    className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <input
+                    value={event.event}
+                    onChange={(e) => {
+                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
+                      newNonPlacing[index] = { ...event, event: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        nonPlacing: newNonPlacing
+                      });
+                    }}
+                    className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <input
+                    value={event.location}
+                    onChange={(e) => {
+                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
+                      newNonPlacing[index] = { ...event, location: e.target.value };
+                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                        ...teamData[teamId].schedule.saturdayPostShow,
+                        nonPlacing: newNonPlacing
+                      });
+                    }}
+                    className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          (events as ScheduleEvent[]).map((event, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                value={event.time}
+                onChange={(e) => {
+                  const newEvents = [...events as ScheduleEvent[]];
+                  newEvents[index] = { ...event, time: e.target.value };
+                  handleUpdateSchedule(teamId, section, newEvents);
+                }}
+                className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+              />
+              <input
+                value={event.event}
+                onChange={(e) => {
+                  const newEvents = [...events as ScheduleEvent[]];
+                  newEvents[index] = { ...event, event: e.target.value };
+                  handleUpdateSchedule(teamId, section, newEvents);
+                }}
+                className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+              />
+              <input
+                value={event.location}
+                onChange={(e) => {
+                  const newEvents = [...events as ScheduleEvent[]];
+                  newEvents[index] = { ...event, location: e.target.value };
+                  handleUpdateSchedule(teamId, section, newEvents);
+                }}
+                className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+              />
+            </div>
+          ))
+        )}
+      </div>
+    );
   };
 
   return (
@@ -248,518 +916,176 @@ const AdminDashboard: React.FC = () => {
             >
               Schedule
             </button>
-            <button
-              onClick={() => setActiveTab('locations')}
-              className={`px-4 py-2 ${
-                activeTab === 'locations'
-                  ? 'border-b-2 border-purple-500'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Locations
-            </button>
           </div>
 
-          <div className="mt-8">
-            {selectedTeams.length === 0 ? (
-              <p className="text-gray-400">Please select one or more teams to manage their information.</p>
-            ) : (
-              <>
-                {activeTab === 'announcements' && (
-                  <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Announcements</h2>
-                    {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-8">
-                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                          {teamData[teamId]?.announcements?.map((announcement) => (
-                            <div key={announcement.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                              <input
-                                type="text"
-                                value={announcement.title}
-                                onChange={(e) => {
-                                  const updatedAnnouncement = {
-                                    ...announcement,
-                                    title: e.target.value
-                                  };
-                                  const currentAnnouncements = teamData[teamId].announcements || [];
-                                  const updatedAnnouncements = currentAnnouncements.map(a =>
-                                    a.id === announcement.id ? updatedAnnouncement : a
-                                  );
-                                  handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
-                                }}
-                                className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2 mb-2"
-                                placeholder="Announcement title..."
-                              />
-                              <textarea
-                                value={announcement.content}
-                                onChange={(e) => {
-                                  const updatedAnnouncement = {
-                                    ...announcement,
-                                    content: e.target.value
-                                  };
-                                  const currentAnnouncements = teamData[teamId].announcements || [];
-                                  const updatedAnnouncements = currentAnnouncements.map(a =>
-                                    a.id === announcement.id ? updatedAnnouncement : a
-                                  );
-                                  handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
-                                }}
-                                className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                placeholder="Announcement content..."
-                              />
-                              <div className="mt-2 flex justify-between items-center">
-                                <span className="text-sm text-gray-400">
-                                  {new Date(announcement.timestamp).toLocaleString()}
-                                </span>
-                                <button
-                                  onClick={() => {
-                                    const updatedAnnouncements = teamData[teamId].announcements.filter(
-                                      a => a.id !== announcement.id
-                                    );
-                                    handleUpdateTeamData(teamId, { announcements: updatedAnnouncements });
-                                  }}
-                                  className="text-red-500 hover:text-red-400"
-                                >
-                                  Remove
-                                </button>
-                              </div>
-                            </div>
+          {activeTab === 'announcements' && (
+            <div className="mt-6">
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-4">New Announcement</h3>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={newAnnouncement.title}
+                    onChange={(e) => setNewAnnouncement(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <textarea
+                    placeholder="Content"
+                    value={newAnnouncement.content}
+                    onChange={(e) => setNewAnnouncement(prev => ({ ...prev, content: e.target.value }))}
+                    className="w-full h-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                  />
+                  <button
+                    onClick={() => {
+                      if (selectedTeams.length > 0 && newAnnouncement.title && newAnnouncement.content) {
+                        handleSendAnnouncement(newAnnouncement.title, newAnnouncement.content, selectedTeams);
+                        setNewAnnouncement({ title: '', content: '' });
+                      }
+                    }}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                    disabled={selectedTeams.length === 0 || !newAnnouncement.title || !newAnnouncement.content}
+                  >
+                    Send to Selected Teams
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'general' && (
+            <div className="mt-6">
+              {selectedTeams.map(teamId => (
+                <div key={teamId} className="mb-8">
+                  <h3 className="text-xl font-semibold mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Practice Area</label>
+                      <input
+                        type="text"
+                        value={teamData[teamId]?.generalInfo?.practiceArea || ''}
+                        onChange={(e) => handleUpdateGeneralInfo({ practiceArea: e.target.value }, [teamId])}
+                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Liaison Contact</label>
+                      <input
+                        type="text"
+                        value={teamData[teamId]?.generalInfo?.liasonContact || ''}
+                        onChange={(e) => handleUpdateGeneralInfo({ liasonContact: e.target.value }, [teamId])}
+                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Special Instructions</label>
+                      <textarea
+                        value={teamData[teamId]?.generalInfo?.specialInstructions || ''}
+                        onChange={(e) => handleUpdateGeneralInfo({ specialInstructions: e.target.value }, [teamId])}
+                        className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Additional Information</label>
+                      <textarea
+                        value={teamData[teamId]?.generalInfo?.additionalInfo || ''}
+                        onChange={(e) => handleUpdateGeneralInfo({ additionalInfo: e.target.value }, [teamId])}
+                        className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'tech' && (
+            <div className="mt-6">
+              {selectedTeams.map(teamId => (
+                <div key={teamId} className="mb-8">
+                  <h3 className="text-xl font-semibold mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Video Title</label>
+                      <input
+                        type="text"
+                        value={teamData[teamId]?.techVideo?.title || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId, {
+                          ...teamData[teamId]?.techVideo,
+                          title: e.target.value
+                        })}
+                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">YouTube URL</label>
+                      <input
+                        type="text"
+                        value={teamData[teamId]?.techVideo?.youtubeUrl || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId, {
+                          ...teamData[teamId]?.techVideo,
+                          youtubeUrl: e.target.value
+                        })}
+                        className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Description</label>
+                      <textarea
+                        value={teamData[teamId]?.techVideo?.description || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId, {
+                          ...teamData[teamId]?.techVideo,
+                          description: e.target.value
+                        })}
+                        className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'schedule' && (
+            <div className="mt-6">
+              {selectedTeams.map(teamId => (
+                <div key={teamId} className="mb-12">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-semibold">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm">Show Order:</label>
+                        <select
+                          value={teamData[teamId]?.schedule?.showOrder || ''}
+                          onChange={(e) => handleUpdateShowOrder(teamId, e.target.value ? parseInt(e.target.value) : null)}
+                          className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                        >
+                          <option value="">Not Assigned</option>
+                          {Array.from({ length: 8 }, (_, i) => i + 1).map(num => (
+                            <option key={num} value={num}>Team {num}</option>
                           ))}
-                          <button
-                            onClick={() => handleAddAnnouncement(teamId)}
-                            className="text-purple-400 hover:text-purple-300"
-                          >
-                            + Add Announcement
-                          </button>
-                        </div>
+                        </select>
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeTab === 'general' && (
-                  <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">General Information</h2>
-                    {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-8">
-                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Practice Area</label>
-                            <input
-                              type="text"
-                              value={teamData[teamId]?.generalInfo?.practiceArea || ''}
-                              onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  generalInfo: {
-                                    ...teamData[teamId]?.generalInfo,
-                                    practiceArea: e.target.value
-                                  }
-                                });
-                              }}
-                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Liaison Contact</label>
-                            <input
-                              type="text"
-                              value={teamData[teamId]?.generalInfo?.liasonContact || ''}
-                              onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  generalInfo: {
-                                    ...teamData[teamId]?.generalInfo,
-                                    liasonContact: e.target.value
-                                  }
-                                });
-                              }}
-                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Special Instructions</label>
-                            <textarea
-                              value={teamData[teamId]?.generalInfo?.specialInstructions || ''}
-                              onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  generalInfo: {
-                                    ...teamData[teamId]?.generalInfo,
-                                    specialInstructions: e.target.value
-                                  }
-                                });
-                              }}
-                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Additional Information</label>
-                            <textarea
-                              value={teamData[teamId]?.generalInfo?.additionalInfo || ''}
-                              onChange={(e) => {
-                                handleUpdateTeamData(teamId, {
-                                  generalInfo: {
-                                    ...teamData[teamId]?.generalInfo,
-                                    additionalInfo: e.target.value
-                                  }
-                                });
-                              }}
-                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm">Published:</label>
+                        <input
+                          type="checkbox"
+                          checked={teamData[teamId]?.schedule?.isPublished || false}
+                          onChange={(e) => handleUpdateSchedulePublished(teamId, e.target.checked)}
+                          className="w-4 h-4"
+                        />
                       </div>
-                    ))}
+                    </div>
                   </div>
-                )}
-
-                {activeTab === 'tech' && (
-                  <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Tech Video</h2>
-                    {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-8">
-                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Video Title</label>
-                            <input
-                              type="text"
-                              value={teamData[teamId]?.techVideo?.title || ''}
-                              onChange={(e) => {
-                                handleUpdateTechVideo(teamId, {
-                                  ...teamData[teamId]?.techVideo,
-                                  title: e.target.value
-                                });
-                              }}
-                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">YouTube URL</label>
-                            <input
-                              type="text"
-                              value={teamData[teamId]?.techVideo?.youtubeUrl || ''}
-                              onChange={(e) => {
-                                handleUpdateTechVideo(teamId, {
-                                  ...teamData[teamId]?.techVideo,
-                                  youtubeUrl: e.target.value
-                                });
-                              }}
-                              className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <label className="block mb-2">Description</label>
-                            <textarea
-                              value={teamData[teamId]?.techVideo?.description || ''}
-                              onChange={(e) => {
-                                handleUpdateTechVideo(teamId, {
-                                  ...teamData[teamId]?.techVideo,
-                                  description: e.target.value
-                                });
-                              }}
-                              className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeTab === 'schedule' && (
-                  <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Schedule</h2>
-                    {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-8">
-                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                          <div className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                            <div className="flex items-center justify-between mb-4">
-                              <div>
-                                <label className="block mb-2">Show Order</label>
-                                <input
-                                  type="number"
-                                  min="1"
-                                  value={teamData[teamId]?.schedule?.showOrder || 1}
-                                  onChange={(e) => {
-                                    handleUpdateTeamData(teamId, {
-                                      schedule: {
-                                        ...teamData[teamId]?.schedule,
-                                        showOrder: parseInt(e.target.value)
-                                      }
-                                    });
-                                  }}
-                                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
-                              </div>
-                              <div className="flex items-center">
-                                <label className="mr-2">Published</label>
-                                <input
-                                  type="checkbox"
-                                  checked={teamData[teamId]?.schedule?.isPublished || false}
-                                  onChange={(e) => {
-                                    handleUpdateTeamData(teamId, {
-                                      schedule: {
-                                        ...teamData[teamId]?.schedule,
-                                        isPublished: e.target.checked
-                                      }
-                                    });
-                                  }}
-                                  className="w-4 h-4"
-                                />
-                              </div>
-                            </div>
-                            {teamData[teamId]?.schedule?.events?.map((event) => (
-                              <div key={event.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg mb-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div>
-                                    <label className="block mb-2">Event Name</label>
-                                    <input
-                                      type="text"
-                                      value={event.name}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          name: e.target.value
-                                        });
-                                      }}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block mb-2">Event Type</label>
-                                    <select
-                                      value={event.type}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          type: e.target.value as TeamInfo['schedule']['events'][0]['type']
-                                        });
-                                      }}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    >
-                                      <option value="Practice">Practice</option>
-                                      <option value="Performance">Performance</option>
-                                      <option value="Meeting">Meeting</option>
-                                      <option value="Other">Other</option>
-                                    </select>
-                                  </div>
-                                  <div>
-                                    <label className="block mb-2">Start Time</label>
-                                    <input
-                                      type="datetime-local"
-                                      value={event.startTime}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          startTime: e.target.value
-                                        });
-                                      }}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block mb-2">End Time</label>
-                                    <input
-                                      type="datetime-local"
-                                      value={event.endTime}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          endTime: e.target.value
-                                        });
-                                      }}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div className="col-span-2">
-                                    <label className="block mb-2">Location</label>
-                                    <input
-                                      type="text"
-                                      value={event.location}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          location: e.target.value
-                                        });
-                                      }}
-                                      className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div className="col-span-2">
-                                    <label className="block mb-2">Notes</label>
-                                    <textarea
-                                      value={event.notes || ''}
-                                      onChange={(e) => {
-                                        handleUpdateSchedule(teamId, {
-                                          ...event,
-                                          notes: e.target.value
-                                        });
-                                      }}
-                                      className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() => {
-                                    const updatedEvents = teamData[teamId].schedule.events.filter(e => e.id !== event.id);
-                                    handleUpdateTeamData(teamId, {
-                                      schedule: {
-                                        ...teamData[teamId].schedule,
-                                        events: updatedEvents
-                                      }
-                                    });
-                                  }}
-                                  className="mt-4 text-red-500 hover:text-red-400"
-                                >
-                                  Remove Event
-                                </button>
-                              </div>
-                            ))}
-                            <button
-                              onClick={() => {
-                                const newEvent = {
-                                  id: Date.now().toString(),
-                                  name: '',
-                                  type: 'Other' as const,
-                                  startTime: new Date().toISOString().slice(0, 16),
-                                  endTime: new Date().toISOString().slice(0, 16),
-                                  location: '',
-                                  notes: ''
-                                };
-                                handleUpdateSchedule(teamId, newEvent);
-                              }}
-                              className="text-purple-400 hover:text-purple-300"
-                            >
-                              + Add Event
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeTab === 'locations' && (
-                  <div>
-                    <h2 className="text-2xl font-['Harry_Potter'] mb-4">Nearby Locations</h2>
-                    {selectedTeams.map((teamId) => (
-                      <div key={teamId} className="mb-8">
-                        <h3 className="text-xl mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                          {teamData[teamId]?.nearbyLocations?.map((location) => (
-                            <div key={location.id} className="p-4 bg-black/40 border border-purple-500/30 rounded-lg">
-                              <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                  <label className="block mb-2">Name</label>
-                                  <input
-                                    type="text"
-                                    value={location.name}
-                                    onChange={(e) => {
-                                      handleUpdateLocation(teamId, {
-                                        ...location,
-                                        name: e.target.value
-                                      });
-                                    }}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block mb-2">Type</label>
-                                  <select
-                                    value={location.type}
-                                    onChange={(e) => {
-                                      handleUpdateLocation(teamId, {
-                                        ...location,
-                                        type: e.target.value as TeamInfo['nearbyLocations'][0]['type']
-                                      });
-                                    }}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  >
-                                    <option value="Food">Food</option>
-                                    <option value="Practice">Practice</option>
-                                    <option value="Hotel">Hotel</option>
-                                    <option value="Emergency">Emergency</option>
-                                    <option value="Other">Other</option>
-                                  </select>
-                                </div>
-                                <div className="col-span-2">
-                                  <label className="block mb-2">Address</label>
-                                  <input
-                                    type="text"
-                                    value={location.address}
-                                    onChange={(e) => {
-                                      handleUpdateLocation(teamId, {
-                                        ...location,
-                                        address: e.target.value
-                                      });
-                                    }}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block mb-2">Distance</label>
-                                  <input
-                                    type="text"
-                                    value={location.distance || ''}
-                                    onChange={(e) => {
-                                      handleUpdateLocation(teamId, {
-                                        ...location,
-                                        distance: e.target.value
-                                      });
-                                    }}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    placeholder="e.g. 0.5 miles"
-                                  />
-                                </div>
-                                <div className="col-span-2">
-                                  <label className="block mb-2">Notes</label>
-                                  <textarea
-                                    value={location.notes || ''}
-                                    onChange={(e) => {
-                                      handleUpdateLocation(teamId, {
-                                        ...location,
-                                        notes: e.target.value
-                                      });
-                                    }}
-                                    className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  const updatedLocations = teamData[teamId].nearbyLocations.filter(l => l.id !== location.id);
-                                  handleUpdateTeamData(teamId, { nearbyLocations: updatedLocations });
-                                }}
-                                className="mt-4 text-red-500 hover:text-red-400"
-                              >
-                                Remove Location
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            onClick={() => {
-                              const newLocation = {
-                                id: Date.now().toString(),
-                                name: '',
-                                address: '',
-                                type: 'Other' as const,
-                                notes: ''
-                              };
-                              handleUpdateLocation(teamId, newLocation);
-                            }}
-                            className="text-purple-400 hover:text-purple-300"
-                          >
-                            + Add Location
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+                  {renderScheduleSection(teamId, 'friday', 'Friday')}
+                  {renderScheduleSection(teamId, 'saturdayTech', 'Saturday Tech Time')}
+                  {renderScheduleSection(teamId, 'saturdayPreShow', 'Saturday Pre-Show')}
+                  {renderScheduleSection(teamId, 'saturdayShow', 'Saturday Show')}
+                  {renderScheduleSection(teamId, 'saturdayPostShow', 'Saturday Post-Show')}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
