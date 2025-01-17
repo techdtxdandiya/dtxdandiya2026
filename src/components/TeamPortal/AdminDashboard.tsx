@@ -616,11 +616,13 @@ const AdminDashboard: React.FC = () => {
           // Create a new team info object with processed announcements
           const processedTeamData: TeamInfo = {
             ...teamData,
-            announcements: Array.isArray(teamData.announcements)
-              ? teamData.announcements
-              : teamData.announcements
-                ? Object.values(teamData.announcements)
+            // Ensure announcements is always an array and sort by timestamp
+            announcements: (Array.isArray(teamData.announcements) 
+              ? teamData.announcements 
+              : teamData.announcements 
+                ? (Object.values(teamData.announcements) as TeamInfo['announcements'])
                 : []
+            ).sort((a, b) => b.timestamp - a.timestamp)
           };
           
           acc[teamId as TeamId] = processedTeamData;
@@ -987,9 +989,7 @@ const AdminDashboard: React.FC = () => {
 
   const renderManageAnnouncementsSection = () => {
     const selectedTeamAnnouncements = selectedTeamForAnnouncements 
-      ? (teamData[selectedTeamForAnnouncements]?.announcements || [])
-          .filter(announcement => announcement && announcement.id) // Filter out any null/invalid announcements
-          .sort((a, b) => b.timestamp - a.timestamp)
+      ? teamData[selectedTeamForAnnouncements]?.announcements || []
       : [];
 
     return (
