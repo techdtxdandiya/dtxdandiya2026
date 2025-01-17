@@ -256,22 +256,47 @@ export default function Dashboard() {
     const unsubscribe = onValue(teamRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        // Ensure schedule has all required fields
-        if (data.schedule) {
-          data.schedule = {
-            showOrder: data.schedule.showOrder || null,
-            isPublished: data.schedule.isPublished || false,
-            friday: data.schedule.friday || [],
-            saturdayTech: data.schedule.saturdayTech || [],
-            saturdayPreShow: data.schedule.saturdayPreShow || [],
-            saturdayShow: data.schedule.saturdayShow || [],
-            saturdayPostShow: {
-              placing: data.schedule.saturdayPostShow?.placing || [],
-              nonPlacing: data.schedule.saturdayPostShow?.nonPlacing || []
+        
+        // Ensure all required fields exist with default values
+        const processedData = {
+          ...data,
+          information: {
+            liaisons: data.information?.liaisons || [],
+            tech: {
+              danceableSpace: data.information?.tech?.danceableSpace || "42' x 28'",
+              backdropSpace: data.information?.tech?.backdropSpace || "4 ft",
+              apronSpace: data.information?.tech?.apronSpace || "4 ft",
+              propsBox: data.information?.tech?.propsBox || "7ft (length) x 5ft (depth) x 10ft (height)",
+              additionalNotes: data.information?.tech?.additionalNotes || "*There will be NO RIGGING this year at Marshall Arts Center*"
+            },
+            venue: {
+              name: data.information?.venue?.name || "Marshall Family Performing Arts Center",
+              address: data.information?.venue?.address || "4141 Spring Valley Rd, Addison, TX 75001",
+              seatingCapacity: data.information?.venue?.seatingCapacity || "600 seat auditorium",
+              additionalNotes: data.information?.venue?.additionalNotes || ""
+            },
+            hotel: {
+              name: data.information?.hotel?.name || "DoubleTree by Hilton Hotel Dallas",
+              address: data.information?.hotel?.address || "4099 Valley View Ln, Dallas, TX 75244",
+              additionalNotes: data.information?.hotel?.additionalNotes || ""
             }
-          };
-        }
-        setTeamInfo(data);
+          },
+          schedule: {
+            showOrder: data.schedule?.showOrder || null,
+            isPublished: data.schedule?.isPublished || false,
+            friday: data.schedule?.friday || [],
+            saturdayTech: data.schedule?.saturdayTech || [],
+            saturdayPreShow: data.schedule?.saturdayPreShow || [],
+            saturdayShow: data.schedule?.saturdayShow || [],
+            saturdayPostShow: {
+              placing: data.schedule?.saturdayPostShow?.placing || [],
+              nonPlacing: data.schedule?.saturdayPostShow?.nonPlacing || []
+            }
+          }
+        };
+        
+        console.log('Processed team data:', processedData);
+        setTeamInfo(processedData);
       }
     });
 

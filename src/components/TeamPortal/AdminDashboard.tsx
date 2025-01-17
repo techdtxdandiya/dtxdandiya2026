@@ -701,14 +701,86 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
+    // Initialize teams if they don't exist
+    const initializeTeams = async () => {
+      try {
+        const teamsRef = ref(db, 'teams');
+        const snapshot = await get(teamsRef);
+        
+        if (!snapshot.exists()) {
+          console.log('Initializing teams data...');
+          const initialData = Object.keys(TEAM_DISPLAY_NAMES).reduce((acc, teamId) => ({
+            ...acc,
+            [teamId]: {
+              displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
+              announcements: [],
+              information: DEFAULT_INFORMATION,
+              techVideo: {
+                title: '',
+                youtubeUrl: '',
+                description: ''
+              },
+              schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]] || INITIAL_SCHEDULES[1],
+              nearbyLocations: []
+            }
+          }), {});
+          
+          await set(teamsRef, initialData);
+          console.log('Teams initialized successfully');
+        } else {
+          // Check and update existing teams
+          const data = snapshot.val();
+          for (const teamId of Object.keys(data)) {
+            const teamRef = ref(db, `teams/${teamId}`);
+            const teamSnapshot = await get(teamRef);
+            const teamData = teamSnapshot.val();
+            
+            // Ensure information exists with default values
+            if (!teamData.information) {
+              await update(teamRef, {
+                information: DEFAULT_INFORMATION
+              });
+            } else {
+              // Update individual sections if they don't exist or are incomplete
+              const updates: Partial<TeamInfo['information']> = {};
+              
+              if (!teamData.information.tech || Object.keys(teamData.information.tech).length < Object.keys(DEFAULT_INFORMATION.tech).length) {
+                updates.tech = DEFAULT_INFORMATION.tech;
+              }
+              if (!teamData.information.venue || Object.keys(teamData.information.venue).length < Object.keys(DEFAULT_INFORMATION.venue).length) {
+                updates.venue = DEFAULT_INFORMATION.venue;
+              }
+              if (!teamData.information.hotel || Object.keys(teamData.information.hotel).length < Object.keys(DEFAULT_INFORMATION.hotel).length) {
+                updates.hotel = DEFAULT_INFORMATION.hotel;
+              }
+              
+              if (Object.keys(updates).length > 0) {
+                await update(ref(db, `teams/${teamId}/information`), updates);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing teams:', error);
+        toast.error('Error initializing data');
+      }
+    };
+
     // Set up Firebase listener
     const teamsRef = ref(db, 'teams');
-    const unsubscribe = onValue(teamsRef, (snapshot) => {
+    const unsubscribe = onValue(teamsRef, async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        // Ensure each team has the default information
+        // Initialize if needed
+        if (!data.information) {
+          await initializeTeams();
+          return;
+        }
+        
+        // Process the data
         const processedData = Object.entries(data).reduce((acc, [teamId, teamData]) => {
           const processedTeamData = teamData as TeamInfo;
+          // Ensure information exists with default values
           if (!processedTeamData.information) {
             processedTeamData.information = DEFAULT_INFORMATION;
           } else {
@@ -729,7 +801,10 @@ const AdminDashboard: React.FC = () => {
           };
         }, {} as Record<TeamId, TeamInfo>);
         
+        console.log('Processed team data:', processedData);
         setTeamData(processedData);
+      } else {
+        await initializeTeams();
       }
     });
 
