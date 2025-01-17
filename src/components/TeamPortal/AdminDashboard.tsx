@@ -610,80 +610,43 @@ const AdminDashboard: React.FC = () => {
     });
 
     const teamsRef = ref(db, 'teams');
-    console.log('Setting up Firebase listener at:', teamsRef);
+    console.log('Setting up Firebase listener at:', teamsRef.toString());
 
     const unsubscribe = onValue(teamsRef, (snapshot) => {
-      console.log('Firebase snapshot received, exists:', snapshot.exists());
+      console.log('Firebase snapshot received:', snapshot.val());
       
       if (snapshot.exists()) {
         const data = snapshot.val();
-        console.log('Raw Firebase data:', JSON.stringify(data, null, 2));
+        console.log('Raw team data structure:', Object.keys(data));
+        Object.entries(data).forEach(([teamId, teamData]) => {
+          console.log(`Team ${teamId} announcements:`, (teamData as any).announcements);
+        });
         
         // Process the data and ensure announcements are arrays
         const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-          console.log(`\nProcessing team ${teamId}:`);
-          console.log('Raw team data:', rawTeamData);
-          
-          // Cast the raw data to our expected type
           const teamData = rawTeamData as TeamInfo;
+          console.log(`Processing ${teamId}:`, teamData);
           
           // Ensure announcements exist and are in the correct format
           let announcements: TeamInfo['announcements'] = [];
           if (teamData.announcements) {
-            console.log('Found announcements:', teamData.announcements);
             if (Array.isArray(teamData.announcements)) {
               announcements = teamData.announcements;
-              console.log('Announcements is already an array');
-            } else if (typeof teamData.announcements === 'object') {
-              announcements = Object.values(teamData.announcements) as TeamInfo['announcements'];
-              console.log('Converted announcements object to array:', announcements);
+              console.log(`${teamId} announcements array:`, announcements);
+            } else {
+              announcements = Object.values(teamData.announcements);
+              console.log(`${teamId} announcements converted from object:`, announcements);
             }
-          } else {
-            console.log('No announcements found for team');
           }
           
-          // Filter out any invalid announcements and sort by timestamp
-          announcements = announcements
-            .filter((announcement): announcement is TeamInfo['announcements'][0] => {
-              const isValid = announcement && 
-                typeof announcement === 'object' && 
-                'id' in announcement &&
-                'title' in announcement &&
-                'content' in announcement &&
-                'timestamp' in announcement;
-              if (!isValid) {
-                console.log('Filtered out invalid announcement:', announcement);
-              }
-              return isValid;
-            })
-            .sort((a, b) => b.timestamp - a.timestamp);
-          
-          console.log('Final processed announcements:', announcements);
-          
-          // Create a new team info object with processed announcements
-          const processedTeamData: TeamInfo = {
-            displayName: teamData.displayName || TEAM_DISPLAY_NAMES[teamId as TeamId],
-            announcements,
-            generalInfo: teamData.generalInfo || {
-              practiceArea: '',
-              liasonContact: '',
-              specialInstructions: '',
-              additionalInfo: ''
-            },
-            techVideo: teamData.techVideo || {
-              title: '',
-              youtubeUrl: '',
-              description: ''
-            },
-            schedule: teamData.schedule || INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]],
-            nearbyLocations: teamData.nearbyLocations || []
+          acc[teamId as TeamId] = {
+            ...teamData,
+            announcements
           };
-          
-          acc[teamId as TeamId] = processedTeamData;
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
         
-        console.log('\nFinal processed team data:', processedData);
+        console.log('Final processed data:', processedData);
         setTeamData(processedData);
       }
     });
@@ -1069,15 +1032,22 @@ const AdminDashboard: React.FC = () => {
   );
 
   const renderManageAnnouncementsSection = () => {
-    console.log('\nRendering manage announcements section');
+    console.log('Rendering manage announcements section');
     console.log('Selected team:', selectedTeamForAnnouncements);
-    console.log('Team data:', teamData);
+    console.log('Team data available:', Object.keys(teamData));
     
+    if (selectedTeamForAnnouncements) {
+      console.log('Selected team data:', teamData[selectedTeamForAnnouncements]);
+      console.log('Selected team announcements:', 
+        teamData[selectedTeamForAnnouncements]?.announcements
+      );
+    }
+
     const selectedTeamAnnouncements = selectedTeamForAnnouncements 
       ? teamData[selectedTeamForAnnouncements]?.announcements || []
       : [];
 
-    console.log('Selected team announcements:', selectedTeamAnnouncements);
+    console.log('Announcements to render:', selectedTeamAnnouncements);
 
     return (
       <div className="space-y-6">
