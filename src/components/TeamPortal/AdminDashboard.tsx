@@ -4,6 +4,9 @@ import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface TeamInfo {
   displayName: string;
@@ -605,12 +608,14 @@ const AdminDashboard: React.FC = () => {
     const unsubscribe = onValue(teamsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        // Ensure announcements array exists for each team
+        // Process the data and ensure announcements are arrays
         const processedData = Object.entries(data).reduce((acc, [teamId, teamData]) => {
-          acc[teamId as TeamId] = {
-            ...teamData as TeamInfo,
-            announcements: (teamData as TeamInfo).announcements || []
-          };
+          const processedTeamData = teamData as TeamInfo;
+          // Convert null or undefined announcements to empty array
+          if (!Array.isArray(processedTeamData.announcements)) {
+            processedTeamData.announcements = [];
+          }
+          acc[teamId as TeamId] = processedTeamData;
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
         setTeamData(processedData);
@@ -979,23 +984,25 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h3 className="text-xl font-semibold text-white">Manage Announcements</h3>
-            <select
-              value={selectedTeamForAnnouncements || ''}
-              onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
-              className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-            >
-              <option value="">Select a team</option>
-              {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
-                <option key={id} value={id}>{name}</option>
-              ))}
-            </select>
+            <div className="w-full sm:w-auto">
+              <select
+                value={selectedTeamForAnnouncements || ''}
+                onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
+                className="w-full sm:w-64 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+              >
+                <option value="">Select a team</option>
+                {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {selectedTeamForAnnouncements ? (
             <div className="space-y-4">
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {selectedTeamAnnouncements.length > 0 ? (
                   selectedTeamAnnouncements.map((announcement, index) => (
                     <motion.div
@@ -1003,12 +1010,24 @@ const AdminDashboard: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
+                      transition={{ duration: 0.2, delay: index * 0.05 }}
+                      className="group bg-black/40 p-4 rounded-lg border border-blue-500/10 hover:border-blue-500/30 transition-colors"
                     >
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
-                        <div className="flex gap-2">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <h4 className="text-lg font-medium text-white mb-2">{announcement.title}</h4>
+                          <p className="text-blue-200/80 whitespace-pre-wrap mb-3">{announcement.content}</p>
+                          <div className="flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
+                            <span>{new Date(announcement.timestamp).toLocaleString()}</span>
+                            {announcement.targetTeams && announcement.targetTeams.length > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => handleEditAnnouncement(announcement)}
                             className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
@@ -1025,27 +1044,28 @@ const AdminDashboard: React.FC = () => {
                           </button>
                         </div>
                       </div>
-                      <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
-                      <div className="mt-2 flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
-                        <span>{new Date(announcement.timestamp).toLocaleString()}</span>
-                        {announcement.targetTeams && announcement.targetTeams.length > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
-                          </>
-                        )}
-                      </div>
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-blue-200/60 text-center py-4">No announcements yet.</p>
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-blue-200/60 text-center py-8"
+                  >
+                    No announcements yet for {TEAM_DISPLAY_NAMES[selectedTeamForAnnouncements]}
+                  </motion.p>
                 )}
               </AnimatePresence>
             </div>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-blue-200/60">Select a team to view and manage their announcements</p>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-12 px-4"
+            >
+              <p className="text-blue-200/60 mb-2">Select a team to view and manage their announcements</p>
+              <p className="text-blue-200/40 text-sm">You can edit, delete, or view the history of announcements for each team</p>
+            </motion.div>
           )}
         </div>
       </div>
@@ -1220,89 +1240,61 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
-      <div className="relative z-10 container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-6">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-['Harry_Potter']">Admin Dashboard</h1>
+          <h1 className="text-4xl font-['Harry_Potter'] text-white">Admin Dashboard</h1>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
           >
             Logout
           </button>
         </div>
 
+        {updateMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-lg text-green-200"
+          >
+            {updateMessage}
+          </motion.div>
+        )}
+
         <div className="mb-8">
-          <h2 className="text-2xl mb-4">Select Teams</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Object.entries(TEAM_DISPLAY_NAMES).map(([teamId, displayName]) => (
+          <div className="flex space-x-4 border-b border-blue-500/30">
+            {['announcements', 'general', 'tech', 'schedule'].map((tab) => (
               <button
-                key={teamId}
-                onClick={() => handleTeamSelect(teamId as TeamId)}
-                className={`p-4 rounded-lg transition-colors ${
-                  selectedTeams.includes(teamId as TeamId)
-                    ? 'bg-purple-600 hover:bg-purple-700'
-                    : 'bg-gray-800 hover:bg-gray-700'
+                key={tab}
+                onClick={() => setActiveTab(tab as typeof activeTab)}
+                className={`px-4 py-2 transition-colors ${
+                  activeTab === tab
+                    ? 'border-b-2 border-blue-500 text-white'
+                    : 'text-blue-200/60 hover:text-white'
                 }`}
               >
-                {displayName}
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </div>
         </div>
 
-        {updateMessage && (
-          <div className="mb-4 p-4 bg-green-600/20 border border-green-500 rounded-lg">
-            {updateMessage}
-          </div>
-        )}
-
-        <div className="mb-8">
-          <div className="flex space-x-4 border-b border-purple-500/30">
-            <button
-              onClick={() => setActiveTab('announcements')}
-              className={`px-4 py-2 ${
-                activeTab === 'announcements'
-                  ? 'border-b-2 border-purple-500'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Announcements
-            </button>
-            <button
-              onClick={() => setActiveTab('general')}
-              className={`px-4 py-2 ${
-                activeTab === 'general'
-                  ? 'border-b-2 border-purple-500'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              General Info
-            </button>
-            <button
-              onClick={() => setActiveTab('tech')}
-              className={`px-4 py-2 ${
-                activeTab === 'tech'
-                  ? 'border-b-2 border-purple-500'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Tech Video
-            </button>
-            <button
-              onClick={() => setActiveTab('schedule')}
-              className={`px-4 py-2 ${
-                activeTab === 'schedule'
-                  ? 'border-b-2 border-purple-500'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Schedule
-            </button>
-          </div>
-
+        <div className="max-w-[1200px] mx-auto">
           {activeTab === 'announcements' && renderAnnouncementsSection()}
-
           {activeTab === 'general' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (
@@ -1348,7 +1340,6 @@ const AdminDashboard: React.FC = () => {
               ))}
             </div>
           )}
-
           {activeTab === 'tech' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (
@@ -1395,7 +1386,6 @@ const AdminDashboard: React.FC = () => {
               ))}
             </div>
           )}
-
           {activeTab === 'schedule' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (
