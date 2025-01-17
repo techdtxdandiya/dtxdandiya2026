@@ -130,10 +130,18 @@ const initializeTeamData = async () => {
           updates.schedule = INITIAL_SCHEDULE;
         } else {
           // Ensure schedule has all required fields
-          const schedule = { ...INITIAL_SCHEDULE };
+          const schedule: Schedule = { ...INITIAL_SCHEDULE };
           (Object.keys(INITIAL_SCHEDULE) as Array<keyof Schedule>).forEach(key => {
-            if (data.schedule?.[key]) {
-              schedule[key] = data.schedule[key] as any;
+            const existingValue = data.schedule?.[key];
+            if (existingValue !== undefined) {
+              if (key === 'saturdayPostShow') {
+                schedule[key] = {
+                  placing: (existingValue as Schedule['saturdayPostShow']).placing || [],
+                  nonPlacing: (existingValue as Schedule['saturdayPostShow']).nonPlacing || []
+                };
+              } else {
+                schedule[key] = existingValue as Schedule[typeof key];
+              }
             }
           });
           updates.schedule = schedule;
