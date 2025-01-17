@@ -604,55 +604,93 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Set up a direct listener for teams data with error handling
-    const teamsRef = ref(db, 'teams');
-    console.log('Setting up Firebase listener at:', teamsRef.toString());
-
-    const unsubscribe = onValue(
-      teamsRef, 
-      (snapshot) => {
-        console.log('Firebase data update received at:', new Date().toISOString());
+    // Initialize teams if they don't exist
+    const initializeTeams = async () => {
+      try {
+        const teamsRef = ref(db, 'teams');
+        const snapshot = await get(teamsRef);
         
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          console.log('Raw Firebase data structure:', Object.keys(data));
-          
-          // Process and set the data
-          const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-            const teamData = rawTeamData as TeamInfo;
-            let announcements: TeamInfo['announcements'] = [];
-            
-            if (teamData.announcements) {
-              announcements = Array.isArray(teamData.announcements) 
-                ? teamData.announcements 
-                : Object.values(teamData.announcements);
-              console.log(`Processed ${teamId} announcements:`, announcements);
+        if (!snapshot.exists()) {
+          console.log('Initializing teams data...');
+          const initialData = Object.keys(TEAM_DISPLAY_NAMES).reduce((acc, teamId) => ({
+            ...acc,
+            [teamId]: {
+              displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
+              announcements: [],
+              generalInfo: {
+                practiceArea: '',
+                liasonContact: '',
+                specialInstructions: '',
+                additionalInfo: ''
+              },
+              techVideo: {
+                title: '',
+                youtubeUrl: '',
+                description: ''
+              },
+              schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]] || INITIAL_SCHEDULES[1],
+              nearbyLocations: []
             }
-
-            acc[teamId as TeamId] = {
-              ...teamData,
-              announcements
-            };
-            return acc;
-          }, {} as Record<TeamId, TeamInfo>);
-
-          console.log('Setting team data in state:', Object.keys(processedData));
-          setTeamData(processedData);
-        } else {
-          console.warn('No data exists in Firebase snapshot');
-          setTeamData({} as Record<TeamId, TeamInfo>);
+          }), {});
+          
+          await set(teamsRef, initialData);
+          console.log('Teams initialized successfully');
         }
-      },
-      (error: { message: string }) => {
-        console.error('Firebase data fetch error:', error);
-        // Handle the error appropriately
-        toast.error('Error accessing data. Please log in again.');
-        // Redirect to login
-        sessionStorage.removeItem('team');
-        navigate('/team-portal/login');
+      } catch (error) {
+        console.error('Error initializing teams:', error);
+        toast.error('Error initializing data');
       }
-    );
+    };
 
+    // Set up Firebase listener
+    const setupFirebaseListener = () => {
+      const teamsRef = ref(db, 'teams');
+      console.log('Setting up Firebase listener at:', teamsRef.toString());
+
+      return onValue(teamsRef, 
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            console.log('Received Firebase data:', Object.keys(data));
+            
+            const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+              const teamData = rawTeamData as TeamInfo;
+              let announcements: TeamInfo['announcements'] = [];
+              
+              if (teamData.announcements) {
+                announcements = Array.isArray(teamData.announcements) 
+                  ? teamData.announcements 
+                  : Object.values(teamData.announcements);
+              }
+
+              acc[teamId as TeamId] = {
+                ...teamData,
+                announcements
+              };
+              return acc;
+            }, {} as Record<TeamId, TeamInfo>);
+
+            setTeamData(processedData);
+          } else {
+            console.log('No data in Firebase, initializing...');
+            initializeTeams();
+          }
+        },
+        (error) => {
+          console.error('Firebase error:', error);
+          if (error.message.includes('permission_denied')) {
+            console.log('Permission denied, attempting to reinitialize...');
+            initializeTeams();
+          } else {
+            toast.error('Error accessing data');
+            sessionStorage.removeItem('team');
+            navigate('/team-portal/login');
+          }
+        }
+      );
+    };
+
+    const unsubscribe = setupFirebaseListener();
     return () => {
       console.log('Cleaning up Firebase listener');
       unsubscribe();
