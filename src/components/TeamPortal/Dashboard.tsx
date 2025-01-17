@@ -114,7 +114,23 @@ export default function Dashboard() {
     const teamRef = ref(db, `teams/${storedTeam}`);
     const unsubscribe = onValue(teamRef, (snapshot) => {
       if (snapshot.exists()) {
-        setTeamInfo(snapshot.val());
+        const data = snapshot.val();
+        // Ensure schedule has all required fields
+        if (data.schedule) {
+          data.schedule = {
+            showOrder: data.schedule.showOrder || null,
+            isPublished: data.schedule.isPublished || false,
+            friday: data.schedule.friday || [],
+            saturdayTech: data.schedule.saturdayTech || [],
+            saturdayPreShow: data.schedule.saturdayPreShow || [],
+            saturdayShow: data.schedule.saturdayShow || [],
+            saturdayPostShow: {
+              placing: data.schedule.saturdayPostShow?.placing || [],
+              nonPlacing: data.schedule.saturdayPostShow?.nonPlacing || []
+            }
+          };
+        }
+        setTeamInfo(data);
       }
     });
 
@@ -297,7 +313,7 @@ export default function Dashboard() {
               <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
               {teamInfo.schedule?.isPublished ? (
                 <div>
-                  {teamInfo.schedule.showOrder && (
+                  {teamInfo.schedule.showOrder !== null && (
                     <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                       <p className="text-xl text-white">Performance Order: Team {teamInfo.schedule.showOrder}</p>
                     </div>
@@ -314,7 +330,7 @@ export default function Dashboard() {
                       <div>
                         <h4 className="text-xl text-blue-200 mb-4">Placing Teams</h4>
                         <div className="space-y-3">
-                          {teamInfo.schedule.saturdayPostShow.placing.map((event, index) => (
+                          {(teamInfo.schedule.saturdayPostShow?.placing || []).map((event, index) => (
                             <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                               <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                                 <div className="text-blue-200 font-medium">{event.time}</div>
@@ -328,7 +344,7 @@ export default function Dashboard() {
                       <div>
                         <h4 className="text-xl text-blue-200 mb-4">Non-Placing Teams</h4>
                         <div className="space-y-3">
-                          {teamInfo.schedule.saturdayPostShow.nonPlacing.map((event, index) => (
+                          {(teamInfo.schedule.saturdayPostShow?.nonPlacing || []).map((event, index) => (
                             <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                               <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                                 <div className="text-blue-200 font-medium">{event.time}</div>

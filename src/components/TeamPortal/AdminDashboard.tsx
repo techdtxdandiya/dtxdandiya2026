@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
-import { ref, onValue, update } from 'firebase/database';
+import { ref, onValue, update, get, set } from 'firebase/database';
 
 interface TeamInfo {
   displayName: string;
@@ -534,6 +534,40 @@ const INITIAL_SCHEDULES: Record<number, TeamInfo['schedule']> = {
   }
 };
 
+const initializeTeamData = async (teamId: TeamId) => {
+  const teamRef = ref(db, `teams/${teamId}`);
+  const snapshot = await get(teamRef);
+  
+  if (!snapshot.exists()) {
+    // Initialize with basic structure
+    await set(teamRef, {
+      displayName: TEAM_DISPLAY_NAMES[teamId],
+      announcements: [],
+      generalInfo: {
+        practiceArea: '',
+        liasonContact: '',
+        specialInstructions: '',
+        additionalInfo: ''
+      },
+      techVideo: {
+        title: '',
+        youtubeUrl: '',
+        description: ''
+      },
+      schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId]] || INITIAL_SCHEDULES[1],
+      nearbyLocations: []
+    });
+  } else {
+    // Ensure schedule exists
+    const data = snapshot.val();
+    if (!data.schedule || Object.keys(data.schedule).length === 0) {
+      await update(teamRef, {
+        schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId]] || INITIAL_SCHEDULES[1]
+      });
+    }
+  }
+};
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'announcements' | 'general' | 'tech' | 'schedule'>('announcements');
@@ -541,15 +575,6 @@ const AdminDashboard: React.FC = () => {
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
-
-  const initializeTeamSchedule = async (teamId: TeamId) => {
-    const currentSchedule = teamData[teamId]?.schedule;
-    if (!currentSchedule || Object.keys(currentSchedule).length === 0) {
-      handleUpdateTeamData(teamId, {
-        schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId]] || INITIAL_SCHEDULES[1]
-      });
-    }
-  };
 
   useEffect(() => {
     const team = sessionStorage.getItem('team');
@@ -564,11 +589,9 @@ const AdminDashboard: React.FC = () => {
         const data = snapshot.val();
         setTeamData(data);
         
-        // Initialize schedules for teams that don't have them
+        // Initialize data for all teams
         Object.keys(TEAM_DISPLAY_NAMES).forEach((teamId) => {
-          if (!data[teamId]?.schedule || Object.keys(data[teamId]?.schedule).length === 0) {
-            initializeTeamSchedule(teamId as TeamId);
-          }
+          initializeTeamData(teamId as TeamId);
         });
       }
     });
@@ -623,21 +646,13 @@ const AdminDashboard: React.FC = () => {
     scheduleSection: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
     data: ScheduleEvent[] | { placing: ScheduleEvent[]; nonPlacing: ScheduleEvent[] }
   ) => {
-    handleUpdateTeamData(teamId, {
-      schedule: {
-        ...teamData[teamId].schedule,
-        [scheduleSection]: data
-      }
-    });
+    const teamRef = ref(db, `teams/${teamId}/schedule/${scheduleSection}`);
+    update(teamRef, data);
   };
 
   const handleUpdateShowOrder = (teamId: TeamId, order: number | null) => {
-    handleUpdateTeamData(teamId, {
-      schedule: {
-        ...teamData[teamId].schedule,
-        showOrder: order
-      }
-    });
+    const teamRef = ref(db, `teams/${teamId}/schedule/showOrder`);
+    set(teamRef, order);
   };
 
   const handleSendAnnouncement = (title: string, content: string, targetTeams: TeamId[]) => {
@@ -650,26 +665,24 @@ const AdminDashboard: React.FC = () => {
     };
 
     targetTeams.forEach(teamId => {
-      const currentAnnouncements = teamData[teamId].announcements || [];
-      handleUpdateTeamData(teamId, {
-        announcements: [...currentAnnouncements, newAnnouncement]
+      const teamRef = ref(db, `teams/${teamId}/announcements`);
+      get(teamRef).then((snapshot) => {
+        const currentAnnouncements = snapshot.exists() ? snapshot.val() : [];
+        update(teamRef, [...currentAnnouncements, newAnnouncement]);
       });
     });
   };
 
   const handleUpdateGeneralInfo = (updates: Partial<TeamInfo['generalInfo']>, targetTeams: TeamId[]) => {
     targetTeams.forEach(teamId => {
-      handleUpdateTeamData(teamId, {
-        generalInfo: {
-          ...teamData[teamId].generalInfo,
-          ...updates
-        }
-      });
+      const teamRef = ref(db, `teams/${teamId}/generalInfo`);
+      update(teamRef, updates);
     });
   };
 
   const handleUpdateTechVideo = (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
-    handleUpdateTeamData(teamId, { techVideo: videoData });
+    const teamRef = ref(db, `teams/${teamId}/techVideo`);
+    set(teamRef, videoData);
   };
 
   const handleUpdateLocation = (teamId: TeamId, location: TeamInfo['nearbyLocations'][0]) => {
@@ -690,12 +703,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleUpdateSchedulePublished = (teamId: TeamId, isPublished: boolean) => {
-    handleUpdateTeamData(teamId, {
-      schedule: {
-        ...teamData[teamId].schedule,
-        isPublished
-      }
-    });
+    const teamRef = ref(db, `teams/${teamId}/schedule/isPublished`);
+    set(teamRef, isPublished);
   };
 
   const renderScheduleSection = (
