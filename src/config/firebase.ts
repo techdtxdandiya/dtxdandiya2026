@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import { getDatabase, connectDatabaseEmulator } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -13,11 +13,31 @@ const firebaseConfig = {
   databaseURL: "https://dtx-dandiya-70009-default-rtdb.firebaseio.com"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app;
+let database;
+let analyticsInstance;
 
-// Initialize Analytics
-export const analytics = getAnalytics(app);
+try {
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+  
+  // Initialize Realtime Database
+  database = getDatabase(app);
+  
+  // Initialize Analytics only in browser environment
+  if (typeof window !== 'undefined') {
+    analyticsInstance = getAnalytics(app);
+  }
 
-// Get database instance
-export const db = getDatabase(app); 
+  // Connect to emulator in development
+  if (process.env.NODE_ENV === 'development') {
+    connectDatabaseEmulator(database, 'localhost', 9000);
+  }
+} catch (error) {
+  console.error('Error initializing Firebase:', error);
+  throw error;
+}
+
+// Export instances
+export const db = database;
+export const analytics = analyticsInstance; 

@@ -4,14 +4,9 @@
       "$teamId": {
         // Allow read access to existing team data
         ".read": true,
-        // Only allow write access from admin
-        ".write": "auth === null"
+        // Allow write access to admin
+        ".write": "auth != null && auth.token.admin === true"
       }
-    },
-    // Admin has full access to all data
-    "admin": {
-      ".read": "auth === null",
-      ".write": "auth === null"
     }
   }
 } 

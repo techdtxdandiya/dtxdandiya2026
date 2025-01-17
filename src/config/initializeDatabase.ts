@@ -1,4 +1,4 @@
-import { ref, set } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import { db } from './firebase';
 
 const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berkeley', 'msu'] as const;
@@ -14,44 +14,94 @@ const TEAM_DISPLAY_NAMES: Record<typeof TEAM_IDS[number], string> = {
   msu: 'MSU RaaSparty'
 };
 
+const INITIAL_SCHEDULE = {
+  showOrder: null,
+  isPublished: false,
+  friday: [],
+  saturdayTech: [],
+  saturdayPreShow: [],
+  saturdayShow: [],
+  saturdayPostShow: {
+    placing: [],
+    nonPlacing: []
+  }
+};
+
 const initializeTeamData = async () => {
   try {
     for (const teamId of TEAM_IDS) {
       const teamRef = ref(db, `teams/${teamId}`);
-      await set(teamRef, {
-        displayName: TEAM_DISPLAY_NAMES[teamId],
-        announcements: [
-          {
-            id: '1',
-            title: 'Welcome to DTX Dandiya 2024!',
-            content: 'Welcome to your team portal. More information will be added soon.',
-            timestamp: Date.now()
-          }
-        ],
-        generalInfo: {
-          practiceArea: 'To be announced',
-          liasonContact: 'To be announced',
-          specialInstructions: 'Please check back later for special instructions.',
-          additionalInfo: ''
-        },
-        techVideo: {
-          title: '',
-          youtubeUrl: '',
-          description: ''
-        },
-        schedule: {
-          showOrder: 1,
-          isPublished: false,
-          events: []
-        },
-        nearbyLocations: []
-      });
+      const snapshot = await get(teamRef);
+      
+      if (!snapshot.exists()) {
+        // Initialize new team data
+        await set(teamRef, {
+          displayName: TEAM_DISPLAY_NAMES[teamId],
+          announcements: [],
+          generalInfo: {
+            practiceArea: '',
+            liasonContact: '',
+            specialInstructions: '',
+            additionalInfo: ''
+          },
+          techVideo: {
+            title: '',
+            youtubeUrl: '',
+            description: ''
+          },
+          schedule: INITIAL_SCHEDULE,
+          nearbyLocations: []
+        });
+        console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
+      } else {
+        // Update existing team data structure if needed
+        const data = snapshot.val();
+        const updates: any = {};
+        
+        // Ensure all required fields exist
+        if (!data.announcements) updates.announcements = [];
+        if (!data.generalInfo) {
+          updates.generalInfo = {
+            practiceArea: '',
+            liasonContact: '',
+            specialInstructions: '',
+            additionalInfo: ''
+          };
+        }
+        if (!data.techVideo) {
+          updates.techVideo = {
+            title: '',
+            youtubeUrl: '',
+            description: ''
+          };
+        }
+        if (!data.schedule) {
+          updates.schedule = INITIAL_SCHEDULE;
+        } else {
+          // Ensure schedule has all required fields
+          const schedule = { ...INITIAL_SCHEDULE };
+          Object.keys(INITIAL_SCHEDULE).forEach(key => {
+            if (data.schedule[key]) {
+              schedule[key] = data.schedule[key];
+            }
+          });
+          updates.schedule = schedule;
+        }
+        if (!data.nearbyLocations) updates.nearbyLocations = [];
+        
+        // Apply updates if needed
+        if (Object.keys(updates).length > 0) {
+          await set(teamRef, { ...data, ...updates });
+          console.log(`Updated data structure for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
+        }
+      }
     }
-    console.log('Database initialized successfully!');
+    console.log('Database initialization completed successfully!');
   } catch (error) {
     console.error('Error initializing database:', error);
+    throw error;
   }
 };
 
 // Run the initialization
-initializeTeamData(); 
+initializeTeamData().catch(console.error); 

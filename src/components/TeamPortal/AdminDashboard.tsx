@@ -617,7 +617,9 @@ const AdminDashboard: React.FC = () => {
   const handleUpdateTeamData = async (teamId: TeamId, updates: Partial<TeamInfo>) => {
     try {
       const teamRef = ref(db, `teams/${teamId}`);
-      await update(teamRef, updates);
+      const snapshot = await get(teamRef);
+      const currentData = snapshot.val() || {};
+      await set(teamRef, { ...currentData, ...updates });
       setUpdateMessage('Updates saved successfully!');
       setTimeout(() => setUpdateMessage(''), 3000);
     } catch (error) {
@@ -641,21 +643,47 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
-  const handleUpdateSchedule = (
+  const handleUpdateSchedule = async (
     teamId: TeamId,
     scheduleSection: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
     data: ScheduleEvent[] | { placing: ScheduleEvent[]; nonPlacing: ScheduleEvent[] }
   ) => {
-    const teamRef = ref(db, `teams/${teamId}/schedule/${scheduleSection}`);
-    update(teamRef, data);
+    try {
+      const teamRef = ref(db, `teams/${teamId}/schedule`);
+      const snapshot = await get(teamRef);
+      const currentSchedule = snapshot.val() || {};
+      await set(teamRef, {
+        ...currentSchedule,
+        [scheduleSection]: data
+      });
+      setUpdateMessage('Schedule updated successfully!');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating schedule:', error);
+      setUpdateMessage('Error updating schedule. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
-  const handleUpdateShowOrder = (teamId: TeamId, order: number | null) => {
-    const teamRef = ref(db, `teams/${teamId}/schedule/showOrder`);
-    set(teamRef, order);
+  const handleUpdateShowOrder = async (teamId: TeamId, order: number | null) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/schedule`);
+      const snapshot = await get(teamRef);
+      const currentSchedule = snapshot.val() || {};
+      await set(teamRef, {
+        ...currentSchedule,
+        showOrder: order
+      });
+      setUpdateMessage('Show order updated successfully!');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating show order:', error);
+      setUpdateMessage('Error updating show order. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
-  const handleSendAnnouncement = (title: string, content: string, targetTeams: TeamId[]) => {
+  const handleSendAnnouncement = async (title: string, content: string, targetTeams: TeamId[]) => {
     const newAnnouncement = {
       id: Date.now().toString(),
       title,
@@ -664,25 +692,50 @@ const AdminDashboard: React.FC = () => {
       targetTeams
     };
 
-    targetTeams.forEach(teamId => {
-      const teamRef = ref(db, `teams/${teamId}/announcements`);
-      get(teamRef).then((snapshot) => {
-        const currentAnnouncements = snapshot.exists() ? snapshot.val() : [];
-        update(teamRef, [...currentAnnouncements, newAnnouncement]);
-      });
-    });
+    try {
+      await Promise.all(targetTeams.map(async teamId => {
+        const teamRef = ref(db, `teams/${teamId}/announcements`);
+        const snapshot = await get(teamRef);
+        const currentAnnouncements = snapshot.val() || [];
+        await set(teamRef, [...currentAnnouncements, newAnnouncement]);
+      }));
+      setUpdateMessage('Announcement sent successfully!');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error sending announcement:', error);
+      setUpdateMessage('Error sending announcement. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
-  const handleUpdateGeneralInfo = (updates: Partial<TeamInfo['generalInfo']>, targetTeams: TeamId[]) => {
-    targetTeams.forEach(teamId => {
-      const teamRef = ref(db, `teams/${teamId}/generalInfo`);
-      update(teamRef, updates);
-    });
+  const handleUpdateGeneralInfo = async (updates: Partial<TeamInfo['generalInfo']>, targetTeams: TeamId[]) => {
+    try {
+      await Promise.all(targetTeams.map(async teamId => {
+        const teamRef = ref(db, `teams/${teamId}/generalInfo`);
+        const snapshot = await get(teamRef);
+        const currentInfo = snapshot.val() || {};
+        await set(teamRef, { ...currentInfo, ...updates });
+      }));
+      setUpdateMessage('General info updated successfully!');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating general info:', error);
+      setUpdateMessage('Error updating general info. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
-  const handleUpdateTechVideo = (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
-    const teamRef = ref(db, `teams/${teamId}/techVideo`);
-    set(teamRef, videoData);
+  const handleUpdateTechVideo = async (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/techVideo`);
+      await set(teamRef, videoData);
+      setUpdateMessage('Tech video updated successfully!');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating tech video:', error);
+      setUpdateMessage('Error updating tech video. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
   const handleUpdateLocation = (teamId: TeamId, location: TeamInfo['nearbyLocations'][0]) => {
@@ -702,9 +755,22 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleUpdateSchedulePublished = (teamId: TeamId, isPublished: boolean) => {
-    const teamRef = ref(db, `teams/${teamId}/schedule/isPublished`);
-    set(teamRef, isPublished);
+  const handleUpdateSchedulePublished = async (teamId: TeamId, isPublished: boolean) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/schedule`);
+      const snapshot = await get(teamRef);
+      const currentSchedule = snapshot.val() || {};
+      await set(teamRef, {
+        ...currentSchedule,
+        isPublished
+      });
+      setUpdateMessage(`Schedule ${isPublished ? 'published' : 'unpublished'} successfully!`);
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating schedule published status:', error);
+      setUpdateMessage('Error updating schedule status. Please try again.');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
   const renderScheduleSection = (
