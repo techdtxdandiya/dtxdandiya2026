@@ -609,15 +609,24 @@ const AdminDashboard: React.FC = () => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         // Process the data and ensure announcements are arrays
-        const processedData = Object.entries(data).reduce((acc, [teamId, teamData]) => {
-          const processedTeamData = teamData as TeamInfo;
-          // Convert null or undefined announcements to empty array
-          if (!Array.isArray(processedTeamData.announcements)) {
-            processedTeamData.announcements = [];
-          }
+        const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+          // Cast the raw data to our expected type
+          const teamData = rawTeamData as TeamInfo;
+          
+          // Create a new team info object with processed announcements
+          const processedTeamData: TeamInfo = {
+            ...teamData,
+            announcements: Array.isArray(teamData.announcements)
+              ? teamData.announcements
+              : teamData.announcements
+                ? Object.values(teamData.announcements)
+                : []
+          };
+          
           acc[teamId as TeamId] = processedTeamData;
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
+        
         setTeamData(processedData);
       }
     });
@@ -978,7 +987,9 @@ const AdminDashboard: React.FC = () => {
 
   const renderManageAnnouncementsSection = () => {
     const selectedTeamAnnouncements = selectedTeamForAnnouncements 
-      ? (teamData[selectedTeamForAnnouncements]?.announcements || []).sort((a, b) => b.timestamp - a.timestamp)
+      ? (teamData[selectedTeamForAnnouncements]?.announcements || [])
+          .filter(announcement => announcement && announcement.id) // Filter out any null/invalid announcements
+          .sort((a, b) => b.timestamp - a.timestamp)
       : [];
 
     return (
