@@ -604,77 +604,59 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Initialize teams if they don't exist
-    const initializeAllTeams = async () => {
-      console.log('Initializing all teams...');
-      await Promise.all(Object.keys(TEAM_DISPLAY_NAMES).map(async (teamId) => {
-        const teamRef = ref(db, `teams/${teamId}`);
-        const snapshot = await get(teamRef);
+    const teamsRef = ref(db, 'teams');
+    console.log('Setting up Firebase listener at:', teamsRef.toString());
+
+    const unsubscribe = onValue(teamsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        console.log('Raw Firebase data:', data);
         
-        if (!snapshot.exists()) {
-          console.log(`Initializing team ${teamId}`);
-          await set(teamRef, {
-            displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
-            announcements: [],
-            generalInfo: {
+        // Process the data and ensure announcements are arrays
+        const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+          const teamData = rawTeamData as TeamInfo;
+          console.log(`Processing team ${teamId}:`, teamData);
+          
+          // Initialize announcements as an empty array if it doesn't exist
+          let announcements: TeamInfo['announcements'] = [];
+          
+          // Check if announcements exist and process them
+          if (teamData.announcements) {
+            if (Array.isArray(teamData.announcements)) {
+              announcements = teamData.announcements;
+            } else if (typeof teamData.announcements === 'object') {
+              // Convert object to array if it's an object
+              announcements = Object.values(teamData.announcements);
+            }
+            console.log(`Team ${teamId} announcements:`, announcements);
+          }
+
+          // Create the processed team data
+          acc[teamId as TeamId] = {
+            displayName: teamData.displayName || TEAM_DISPLAY_NAMES[teamId as TeamId],
+            announcements,
+            generalInfo: teamData.generalInfo || {
               practiceArea: '',
               liasonContact: '',
               specialInstructions: '',
               additionalInfo: ''
             },
-            techVideo: {
+            techVideo: teamData.techVideo || {
               title: '',
               youtubeUrl: '',
               description: ''
             },
-            schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]] || INITIAL_SCHEDULES[1],
-            nearbyLocations: []
-          });
-        } else {
-          console.log(`Team ${teamId} already exists`);
-        }
-      }));
-      console.log('Team initialization complete');
-    };
-
-    initializeAllTeams();
-
-    const teamsRef = ref(db, 'teams');
-    console.log('Setting up Firebase listener at:', teamsRef.toString());
-
-    const unsubscribe = onValue(teamsRef, (snapshot) => {
-      console.log('Firebase snapshot received:', snapshot.val());
-      
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        console.log('Raw team data structure:', Object.keys(data));
-        
-        // Process the data and ensure announcements are arrays
-        const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-          const teamData = rawTeamData as TeamInfo;
-          console.log(`Processing ${teamId}:`, teamData);
-          
-          // Ensure announcements exist and are in the correct format
-          let announcements: TeamInfo['announcements'] = [];
-          if (teamData.announcements) {
-            if (Array.isArray(teamData.announcements)) {
-              announcements = teamData.announcements;
-            } else {
-              announcements = Object.values(teamData.announcements);
-            }
-          }
-          
-          acc[teamId as TeamId] = {
-            ...teamData,
-            announcements
+            schedule: teamData.schedule || INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]],
+            nearbyLocations: teamData.nearbyLocations || []
           };
+          
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
         
         console.log('Final processed data:', processedData);
         setTeamData(processedData);
       } else {
-        console.log('No teams data found in Firebase');
+        console.log('No data exists in Firebase');
       }
     });
 
@@ -795,6 +777,8 @@ const AdminDashboard: React.FC = () => {
         if (snapshot.exists()) {
           const teamData = snapshot.val();
           let currentAnnouncements = teamData.announcements || [];
+          
+          // Ensure currentAnnouncements is an array
           if (!Array.isArray(currentAnnouncements)) {
             currentAnnouncements = Object.values(currentAnnouncements);
           }
@@ -804,11 +788,12 @@ const AdminDashboard: React.FC = () => {
             ? currentAnnouncements.filter((a: any) => a.id !== announcementForm.id)
             : currentAnnouncements;
           
-          console.log(`Updating announcements for team ${teamId}:`, [...filteredAnnouncements, newAnnouncement]);
+          const updatedAnnouncements = [...filteredAnnouncements, newAnnouncement];
+          console.log(`Updating announcements for team ${teamId}:`, updatedAnnouncements);
           
           await set(teamRef, {
             ...teamData,
-            announcements: [...filteredAnnouncements, newAnnouncement]
+            announcements: updatedAnnouncements
           });
         }
       }));
