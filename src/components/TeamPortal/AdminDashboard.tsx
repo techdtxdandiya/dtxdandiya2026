@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
-import { FiEdit2, FiTrash2, FiSend, FiAlertCircle } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TeamInfo {
@@ -590,6 +590,9 @@ const AdminDashboard: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeAnnouncementTab, setActiveAnnouncementTab] = useState<'new' | 'manage'>('new');
+  const [selectedTeamForAnnouncements, setSelectedTeamForAnnouncements] = useState<TeamId | null>(null);
+  const [previewMode, setPreviewMode] = useState(false);
 
   useEffect(() => {
     const team = sessionStorage.getItem('team');
@@ -736,6 +739,7 @@ const AdminDashboard: React.FC = () => {
 
       setUpdateMessage('Announcement sent successfully!');
       setAnnouncementForm({ title: '', content: '' });
+      setSelectedTeams([]);
       setTimeout(() => setUpdateMessage(''), 3000);
     } catch (error) {
       console.error('Error sending announcement:', error);
@@ -835,126 +839,225 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const renderAnnouncementsSection = () => {
-    const selectedTeamAnnouncements = selectedTeams.length === 1 
-      ? teamData[selectedTeams[0]]?.announcements || []
-      : [];
-
-    return (
-      <div className="space-y-6">
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <h3 className="text-xl font-semibold text-white mb-4">
-            {announcementForm.isEditing ? 'Edit Announcement' : 'New Announcement'}
-          </h3>
+  const renderNewAnnouncementSection = () => (
+    <div className="space-y-6">
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+        <h3 className="text-xl font-semibold text-white mb-4">New Announcement</h3>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-blue-300 mb-1">Title</label>
+            <input
+              type="text"
+              placeholder="Enter announcement title"
+              value={announcementForm.title}
+              onChange={(e) => setAnnouncementForm(prev => ({ ...prev, title: e.target.value }))}
+              className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+            />
+          </div>
           
-          <div className="space-y-4">
-            <div>
-              <input
-                type="text"
-                placeholder="Announcement Title"
-                value={announcementForm.title}
-                onChange={(e) => setAnnouncementForm(prev => ({ ...prev, title: e.target.value }))}
-                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-              />
-            </div>
-            
-            <div>
-              <textarea
-                placeholder="Announcement Content"
-                value={announcementForm.content}
-                onChange={(e) => setAnnouncementForm(prev => ({ ...prev, content: e.target.value }))}
-                rows={4}
-                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-blue-300 mb-1">Content</label>
+            <textarea
+              placeholder="Enter announcement content"
+              value={announcementForm.content}
+              onChange={(e) => setAnnouncementForm(prev => ({ ...prev, content: e.target.value }))}
+              rows={4}
+              className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
+            />
+          </div>
 
-            {errorMessage && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg"
-              >
-                <FiAlertCircle />
-                <span>{errorMessage}</span>
-              </motion.div>
-            )}
+          <div>
+            <label className="block text-sm font-medium text-blue-300 mb-2">Select Teams</label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {Object.entries(TEAM_DISPLAY_NAMES).map(([teamId, name]) => (
+                <button
+                  key={teamId}
+                  onClick={() => handleTeamSelect(teamId as TeamId)}
+                  className={`flex items-center justify-between p-3 rounded-lg text-left transition-colors ${
+                    selectedTeams.includes(teamId as TeamId)
+                      ? 'bg-blue-500/20 text-white border-2 border-blue-500'
+                      : 'text-blue-200/60 border border-blue-500/20 hover:bg-blue-500/10'
+                  }`}
+                >
+                  <span className="truncate">{name}</span>
+                  {selectedTeams.includes(teamId as TeamId) && (
+                    <FiCheck className="text-blue-400 ml-2 flex-shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            <div className="flex justify-between items-center">
+          {errorMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg"
+            >
+              <FiAlertCircle />
+              <span>{errorMessage}</span>
+            </motion.div>
+          )}
+
+          <div className="flex justify-between items-center pt-4 border-t border-blue-500/20">
+            <div className="flex gap-2">
               <button
                 onClick={() => {
                   setAnnouncementForm({ title: '', content: '' });
+                  setSelectedTeams([]);
                   setErrorMessage('');
                 }}
                 className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
               >
-                Clear
+                Clear All
               </button>
-              
               <button
-                onClick={handleSendAnnouncement}
-                disabled={isSubmitting}
-                className={`flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+                onClick={() => setPreviewMode(!previewMode)}
+                className={`flex items-center gap-2 px-4 py-2 ${
+                  previewMode 
+                    ? 'bg-blue-500/20 text-blue-300' 
+                    : 'bg-gray-800 hover:bg-gray-700 text-white'
+                } rounded-lg transition-colors`}
               >
-                <FiSend />
-                {isSubmitting ? 'Sending...' : announcementForm.isEditing ? 'Update' : 'Send to Selected Teams'}
+                <FiEye />
+                Preview
               </button>
             </div>
+            
+            <button
+              onClick={handleSendAnnouncement}
+              disabled={isSubmitting}
+              className={`flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <FiSend />
+              {isSubmitting ? 'Sending...' : 'Send Announcement'}
+            </button>
           </div>
         </div>
 
-        {selectedTeams.length === 1 && (
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Current Announcements for {teamData[selectedTeams[0]]?.displayName}
-            </h3>
-            
-            <div className="space-y-4">
-              <AnimatePresence>
-                {selectedTeamAnnouncements.length > 0 ? (
-                  selectedTeamAnnouncements.map((announcement, index) => (
-                    <motion.div
-                      key={announcement.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEditAnnouncement(announcement)}
-                            className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
-                          >
-                            <FiEdit2 className="text-blue-400" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeams[0])}
-                            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
-                          >
-                            <FiTrash2 className="text-red-400" />
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
-                      <div className="mt-2 text-sm text-blue-300/60">
-                        {new Date(announcement.timestamp).toLocaleString()}
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <p className="text-blue-200/60">No announcements yet.</p>
-                )}
-              </AnimatePresence>
+        {previewMode && announcementForm.title && announcementForm.content && (
+          <div className="mt-6 border-t border-blue-500/20 pt-6">
+            <h4 className="text-lg font-medium text-blue-300 mb-4">Preview</h4>
+            <div className="bg-black/40 p-4 rounded-lg border border-blue-500/10">
+              <h5 className="text-lg font-medium text-white mb-2">{announcementForm.title}</h5>
+              <p className="text-blue-200/80 whitespace-pre-wrap">{announcementForm.content}</p>
+              <div className="mt-4 text-sm text-blue-300/60">
+                Will be sent to: {selectedTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}
+              </div>
             </div>
           </div>
         )}
       </div>
-    );
-  };
+    </div>
+  );
+
+  const renderManageAnnouncementsSection = () => (
+    <div className="space-y-6">
+      <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-semibold text-white">Manage Announcements</h3>
+          <select
+            value={selectedTeamForAnnouncements || ''}
+            onChange={(e) => setSelectedTeamForAnnouncements(e.target.value as TeamId)}
+            className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+          >
+            <option value="">Select a team</option>
+            {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
+              <option key={id} value={id}>{name}</option>
+            ))}
+          </select>
+        </div>
+
+        {selectedTeamForAnnouncements ? (
+          <div className="space-y-4">
+            <AnimatePresence>
+              {teamData[selectedTeamForAnnouncements]?.announcements?.length > 0 ? (
+                teamData[selectedTeamForAnnouncements].announcements.map((announcement, index) => (
+                  <motion.div
+                    key={announcement.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-black/40 p-4 rounded-lg border border-blue-500/10"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="text-lg font-medium text-white">{announcement.title}</h4>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            handleEditAnnouncement(announcement);
+                            setActiveAnnouncementTab('new');
+                          }}
+                          className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                        >
+                          <FiEdit2 className="text-blue-400" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements)}
+                          className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                        >
+                          <FiTrash2 className="text-red-400" />
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-blue-200/80 whitespace-pre-wrap">{announcement.content}</p>
+                    <div className="mt-2 flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
+                      <span>{new Date(announcement.timestamp).toLocaleString()}</span>
+                      {announcement.targetTeams && announcement.targetTeams.length > 0 && (
+                        <>
+                          <span>•</span>
+                          <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-blue-200/60">No announcements yet.</p>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-blue-200/60">Select a team to view and manage their announcements</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderAnnouncementsSection = () => (
+    <div className="space-y-6">
+      <div className="flex space-x-4 mb-6">
+        <button
+          onClick={() => setActiveAnnouncementTab('new')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeAnnouncementTab === 'new'
+              ? 'bg-blue-500/20 text-white'
+              : 'text-blue-200/60 hover:bg-blue-500/10'
+          }`}
+        >
+          New Announcement
+        </button>
+        <button
+          onClick={() => setActiveAnnouncementTab('manage')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeAnnouncementTab === 'manage'
+              ? 'bg-blue-500/20 text-white'
+              : 'text-blue-200/60 hover:bg-blue-500/10'
+          }`}
+        >
+          Manage Announcements
+        </button>
+      </div>
+
+      {activeAnnouncementTab === 'new' ? renderNewAnnouncementSection() : renderManageAnnouncementsSection()}
+    </div>
+  );
 
   const renderScheduleSection = (
     teamId: TeamId,
