@@ -604,58 +604,54 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Set up a direct listener for teams data
+    // Set up a direct listener for teams data with error handling
     const teamsRef = ref(db, 'teams');
     console.log('Setting up Firebase listener at:', teamsRef.toString());
 
-    const unsubscribe = onValue(teamsRef, (snapshot) => {
-      console.log('Firebase data update received at:', new Date().toISOString());
-      
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        console.log('Raw Firebase data structure:', Object.keys(data));
+    const unsubscribe = onValue(
+      teamsRef, 
+      (snapshot) => {
+        console.log('Firebase data update received at:', new Date().toISOString());
         
-        // Log each team's data with proper type casting
-        Object.entries(data).forEach(([teamId, rawTeamData]) => {
-          const teamData = rawTeamData as TeamInfo;
-          console.log(`Team ${teamId} data:`, {
-            displayName: teamData.displayName,
-            hasAnnouncements: !!teamData.announcements,
-            announcementCount: teamData.announcements ? 
-              (Array.isArray(teamData.announcements) ? 
-                teamData.announcements.length : 
-                Object.keys(teamData.announcements).length) : 0
-          });
-        });
-
-        // Process and set the data
-        const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-          const teamData = rawTeamData as TeamInfo;
-          let announcements: TeamInfo['announcements'] = [];
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          console.log('Raw Firebase data structure:', Object.keys(data));
           
-          if (teamData.announcements) {
-            announcements = Array.isArray(teamData.announcements) 
-              ? teamData.announcements 
-              : Object.values(teamData.announcements);
-            console.log(`Processed ${teamId} announcements:`, announcements);
-          }
+          // Process and set the data
+          const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
+            const teamData = rawTeamData as TeamInfo;
+            let announcements: TeamInfo['announcements'] = [];
+            
+            if (teamData.announcements) {
+              announcements = Array.isArray(teamData.announcements) 
+                ? teamData.announcements 
+                : Object.values(teamData.announcements);
+              console.log(`Processed ${teamId} announcements:`, announcements);
+            }
 
-          acc[teamId as TeamId] = {
-            ...teamData,
-            announcements
-          };
-          return acc;
-        }, {} as Record<TeamId, TeamInfo>);
+            acc[teamId as TeamId] = {
+              ...teamData,
+              announcements
+            };
+            return acc;
+          }, {} as Record<TeamId, TeamInfo>);
 
-        console.log('Setting team data in state:', Object.keys(processedData));
-        setTeamData(processedData);
-      } else {
-        console.warn('No data exists in Firebase snapshot');
-        setTeamData({} as Record<TeamId, TeamInfo>);
+          console.log('Setting team data in state:', Object.keys(processedData));
+          setTeamData(processedData);
+        } else {
+          console.warn('No data exists in Firebase snapshot');
+          setTeamData({} as Record<TeamId, TeamInfo>);
+        }
+      },
+      (error: { message: string }) => {
+        console.error('Firebase data fetch error:', error);
+        // Handle the error appropriately
+        toast.error('Error accessing data. Please log in again.');
+        // Redirect to login
+        sessionStorage.removeItem('team');
+        navigate('/team-portal/login');
       }
-    }, (error) => {
-      console.error('Firebase data fetch error:', error);
-    });
+    );
 
     return () => {
       console.log('Cleaning up Firebase listener');
