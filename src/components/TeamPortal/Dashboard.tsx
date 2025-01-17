@@ -113,6 +113,129 @@ const renderScheduleSection = (
   );
 };
 
+const renderInformationSection = (teamInfo: TeamInfo) => (
+  <div className="space-y-6">
+    {/* Liaisons Information */}
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+      <h3 className="text-lg font-semibold mb-4">Liaisons Information</h3>
+      <div className="space-y-3">
+        {teamInfo?.information?.liaisons?.map((liaison, index) => (
+          <div key={index} className="flex gap-4 items-center">
+            <div className="flex-1">
+              <span className="text-blue-300">Name:</span> {liaison.name}
+            </div>
+            <div className="w-48">
+              <span className="text-blue-300">Phone:</span> {liaison.phone}
+            </div>
+          </div>
+        ))}
+        {(!teamInfo?.information?.liaisons || teamInfo.information.liaisons.length === 0) && (
+          <p className="text-gray-400 italic">No liaisons information available</p>
+        )}
+      </div>
+    </div>
+
+    {/* Tech Information */}
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+      <h3 className="text-lg font-semibold mb-4">Tech Information</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <span className="text-blue-300">Danceable Space:</span>
+          <p>{teamInfo?.information?.tech?.danceableSpace || 'Not specified'}</p>
+        </div>
+        <div>
+          <span className="text-blue-300">Backdrop Space:</span>
+          <p>{teamInfo?.information?.tech?.backdropSpace || 'Not specified'}</p>
+        </div>
+        <div>
+          <span className="text-blue-300">Apron Space:</span>
+          <p>{teamInfo?.information?.tech?.apronSpace || 'Not specified'}</p>
+        </div>
+        <div>
+          <span className="text-blue-300">Props Box:</span>
+          <p>{teamInfo?.information?.tech?.propsBox || 'Not specified'}</p>
+        </div>
+      </div>
+      {teamInfo?.information?.tech?.additionalNotes && (
+        <div className="mt-4">
+          <span className="text-blue-300">Additional Notes:</span>
+          <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.tech.additionalNotes}</p>
+        </div>
+      )}
+    </div>
+
+    {/* Venue Information */}
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+      <h3 className="text-lg font-semibold mb-4">Venue Information</h3>
+      <div className="space-y-3">
+        <div>
+          <span className="text-blue-300">Name:</span>
+          <p>{teamInfo?.information?.venue?.name || 'Not specified'}</p>
+        </div>
+        <div>
+          <span className="text-blue-300">Address:</span>
+          <p>
+            {teamInfo?.information?.venue?.address || 'Not specified'}
+            {teamInfo?.information?.venue?.address && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information.venue.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 text-blue-400 hover:text-blue-300 text-sm"
+              >
+                View in Google Maps
+              </a>
+            )}
+          </p>
+        </div>
+        <div>
+          <span className="text-blue-300">Seating Capacity:</span>
+          <p>{teamInfo?.information?.venue?.seatingCapacity || 'Not specified'}</p>
+        </div>
+        {teamInfo?.information?.venue?.additionalNotes && (
+          <div>
+            <span className="text-blue-300">Additional Notes:</span>
+            <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.venue.additionalNotes}</p>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Hotel Information */}
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+      <h3 className="text-lg font-semibold mb-4">Hotel Information</h3>
+      <div className="space-y-3">
+        <div>
+          <span className="text-blue-300">Name:</span>
+          <p>{teamInfo?.information?.hotel?.name || 'Not specified'}</p>
+        </div>
+        <div>
+          <span className="text-blue-300">Address:</span>
+          <p>
+            {teamInfo?.information?.hotel?.address || 'Not specified'}
+            {teamInfo?.information?.hotel?.address && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information.hotel.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 text-blue-400 hover:text-blue-300 text-sm"
+              >
+                View in Google Maps
+              </a>
+            )}
+          </p>
+        </div>
+        {teamInfo?.information?.hotel?.additionalNotes && (
+          <div>
+            <span className="text-blue-300">Additional Notes:</span>
+            <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.hotel.additionalNotes}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
@@ -165,7 +288,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
@@ -273,118 +396,10 @@ export default function Dashboard() {
             </div>
           )}
 
-          {activeTab === 'information' && (
+          {activeTab === 'information' && teamInfo && (
             <div>
               <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Information</h2>
-              
-              {/* Liaisons Section */}
-              <div className="mb-8">
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-2xl text-white mb-4">Liaisons Information</h3>
-                  <div className="space-y-4">
-                    {teamInfo.information?.liaisons.length > 0 ? (
-                      teamInfo.information.liaisons.map((liaison, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <div className="text-blue-200">{liaison.name}</div>
-                          <div className="text-blue-200">{liaison.phone}</div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-blue-200/60">Liaison information will be updated soon.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Tech Information */}
-              <div className="mb-8">
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-2xl text-white mb-4">Tech Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">Danceable Space</h4>
-                      <p className="text-blue-200">{teamInfo.information?.tech?.danceableSpace}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">Backdrop Space</h4>
-                      <p className="text-blue-200">{teamInfo.information?.tech?.backdropSpace}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">Apron Space</h4>
-                      <p className="text-blue-200">{teamInfo.information?.tech?.apronSpace}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">Props Box</h4>
-                      <p className="text-blue-200">{teamInfo.information?.tech?.propsBox}</p>
-                    </div>
-                  </div>
-                  {teamInfo.information?.tech?.additionalNotes && (
-                    <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
-                      <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.tech.additionalNotes}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Venue Information */}
-              <div className="mb-8">
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-2xl text-white mb-4">Venue Information</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">{teamInfo.information?.venue?.name}</h4>
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information?.venue?.address || '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
-                      >
-                        <span>{teamInfo.information?.venue?.address}</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    </div>
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">Seating Capacity</h4>
-                      <p className="text-blue-200">{teamInfo.information?.venue?.seatingCapacity}</p>
-                    </div>
-                    {teamInfo.information?.venue?.additionalNotes && (
-                      <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
-                        <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.venue.additionalNotes}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Hotel Information */}
-              <div className="mb-8">
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-2xl text-white mb-4">Hotel Information</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-lg text-blue-300 mb-2">{teamInfo.information?.hotel?.name}</h4>
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information?.hotel?.address || '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
-                      >
-                        <span>{teamInfo.information?.hotel?.address}</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    </div>
-                    {teamInfo.information?.hotel?.additionalNotes && (
-                      <div className="mt-4 p-4 bg-blue-500/10 rounded-lg">
-                        <p className="text-blue-200 whitespace-pre-wrap">{teamInfo.information.hotel.additionalNotes}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+              {renderInformationSection(teamInfo)}
             </div>
           )}
 

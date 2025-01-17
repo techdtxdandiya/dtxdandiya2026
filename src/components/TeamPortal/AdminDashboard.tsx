@@ -701,92 +701,39 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Initialize teams if they don't exist
-    const initializeTeams = async () => {
-      try {
-    const teamsRef = ref(db, 'teams');
-        const snapshot = await get(teamsRef);
-        
-        if (!snapshot.exists()) {
-          console.log('Initializing teams data...');
-          const initialData = Object.keys(TEAM_DISPLAY_NAMES).reduce((acc, teamId) => ({
-            ...acc,
-            [teamId]: {
-              displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
-              announcements: [],
-              information: DEFAULT_INFORMATION,
-              techVideo: {
-                title: '',
-                youtubeUrl: '',
-                description: ''
-              },
-              schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]] || INITIAL_SCHEDULES[1],
-              nearbyLocations: []
-            }
-          }), {});
-          
-          await set(teamsRef, initialData);
-          console.log('Teams initialized successfully');
-        }
-      } catch (error) {
-        console.error('Error initializing teams:', error);
-        toast.error('Error initializing data');
-      }
-    };
-
     // Set up Firebase listener
-    const setupFirebaseListener = () => {
-      const teamsRef = ref(db, 'teams');
-      console.log('Setting up Firebase listener at:', teamsRef.toString());
-
-      return onValue(teamsRef, 
-        (snapshot) => {
+    const teamsRef = ref(db, 'teams');
+    const unsubscribe = onValue(teamsRef, (snapshot) => {
       if (snapshot.exists()) {
-            const data = snapshot.val();
-            console.log('Received Firebase data:', Object.keys(data));
-            
-            const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
-              const teamData = rawTeamData as TeamInfo;
-              let announcements: TeamInfo['announcements'] = [];
-              
-              if (teamData.announcements) {
-                announcements = Array.isArray(teamData.announcements) 
-                  ? teamData.announcements 
-                  : Object.values(teamData.announcements);
-              }
-
-              acc[teamId as TeamId] = {
-                ...teamData,
-                announcements
-              };
-              return acc;
-            }, {} as Record<TeamId, TeamInfo>);
-
-            setTeamData(processedData);
+        const data = snapshot.val();
+        // Ensure each team has the default information
+        const processedData = Object.entries(data).reduce((acc, [teamId, teamData]) => {
+          const processedTeamData = teamData as TeamInfo;
+          if (!processedTeamData.information) {
+            processedTeamData.information = DEFAULT_INFORMATION;
           } else {
-            console.log('No data in Firebase, initializing...');
-            initializeTeams();
+            // Update individual sections if they don't exist or are incomplete
+            if (!processedTeamData.information.tech || Object.keys(processedTeamData.information.tech).length < Object.keys(DEFAULT_INFORMATION.tech).length) {
+              processedTeamData.information.tech = DEFAULT_INFORMATION.tech;
+            }
+            if (!processedTeamData.information.venue || Object.keys(processedTeamData.information.venue).length < Object.keys(DEFAULT_INFORMATION.venue).length) {
+              processedTeamData.information.venue = DEFAULT_INFORMATION.venue;
+            }
+            if (!processedTeamData.information.hotel || Object.keys(processedTeamData.information.hotel).length < Object.keys(DEFAULT_INFORMATION.hotel).length) {
+              processedTeamData.information.hotel = DEFAULT_INFORMATION.hotel;
+            }
           }
-        },
-        (error) => {
-          console.error('Firebase error:', error);
-          if (error.message.includes('permission_denied')) {
-            console.log('Permission denied, attempting to reinitialize...');
-            initializeTeams();
-          } else {
-            toast.error('Error accessing data');
-            sessionStorage.removeItem('team');
-            navigate('/team-portal/login');
-          }
-        }
-      );
-    };
+          return {
+            ...acc,
+            [teamId]: processedTeamData
+          };
+        }, {} as Record<TeamId, TeamInfo>);
+        
+        setTeamData(processedData);
+      }
+    });
 
-    const unsubscribe = setupFirebaseListener();
-    return () => {
-      console.log('Cleaning up Firebase listener');
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [navigate]);
 
   // Add team selection logging
@@ -1531,7 +1478,7 @@ const AdminDashboard: React.FC = () => {
             <div className="space-y-6">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-xl font-semibold text-white mb-4">Select Team</h3>
-                <select
+                                    <select
                   value={selectedTeamForInformation || ''}
                   onChange={(e) => setSelectedTeamForInformation(e.target.value as TeamId)}
                   className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
@@ -1540,8 +1487,8 @@ const AdminDashboard: React.FC = () => {
                   {Object.entries(TEAM_DISPLAY_NAMES).map(([id, name]) => (
                     <option key={id} value={id}>{name}</option>
                   ))}
-                </select>
-              </div>
+                                    </select>
+                                  </div>
 
               {selectedTeamForInformation && teamData[selectedTeamForInformation] && (
                 <div className="space-y-6">
@@ -1551,50 +1498,50 @@ const AdminDashboard: React.FC = () => {
                     <div className="space-y-4">
                       {teamData[selectedTeamForInformation]?.information?.liaisons.map((liaison, index) => (
                         <div key={index} className="flex gap-4">
-                          <input
+                                    <input
                             type="text"
                             value={liaison.name}
                             placeholder="Name"
-                            onChange={(e) => {
+                                      onChange={(e) => {
                               const newLiaisons = [...teamData[selectedTeamForInformation].information.liaisons];
                               newLiaisons[index] = { ...liaison, name: e.target.value };
                               handleUpdateInformation({ liaisons: newLiaisons }, selectedTeamForInformation);
                             }}
                             className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
                           />
-                          <input
-                            type="text"
+                                    <input
+                                      type="text"
                             value={liaison.phone}
                             placeholder="Phone"
-                            onChange={(e) => {
+                                      onChange={(e) => {
                               const newLiaisons = [...teamData[selectedTeamForInformation].information.liaisons];
                               newLiaisons[index] = { ...liaison, phone: e.target.value };
                               handleUpdateInformation({ liaisons: newLiaisons }, selectedTeamForInformation);
                             }}
                             className="w-48 bg-black/40 border border-blue-500/30 rounded-lg p-2"
                           />
-                          <button
-                            onClick={() => {
+                                <button
+                                  onClick={() => {
                               const newLiaisons = teamData[selectedTeamForInformation].information.liaisons.filter((_, i) => i !== index);
                               handleUpdateInformation({ liaisons: newLiaisons }, selectedTeamForInformation);
                             }}
                             className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
                           >
                             <FiTrash2 className="text-red-400" />
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        onClick={() => {
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => {
                           const newLiaisons = [...(teamData[selectedTeamForInformation]?.information?.liaisons || []), { name: '', phone: '' }];
                           handleUpdateInformation({ liaisons: newLiaisons }, selectedTeamForInformation);
                         }}
                         className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-white rounded-lg transition-colors"
                       >
                         Add Liaison
-                      </button>
-                    </div>
-                  </div>
+                            </button>
+                          </div>
+                        </div>
 
                   {/* Tech Information */}
                   <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
@@ -1621,7 +1568,7 @@ const AdminDashboard: React.FC = () => {
                           }, selectedTeamForInformation)}
                           className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
                         />
-                      </div>
+                  </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Apron Space</label>
                         <input
@@ -1661,7 +1608,7 @@ const AdminDashboard: React.FC = () => {
                   <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                     <h4 className="text-lg font-semibold mb-4">Venue Information</h4>
                     <div className="space-y-4">
-                      <div>
+                  <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
                         <input
                           type="text"
@@ -1720,19 +1667,19 @@ const AdminDashboard: React.FC = () => {
                   {/* Hotel Information */}
                   <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                     <h4 className="text-lg font-semibold mb-4">Hotel Information</h4>
-                    <div className="space-y-4">
-                      <div>
+                        <div className="space-y-4">
+                                <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
-                        <input
-                          type="text"
+                                  <input
+                                    type="text"
                           value={teamData[selectedTeamForInformation]?.information?.hotel?.name}
                           onChange={(e) => handleUpdateInformation({
                             hotel: { ...teamData[selectedTeamForInformation].information.hotel, name: e.target.value }
                           }, selectedTeamForInformation)}
                           className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                        />
-                      </div>
-                      <div>
+                                  />
+                                </div>
+                                <div>
                         <label className="block text-sm font-medium mb-1">Address</label>
                         <div className="space-y-2">
                           <input
@@ -1751,7 +1698,7 @@ const AdminDashboard: React.FC = () => {
                           >
                             View in Google Maps
                           </a>
-                        </div>
+                                </div>
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">Additional Notes</label>
