@@ -33,6 +33,37 @@ interface Schedule {
   };
 }
 
+interface TeamData {
+  displayName: string;
+  announcements: Array<{
+    id: string;
+    title: string;
+    content: string;
+    timestamp: number;
+    targetTeams?: typeof TEAM_IDS[number][];
+  }>;
+  generalInfo: {
+    practiceArea: string;
+    liasonContact: string;
+    specialInstructions: string;
+    additionalInfo: string;
+  };
+  techVideo: {
+    title: string;
+    youtubeUrl: string;
+    description: string;
+  };
+  schedule: Schedule;
+  nearbyLocations: Array<{
+    id: string;
+    name: string;
+    address: string;
+    type: 'Food' | 'Practice' | 'Hotel' | 'Emergency' | 'Other';
+    distance?: string;
+    notes?: string;
+  }>;
+}
+
 const INITIAL_SCHEDULE: Schedule = {
   showOrder: null,
   isPublished: false,
@@ -54,7 +85,7 @@ const initializeTeamData = async () => {
       
       if (!snapshot.exists()) {
         // Initialize new team data
-        await set(teamRef, {
+        const initialData: TeamData = {
           displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
           generalInfo: {
@@ -70,12 +101,13 @@ const initializeTeamData = async () => {
           },
           schedule: INITIAL_SCHEDULE,
           nearbyLocations: []
-        });
+        };
+        await set(teamRef, initialData);
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       } else {
         // Update existing team data structure if needed
-        const data = snapshot.val();
-        const updates: any = {};
+        const data = snapshot.val() as Partial<TeamData>;
+        const updates: Partial<TeamData> = {};
         
         // Ensure all required fields exist
         if (!data.announcements) updates.announcements = [];
@@ -100,8 +132,8 @@ const initializeTeamData = async () => {
           // Ensure schedule has all required fields
           const schedule = { ...INITIAL_SCHEDULE };
           (Object.keys(INITIAL_SCHEDULE) as Array<keyof Schedule>).forEach(key => {
-            if (data.schedule[key]) {
-              schedule[key] = data.schedule[key];
+            if (data.schedule?.[key]) {
+              schedule[key] = data.schedule[key] as any;
             }
           });
           updates.schedule = schedule;
