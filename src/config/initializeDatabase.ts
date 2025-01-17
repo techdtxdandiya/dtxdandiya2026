@@ -14,7 +14,26 @@ const TEAM_DISPLAY_NAMES: Record<typeof TEAM_IDS[number], string> = {
   msu: 'MSU RaaSparty'
 };
 
-const INITIAL_SCHEDULE = {
+interface ScheduleEvent {
+  time: string;
+  event: string;
+  location: string;
+}
+
+interface Schedule {
+  showOrder: number | null;
+  isPublished: boolean;
+  friday: ScheduleEvent[];
+  saturdayTech: ScheduleEvent[];
+  saturdayPreShow: ScheduleEvent[];
+  saturdayShow: ScheduleEvent[];
+  saturdayPostShow: {
+    placing: ScheduleEvent[];
+    nonPlacing: ScheduleEvent[];
+  };
+}
+
+const INITIAL_SCHEDULE: Schedule = {
   showOrder: null,
   isPublished: false,
   friday: [],
@@ -80,7 +99,7 @@ const initializeTeamData = async () => {
         } else {
           // Ensure schedule has all required fields
           const schedule = { ...INITIAL_SCHEDULE };
-          Object.keys(INITIAL_SCHEDULE).forEach(key => {
+          (Object.keys(INITIAL_SCHEDULE) as Array<keyof Schedule>).forEach(key => {
             if (data.schedule[key]) {
               schedule[key] = data.schedule[key];
             }
