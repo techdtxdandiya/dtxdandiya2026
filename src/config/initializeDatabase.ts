@@ -77,6 +77,43 @@ const INITIAL_SCHEDULE: Schedule = {
   }
 };
 
+const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedule => {
+  const schedule = { ...INITIAL_SCHEDULE };
+  
+  if (!existingSchedule) return schedule;
+
+  if (existingSchedule.showOrder !== undefined) {
+    schedule.showOrder = existingSchedule.showOrder;
+  }
+  if (existingSchedule.isPublished !== undefined) {
+    schedule.isPublished = existingSchedule.isPublished;
+  }
+  if (Array.isArray(existingSchedule.friday)) {
+    schedule.friday = existingSchedule.friday;
+  }
+  if (Array.isArray(existingSchedule.saturdayTech)) {
+    schedule.saturdayTech = existingSchedule.saturdayTech;
+  }
+  if (Array.isArray(existingSchedule.saturdayPreShow)) {
+    schedule.saturdayPreShow = existingSchedule.saturdayPreShow;
+  }
+  if (Array.isArray(existingSchedule.saturdayShow)) {
+    schedule.saturdayShow = existingSchedule.saturdayShow;
+  }
+  if (existingSchedule.saturdayPostShow) {
+    schedule.saturdayPostShow = {
+      placing: Array.isArray(existingSchedule.saturdayPostShow.placing) 
+        ? existingSchedule.saturdayPostShow.placing 
+        : [],
+      nonPlacing: Array.isArray(existingSchedule.saturdayPostShow.nonPlacing)
+        ? existingSchedule.saturdayPostShow.nonPlacing
+        : []
+    };
+  }
+
+  return schedule;
+};
+
 const initializeTeamData = async () => {
   try {
     for (const teamId of TEAM_IDS) {
@@ -129,22 +166,7 @@ const initializeTeamData = async () => {
         if (!data.schedule) {
           updates.schedule = INITIAL_SCHEDULE;
         } else {
-          // Ensure schedule has all required fields
-          const schedule: Schedule = { ...INITIAL_SCHEDULE };
-          (Object.keys(INITIAL_SCHEDULE) as Array<keyof Schedule>).forEach(key => {
-            const existingValue = data.schedule?.[key];
-            if (existingValue !== undefined) {
-              if (key === 'saturdayPostShow') {
-                schedule[key] = {
-                  placing: (existingValue as Schedule['saturdayPostShow']).placing || [],
-                  nonPlacing: (existingValue as Schedule['saturdayPostShow']).nonPlacing || []
-                };
-              } else {
-                schedule[key] = existingValue as Schedule[typeof key];
-              }
-            }
-          });
-          updates.schedule = schedule;
+          updates.schedule = updateSchedule(data.schedule);
         }
         if (!data.nearbyLocations) updates.nearbyLocations = [];
         
