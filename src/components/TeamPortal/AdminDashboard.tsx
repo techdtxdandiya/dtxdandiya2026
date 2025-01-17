@@ -605,9 +605,39 @@ const AdminDashboard: React.FC = () => {
     }
 
     // Initialize teams if they don't exist
-    Object.keys(TEAM_DISPLAY_NAMES).forEach(teamId => {
-      initializeTeamData(teamId as TeamId);
-    });
+    const initializeAllTeams = async () => {
+      console.log('Initializing all teams...');
+      await Promise.all(Object.keys(TEAM_DISPLAY_NAMES).map(async (teamId) => {
+        const teamRef = ref(db, `teams/${teamId}`);
+        const snapshot = await get(teamRef);
+        
+        if (!snapshot.exists()) {
+          console.log(`Initializing team ${teamId}`);
+          await set(teamRef, {
+            displayName: TEAM_DISPLAY_NAMES[teamId as TeamId],
+            announcements: [],
+            generalInfo: {
+              practiceArea: '',
+              liasonContact: '',
+              specialInstructions: '',
+              additionalInfo: ''
+            },
+            techVideo: {
+              title: '',
+              youtubeUrl: '',
+              description: ''
+            },
+            schedule: INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]] || INITIAL_SCHEDULES[1],
+            nearbyLocations: []
+          });
+        } else {
+          console.log(`Team ${teamId} already exists`);
+        }
+      }));
+      console.log('Team initialization complete');
+    };
+
+    initializeAllTeams();
 
     const teamsRef = ref(db, 'teams');
     console.log('Setting up Firebase listener at:', teamsRef.toString());
@@ -618,9 +648,6 @@ const AdminDashboard: React.FC = () => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log('Raw team data structure:', Object.keys(data));
-        Object.entries(data).forEach(([teamId, teamData]) => {
-          console.log(`Team ${teamId} announcements:`, (teamData as any).announcements);
-        });
         
         // Process the data and ensure announcements are arrays
         const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
@@ -632,10 +659,8 @@ const AdminDashboard: React.FC = () => {
           if (teamData.announcements) {
             if (Array.isArray(teamData.announcements)) {
               announcements = teamData.announcements;
-              console.log(`${teamId} announcements array:`, announcements);
             } else {
               announcements = Object.values(teamData.announcements);
-              console.log(`${teamId} announcements converted from object:`, announcements);
             }
           }
           
@@ -648,6 +673,8 @@ const AdminDashboard: React.FC = () => {
         
         console.log('Final processed data:', processedData);
         setTeamData(processedData);
+      } else {
+        console.log('No teams data found in Firebase');
       }
     });
 
