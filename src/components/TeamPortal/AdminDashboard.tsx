@@ -604,64 +604,89 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
+    // Set up a direct listener for teams data
     const teamsRef = ref(db, 'teams');
     console.log('Setting up Firebase listener at:', teamsRef.toString());
 
     const unsubscribe = onValue(teamsRef, (snapshot) => {
+      console.log('Firebase data update received at:', new Date().toISOString());
+      
       if (snapshot.exists()) {
         const data = snapshot.val();
-        console.log('Raw Firebase data:', data);
+        console.log('Raw Firebase data structure:', Object.keys(data));
         
-        // Process the data and ensure announcements are arrays
+        // Log each team's data with proper type casting
+        Object.entries(data).forEach(([teamId, rawTeamData]) => {
+          const teamData = rawTeamData as TeamInfo;
+          console.log(`Team ${teamId} data:`, {
+            displayName: teamData.displayName,
+            hasAnnouncements: !!teamData.announcements,
+            announcementCount: teamData.announcements ? 
+              (Array.isArray(teamData.announcements) ? 
+                teamData.announcements.length : 
+                Object.keys(teamData.announcements).length) : 0
+          });
+        });
+
+        // Process and set the data
         const processedData = Object.entries(data).reduce((acc, [teamId, rawTeamData]) => {
           const teamData = rawTeamData as TeamInfo;
-          console.log(`Processing team ${teamId}:`, teamData);
-          
-          // Initialize announcements as an empty array if it doesn't exist
           let announcements: TeamInfo['announcements'] = [];
           
-          // Check if announcements exist and process them
           if (teamData.announcements) {
-            if (Array.isArray(teamData.announcements)) {
-              announcements = teamData.announcements;
-            } else if (typeof teamData.announcements === 'object') {
-              // Convert object to array if it's an object
-              announcements = Object.values(teamData.announcements);
-            }
-            console.log(`Team ${teamId} announcements:`, announcements);
+            announcements = Array.isArray(teamData.announcements) 
+              ? teamData.announcements 
+              : Object.values(teamData.announcements);
+            console.log(`Processed ${teamId} announcements:`, announcements);
           }
 
-          // Create the processed team data
           acc[teamId as TeamId] = {
-            displayName: teamData.displayName || TEAM_DISPLAY_NAMES[teamId as TeamId],
-            announcements,
-            generalInfo: teamData.generalInfo || {
-              practiceArea: '',
-              liasonContact: '',
-              specialInstructions: '',
-              additionalInfo: ''
-            },
-            techVideo: teamData.techVideo || {
-              title: '',
-              youtubeUrl: '',
-              description: ''
-            },
-            schedule: teamData.schedule || INITIAL_SCHEDULES[TEAM_NUMBER_MAP[teamId as TeamId]],
-            nearbyLocations: teamData.nearbyLocations || []
+            ...teamData,
+            announcements
           };
-          
           return acc;
         }, {} as Record<TeamId, TeamInfo>);
-        
-        console.log('Final processed data:', processedData);
+
+        console.log('Setting team data in state:', Object.keys(processedData));
         setTeamData(processedData);
       } else {
-        console.log('No data exists in Firebase');
+        console.warn('No data exists in Firebase snapshot');
+        setTeamData({} as Record<TeamId, TeamInfo>);
       }
+    }, (error) => {
+      console.error('Firebase data fetch error:', error);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('Cleaning up Firebase listener');
+      unsubscribe();
+    };
   }, [navigate]);
+
+  // Add team selection logging
+  const handleTeamSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const teamId = e.target.value as TeamId;
+    console.log('Team selection changed to:', teamId);
+    console.log('Available team data:', Object.keys(teamData));
+    if (teamId && teamId in teamData) {
+      const selectedTeamData = teamData[teamId];
+      console.log('Selected team data:', {
+        displayName: selectedTeamData.displayName,
+        hasAnnouncements: !!selectedTeamData.announcements,
+        announcementCount: selectedTeamData.announcements?.length || 0
+      });
+    }
+    setSelectedTeamForAnnouncements(teamId || null);
+  };
+
+  // Add logging to team selection
+  useEffect(() => {
+    if (selectedTeamForAnnouncements) {
+      console.log('Selected team changed to:', selectedTeamForAnnouncements);
+      console.log('Current team data:', teamData[selectedTeamForAnnouncements]);
+      console.log('Team announcements:', teamData[selectedTeamForAnnouncements]?.announcements);
+    }
+  }, [selectedTeamForAnnouncements, teamData]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('team');
@@ -669,6 +694,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleTeamSelect = (teamId: TeamId) => {
+    console.log('Team selection handler called with:', teamId);
+    console.log('Current team data available:', teamData);
     setSelectedTeams((prev) =>
       prev.includes(teamId)
         ? prev.filter((id) => id !== teamId)
@@ -1069,12 +1096,7 @@ const AdminDashboard: React.FC = () => {
             <div className="w-full sm:w-auto">
               <select
                 value={selectedTeamForAnnouncements || ''}
-                onChange={(e) => {
-                  const teamId = e.target.value as TeamId;
-                  console.log('Team selection changed to:', teamId);
-                  console.log('Current team data:', teamData[teamId]);
-                  setSelectedTeamForAnnouncements(teamId);
-                }}
+                onChange={handleTeamSelectionChange}
                 className="w-full sm:w-64 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
               >
                 <option value="">Select a team</option>
