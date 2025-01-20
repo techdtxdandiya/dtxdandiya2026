@@ -130,7 +130,7 @@ const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedu
   return schedule;
 };
 
-const TEAM_LIAISONS: Record<typeof TEAM_IDS[number], Array<{ name: string; phone: string }>> = {
+export const TEAM_LIAISONS: Record<typeof TEAM_IDS[number], Array<{ name: string; phone: string }>> = {
   texas: [
     { name: 'Svayam Sharma', phone: '972.510.7638' },
     { name: 'Prajith Sugatan', phone: '214.732.1833' },

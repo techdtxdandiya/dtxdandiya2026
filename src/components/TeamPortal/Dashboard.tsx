@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, set } from 'firebase/database';
+import { TEAM_LIAISONS } from '../../config/initializeDatabase';
 
 interface TeamInfo {
   displayName: string;
@@ -129,11 +130,28 @@ export default function Dashboard() {
     console.log('Loading data for team:', storedTeam);
     
     const teamRef = ref(db, `teams/${storedTeam}`);
-    const unsubscribe = onValue(teamRef, (snapshot) => {
+    const unsubscribe = onValue(teamRef, async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log('Received team data:', data);
-        console.log('Liaisons:', data.information?.liaisons);
+        
+        // Ensure liaisons data exists and is not empty
+        if (!data.information?.liaisons || data.information.liaisons.length === 0) {
+          // Re-initialize the team data
+          const teamRef = ref(db, `teams/${storedTeam}`);
+          try {
+            await set(teamRef, {
+              ...data,
+              information: {
+                ...data.information,
+                liaisons: TEAM_LIAISONS[storedTeam]
+              }
+            });
+            console.log('Re-initialized liaisons data for team:', storedTeam);
+          } catch (error) {
+            console.error('Error re-initializing liaisons data:', error);
+          }
+        }
         
         // Ensure schedule has all required fields
         if (data.schedule) {
