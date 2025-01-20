@@ -929,17 +929,17 @@ const AdminDashboard: React.FC = () => {
           )}
           {activeTab === 'tech-time-video' && (
             <div className="mt-6">
-              {selectedTeams.map(teamId => (
+              {Object.keys(teamData).map(teamId => (
                 <div key={teamId} className="mb-8 bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                    <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h3>
                     <div className="flex items-center gap-2">
                       <label className="text-sm text-blue-200">Published:</label>
                       <input
                         type="checkbox"
-                        checked={teamData[teamId]?.techVideo?.isPublished || false}
-                        onChange={(e) => handleUpdateTechVideo(teamId, {
-                          ...teamData[teamId]?.techVideo,
+                        checked={teamData[teamId as TeamId]?.techVideo?.isPublished || false}
+                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
+                          ...teamData[teamId as TeamId]?.techVideo,
                           isPublished: e.target.checked
                         })}
                         className="w-4 h-4"
@@ -951,9 +951,9 @@ const AdminDashboard: React.FC = () => {
                       <label className="block text-sm font-medium text-blue-300 mb-1">Video Title</label>
                       <input
                         type="text"
-                        value={teamData[teamId]?.techVideo?.title || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId, {
-                          ...teamData[teamId]?.techVideo,
+                        value={teamData[teamId as TeamId]?.techVideo?.title || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
+                          ...teamData[teamId as TeamId]?.techVideo,
                           title: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
@@ -964,9 +964,9 @@ const AdminDashboard: React.FC = () => {
                       <label className="block text-sm font-medium text-blue-300 mb-1">Google Drive URL</label>
                       <input
                         type="text"
-                        value={teamData[teamId]?.techVideo?.driveUrl || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId, {
-                          ...teamData[teamId]?.techVideo,
+                        value={teamData[teamId as TeamId]?.techVideo?.driveUrl || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
+                          ...teamData[teamId as TeamId]?.techVideo,
                           driveUrl: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
@@ -977,9 +977,9 @@ const AdminDashboard: React.FC = () => {
                       <label className="block text-sm font-medium text-blue-300 mb-1">YouTube URL</label>
                       <input
                         type="text"
-                        value={teamData[teamId]?.techVideo?.youtubeUrl || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId, {
-                          ...teamData[teamId]?.techVideo,
+                        value={teamData[teamId as TeamId]?.techVideo?.youtubeUrl || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
+                          ...teamData[teamId as TeamId]?.techVideo,
                           youtubeUrl: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
@@ -989,9 +989,9 @@ const AdminDashboard: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-blue-300 mb-1">Description</label>
                       <textarea
-                        value={teamData[teamId]?.techVideo?.description || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId, {
-                          ...teamData[teamId]?.techVideo,
+                        value={teamData[teamId as TeamId]?.techVideo?.description || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
+                          ...teamData[teamId as TeamId]?.techVideo,
                           description: e.target.value
                         })}
                         className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
