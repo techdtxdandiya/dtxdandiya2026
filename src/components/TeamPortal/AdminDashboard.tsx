@@ -12,8 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface AnnouncementFormData {
   id?: string;
-  title: string;
-  content: string;
+    title: string;
+    content: string;
   isEditing?: boolean;
 }
 
@@ -717,11 +717,11 @@ const AdminDashboard: React.FC = () => {
                   handleUpdateSchedule(teamId, section, newEvents);
                 }}
                 className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
-                              </div>
+                                    />
+                                  </div>
           ))
         )}
-                            </div>
+                                  </div>
     );
   };
 
@@ -791,10 +791,10 @@ const AdminDashboard: React.FC = () => {
                       <h4 className="text-xl text-white">{TEAM_DISPLAY_NAMES[teamId]}</h4>
                       {teamData[teamId]?.information?.liaisons?.map((liaison, index) => (
                         <div key={index} className="space-y-2">
-                          <input
+                                    <input
                             type="text"
                             value={liaison.name}
-                            onChange={(e) => {
+                                      onChange={(e) => {
                               const newLiaisons = [...teamData[teamId].information.liaisons];
                               newLiaisons[index] = { ...liaison, name: e.target.value };
                               handleUpdateLiaisons(teamId, newLiaisons);
@@ -803,10 +803,10 @@ const AdminDashboard: React.FC = () => {
                             className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
                           />
                           <div className="flex gap-2">
-                            <input
-                              type="text"
+                                    <input
+                                      type="text"
                               value={liaison.phone}
-                              onChange={(e) => {
+                                      onChange={(e) => {
                                 const newLiaisons = [...teamData[teamId].information.liaisons];
                                 newLiaisons[index] = { ...liaison, phone: e.target.value };
                                 handleUpdateLiaisons(teamId, newLiaisons);
@@ -825,22 +825,22 @@ const AdminDashboard: React.FC = () => {
                                 </svg>
                               </a>
                             )}
-                          </div>
-                        </div>
+                                  </div>
+                                  </div>
                       ))}
-                      <button
-                        onClick={() => {
+                                <button
+                                  onClick={() => {
                           const newLiaisons = [...(teamData[teamId]?.information?.liaisons || []), { name: '', phone: '' }];
                           handleUpdateLiaisons(teamId, newLiaisons);
                         }}
                         className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
                       >
                         Add Liaison
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
@@ -848,7 +848,7 @@ const AdminDashboard: React.FC = () => {
                   <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
                     <p className="text-white">42' x 28'</p>
-                  </div>
+                      </div>
                   <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
                     <p className="text-white">4 ft</p>
@@ -899,12 +899,12 @@ const AdminDashboard: React.FC = () => {
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
-                <div className="space-y-4">
-                  <div>
+                        <div className="space-y-4">
+                                <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
                     <p className="text-white">DoubleTree by Hilton Hotel Dallas</p>
-                  </div>
-                  <div>
+                                </div>
+                                <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
                       <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
@@ -916,7 +916,7 @@ const AdminDashboard: React.FC = () => {
                       >
                         View in Google Maps
                       </a>
-                    </div>
+                                </div>
                   </div>
                 </div>
               </div>
