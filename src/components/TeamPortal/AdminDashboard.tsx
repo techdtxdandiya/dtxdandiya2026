@@ -283,16 +283,46 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleUpdateTechVideo = async (teamId: TeamId, videoData: TeamInfo['techVideo']) => {
+  const handleUpdateTechVideo = async (teamId: TeamId, videoData: Partial<TeamInfo['techVideo']>) => {
     try {
       const teamRef = ref(db, `teams/${teamId}/techVideo`);
-      await set(teamRef, videoData);
-      setUpdateMessage('Tech video updated successfully!');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      const snapshot = await get(teamRef);
+      const currentData = snapshot.val() || {};
+      
+      await set(teamRef, {
+        ...currentData,
+        ...videoData,
+        title: 'Tech Time Video' // Always set this title
+      });
+      
+      toast.success('Tech video updated successfully!');
     } catch (error) {
       console.error('Error updating tech video:', error);
-      setUpdateMessage('Error updating tech video. Please try again.');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      toast.error('Error updating tech video');
+    }
+  };
+
+  const handlePublishTechVideo = async (teamId: TeamId) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/techVideo`);
+      const snapshot = await get(teamRef);
+      const currentData = snapshot.val() || {};
+      
+      if (!currentData.driveUrl) {
+        toast.error('Please add a video link before publishing');
+        return;
+      }
+
+      await set(teamRef, {
+        ...currentData,
+        title: 'Tech Time Video',
+        isPublished: true
+      });
+      
+      toast.success('Tech video published successfully!');
+    } catch (error) {
+      console.error('Error publishing tech video:', error);
+      toast.error('Error publishing tech video');
     }
   };
 
@@ -934,68 +964,32 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h3>
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-blue-200">Published:</label>
-                      <input
-                        type="checkbox"
-                        checked={teamData[teamId as TeamId]?.techVideo?.isPublished || false}
-                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          ...teamData[teamId as TeamId]?.techVideo,
-                          isPublished: e.target.checked
-                        })}
-                        className="w-4 h-4"
-                      />
+                      {teamData[teamId as TeamId]?.techVideo?.isPublished ? (
+                        <span className="text-sm text-green-400 bg-green-400/10 px-3 py-1 rounded-lg">
+                          Published
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handlePublishTechVideo(teamId as TeamId)}
+                          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                        >
+                          Publish
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-blue-300 mb-1">Video Title</label>
-                      <input
-                        type="text"
-                        value={teamData[teamId as TeamId]?.techVideo?.title || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          ...teamData[teamId as TeamId]?.techVideo,
-                          title: e.target.value
-                        })}
-                        className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-                        placeholder="Enter video title"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-blue-300 mb-1">Google Drive URL</label>
+                      <label className="block text-sm font-medium text-blue-300 mb-1">Video Link</label>
                       <input
                         type="text"
                         value={teamData[teamId as TeamId]?.techVideo?.driveUrl || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          ...teamData[teamId as TeamId]?.techVideo,
-                          driveUrl: e.target.value
+                          driveUrl: e.target.value,
+                          isPublished: teamData[teamId as TeamId]?.techVideo?.isPublished || false
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-                        placeholder="Enter Google Drive URL"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-blue-300 mb-1">YouTube URL</label>
-                      <input
-                        type="text"
-                        value={teamData[teamId as TeamId]?.techVideo?.youtubeUrl || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          ...teamData[teamId as TeamId]?.techVideo,
-                          youtubeUrl: e.target.value
-                        })}
-                        className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-                        placeholder="Enter YouTube URL"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-blue-300 mb-1">Description</label>
-                      <textarea
-                        value={teamData[teamId as TeamId]?.techVideo?.description || ''}
-                        onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          ...teamData[teamId as TeamId]?.techVideo,
-                          description: e.target.value
-                        })}
-                        className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
-                        placeholder="Enter video description"
+                        placeholder="Enter Google Drive video link"
                       />
                     </div>
                   </div>

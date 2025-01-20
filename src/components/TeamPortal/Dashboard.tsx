@@ -259,7 +259,7 @@ export default function Dashboard() {
                 <div className="space-y-6">
                   {teamInfo.techVideo.driveUrl && (
                     <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                      <h3 className="text-xl text-white mb-4">Video Files</h3>
+                      <h3 className="text-xl text-white mb-4">{teamInfo.techVideo.title}</h3>
                       <a
                         href={teamInfo.techVideo.driveUrl}
                         target="_blank"
@@ -269,28 +269,9 @@ export default function Dashboard() {
                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1 17l-5-5 1.41-1.41 3.59 3.59 7.59-7.59 1.41 1.41-9 9z"/>
                         </svg>
-                        Access Video Files on Google Drive
+                        Access Video
                       </a>
                     </div>
-                  )}
-                  {teamInfo.techVideo.youtubeUrl && (
-                    <>
-                      <div className="aspect-w-16 aspect-h-9">
-                        <iframe
-                          src={teamInfo.techVideo.youtubeUrl.replace('watch?v=', 'embed/')}
-                          title={teamInfo.techVideo.title}
-                          className="w-full rounded-xl"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      </div>
-                      <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                        <h3 className="text-xl text-white mb-4">{teamInfo.techVideo.title}</h3>
-                        {teamInfo.techVideo.description && (
-                          <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.techVideo.description}</p>
-                        )}
-                      </div>
-                    </>
                   )}
                 </div>
               ) : (
