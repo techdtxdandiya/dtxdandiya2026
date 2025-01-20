@@ -6,7 +6,7 @@ export const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berke
 export type TeamId = typeof TEAM_IDS[number];
 export type DashboardTeamId = TeamId | 'admin';
 
-export const TEAM_DISPLAY_NAMES = {
+export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Texas Raas',
   michigan: 'Michigan Wolveraas',
@@ -15,7 +15,7 @@ export const TEAM_DISPLAY_NAMES = {
   iu: 'IU HoosierRaas',
   berkeley: 'UC Berkeley Raas Ramzat',
   msu: 'MSU RaaSparty'
-} as const;
+};
 
 export interface ScheduleEvent {
   time: string;
