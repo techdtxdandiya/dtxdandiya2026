@@ -42,11 +42,27 @@ interface TeamData {
     timestamp: number;
     targetTeams?: typeof TEAM_IDS[number][];
   }>;
-  generalInfo: {
-    practiceArea: string;
-    liasonContact: string;
-    specialInstructions: string;
-    additionalInfo: string;
+  information: {
+    liaisons: Array<{
+      name: string;
+      phone: string;
+    }>;
+    tech: {
+      danceableSpace: string;
+      backdropSpace: string;
+      apronSpace: string;
+      propsBox: string;
+      additionalNotes?: string;
+    };
+    venue: {
+      name: string;
+      address: string;
+      seatingCapacity: string;
+    };
+    hotel: {
+      name: string;
+      address: string;
+    };
   };
   techVideo: {
     title: string;
@@ -114,6 +130,67 @@ const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedu
   return schedule;
 };
 
+const TEAM_LIAISONS: Record<typeof TEAM_IDS[number], Array<{ name: string; phone: string }>> = {
+  texas: [
+    { name: 'svayam', phone: '' },
+    { name: 'prajith', phone: '' },
+    { name: 'aayushi', phone: '' }
+  ],
+  berkeley: [
+    { name: 'subhash m', phone: '' },
+    { name: 'aarya', phone: '' },
+    { name: 'satya', phone: '' }
+  ],
+  msu: [
+    { name: 'subhash e', phone: '' },
+    { name: 'jerin', phone: '' },
+    { name: 'disha', phone: '' }
+  ],
+  iu: [
+    { name: 'shivan', phone: '' },
+    { name: 'ishani', phone: '' },
+    { name: 'divya', phone: '' }
+  ],
+  unc: [
+    { name: 'shivani', phone: '' },
+    { name: 'suhas', phone: '' },
+    { name: 'samarth', phone: '' }
+  ],
+  michigan: [
+    { name: 'ahimsa', phone: '' },
+    { name: 'vijyal', phone: '' },
+    { name: 'punjan', phone: '' }
+  ],
+  tamu: [
+    { name: 'adrian', phone: '' },
+    { name: 'rupali', phone: '' }
+  ],
+  ucd: [
+    { name: 'pranav b', phone: '' },
+    { name: 'prakrit', phone: '' },
+    { name: 'sarayu', phone: '' }
+  ]
+};
+
+const VENUE_INFO = {
+  name: 'Marshall Family Performing Arts Center',
+  address: '4141 Spring Valley Rd, Addison, TX 75001',
+  seatingCapacity: '600 seat auditorium'
+};
+
+const HOTEL_INFO = {
+  name: 'DoubleTree by Hilton Hotel Dallas',
+  address: '4099 Valley View Ln, Dallas, TX 75244'
+};
+
+const TECH_INFO = {
+  danceableSpace: "42' x 28'",
+  backdropSpace: '4 ft',
+  apronSpace: '4 ft',
+  propsBox: '7ft (length) x 5ft (depth) x 10ft (height)',
+  additionalNotes: '*There will be NO RIGGING this year at Marshall Arts Center*'
+};
+
 const initializeTeamData = async () => {
   try {
     for (const teamId of TEAM_IDS) {
@@ -125,11 +202,11 @@ const initializeTeamData = async () => {
         const initialData: TeamData = {
           displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
-          generalInfo: {
-            practiceArea: '',
-            liasonContact: '',
-            specialInstructions: '',
-            additionalInfo: ''
+          information: {
+            liaisons: TEAM_LIAISONS[teamId],
+            tech: TECH_INFO,
+            venue: VENUE_INFO,
+            hotel: HOTEL_INFO
           },
           techVideo: {
             title: '',
@@ -148,12 +225,12 @@ const initializeTeamData = async () => {
         
         // Ensure all required fields exist
         if (!data.announcements) updates.announcements = [];
-        if (!data.generalInfo) {
-          updates.generalInfo = {
-            practiceArea: '',
-            liasonContact: '',
-            specialInstructions: '',
-            additionalInfo: ''
+        if (!data.information) {
+          updates.information = {
+            liaisons: TEAM_LIAISONS[teamId],
+            tech: TECH_INFO,
+            venue: VENUE_INFO,
+            hotel: HOTEL_INFO
           };
         }
         if (!data.techVideo) {

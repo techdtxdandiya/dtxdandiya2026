@@ -28,12 +28,10 @@ interface TeamInfo {
       name: string;
       address: string;
       seatingCapacity: string;
-      additionalNotes?: string;
     };
     hotel: {
       name: string;
       address: string;
-      additionalNotes?: string;
     };
   };
   techVideo: {
@@ -113,134 +111,11 @@ const renderScheduleSection = (
   );
 };
 
-const renderInformationSection = (teamInfo: TeamInfo) => (
-  <div className="space-y-6">
-    {/* Liaisons Information */}
-    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-      <h3 className="text-lg font-semibold mb-4">Liaisons Information</h3>
-      <div className="space-y-3">
-        {teamInfo?.information?.liaisons?.map((liaison, index) => (
-          <div key={index} className="flex gap-4 items-center">
-            <div className="flex-1">
-              <span className="text-blue-300">Name:</span> {liaison.name}
-            </div>
-            <div className="w-48">
-              <span className="text-blue-300">Phone:</span> {liaison.phone}
-            </div>
-          </div>
-        ))}
-        {(!teamInfo?.information?.liaisons || teamInfo.information.liaisons.length === 0) && (
-          <p className="text-gray-400 italic">No liaisons information available</p>
-        )}
-      </div>
-    </div>
-
-    {/* Tech Information */}
-    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-      <h3 className="text-lg font-semibold mb-4">Tech Information</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <span className="text-blue-300">Danceable Space:</span>
-          <p>{teamInfo?.information?.tech?.danceableSpace || 'Not specified'}</p>
-        </div>
-        <div>
-          <span className="text-blue-300">Backdrop Space:</span>
-          <p>{teamInfo?.information?.tech?.backdropSpace || 'Not specified'}</p>
-        </div>
-        <div>
-          <span className="text-blue-300">Apron Space:</span>
-          <p>{teamInfo?.information?.tech?.apronSpace || 'Not specified'}</p>
-        </div>
-        <div>
-          <span className="text-blue-300">Props Box:</span>
-          <p>{teamInfo?.information?.tech?.propsBox || 'Not specified'}</p>
-        </div>
-      </div>
-      {teamInfo?.information?.tech?.additionalNotes && (
-        <div className="mt-4">
-          <span className="text-blue-300">Additional Notes:</span>
-          <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.tech.additionalNotes}</p>
-        </div>
-      )}
-    </div>
-
-    {/* Venue Information */}
-    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-      <h3 className="text-lg font-semibold mb-4">Venue Information</h3>
-      <div className="space-y-3">
-        <div>
-          <span className="text-blue-300">Name:</span>
-          <p>{teamInfo?.information?.venue?.name || 'Not specified'}</p>
-        </div>
-        <div>
-          <span className="text-blue-300">Address:</span>
-          <p>
-            {teamInfo?.information?.venue?.address || 'Not specified'}
-            {teamInfo?.information?.venue?.address && (
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information.venue.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 text-blue-400 hover:text-blue-300 text-sm"
-              >
-                View in Google Maps
-              </a>
-            )}
-          </p>
-        </div>
-        <div>
-          <span className="text-blue-300">Seating Capacity:</span>
-          <p>{teamInfo?.information?.venue?.seatingCapacity || 'Not specified'}</p>
-        </div>
-        {teamInfo?.information?.venue?.additionalNotes && (
-          <div>
-            <span className="text-blue-300">Additional Notes:</span>
-            <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.venue.additionalNotes}</p>
-          </div>
-        )}
-      </div>
-    </div>
-
-    {/* Hotel Information */}
-    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-      <h3 className="text-lg font-semibold mb-4">Hotel Information</h3>
-      <div className="space-y-3">
-        <div>
-          <span className="text-blue-300">Name:</span>
-          <p>{teamInfo?.information?.hotel?.name || 'Not specified'}</p>
-        </div>
-        <div>
-          <span className="text-blue-300">Address:</span>
-          <p>
-            {teamInfo?.information?.hotel?.address || 'Not specified'}
-            {teamInfo?.information?.hotel?.address && (
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information.hotel.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 text-blue-400 hover:text-blue-300 text-sm"
-              >
-                View in Google Maps
-              </a>
-            )}
-          </p>
-        </div>
-        {teamInfo?.information?.hotel?.additionalNotes && (
-          <div>
-            <span className="text-blue-300">Additional Notes:</span>
-            <p className="mt-1 whitespace-pre-wrap">{teamInfo.information.hotel.additionalNotes}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-);
-
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<TeamId | null>(null);
-  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule' | 'locations'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule'>('announcements');
 
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as TeamId | null;
@@ -256,47 +131,22 @@ export default function Dashboard() {
     const unsubscribe = onValue(teamRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        
-        // Ensure all required fields exist with default values
-        const processedData = {
-          ...data,
-          information: {
-            liaisons: data.information?.liaisons || [],
-            tech: {
-              danceableSpace: data.information?.tech?.danceableSpace || "42' x 28'",
-              backdropSpace: data.information?.tech?.backdropSpace || "4 ft",
-              apronSpace: data.information?.tech?.apronSpace || "4 ft",
-              propsBox: data.information?.tech?.propsBox || "7ft (length) x 5ft (depth) x 10ft (height)",
-              additionalNotes: data.information?.tech?.additionalNotes || "*There will be NO RIGGING this year at Marshall Arts Center*"
-            },
-            venue: {
-              name: data.information?.venue?.name || "Marshall Family Performing Arts Center",
-              address: data.information?.venue?.address || "4141 Spring Valley Rd, Addison, TX 75001",
-              seatingCapacity: data.information?.venue?.seatingCapacity || "600 seat auditorium",
-              additionalNotes: data.information?.venue?.additionalNotes || ""
-            },
-            hotel: {
-              name: data.information?.hotel?.name || "DoubleTree by Hilton Hotel Dallas",
-              address: data.information?.hotel?.address || "4099 Valley View Ln, Dallas, TX 75244",
-              additionalNotes: data.information?.hotel?.additionalNotes || ""
-            }
-          },
-          schedule: {
-            showOrder: data.schedule?.showOrder || null,
-            isPublished: data.schedule?.isPublished || false,
-            friday: data.schedule?.friday || [],
-            saturdayTech: data.schedule?.saturdayTech || [],
-            saturdayPreShow: data.schedule?.saturdayPreShow || [],
-            saturdayShow: data.schedule?.saturdayShow || [],
+        // Ensure schedule has all required fields
+        if (data.schedule) {
+          data.schedule = {
+            showOrder: data.schedule.showOrder || null,
+            isPublished: data.schedule.isPublished || false,
+            friday: data.schedule.friday || [],
+            saturdayTech: data.schedule.saturdayTech || [],
+            saturdayPreShow: data.schedule.saturdayPreShow || [],
+            saturdayShow: data.schedule.saturdayShow || [],
             saturdayPostShow: {
-              placing: data.schedule?.saturdayPostShow?.placing || [],
-              nonPlacing: data.schedule?.saturdayPostShow?.nonPlacing || []
+              placing: data.schedule.saturdayPostShow?.placing || [],
+              nonPlacing: data.schedule.saturdayPostShow?.nonPlacing || []
             }
-          }
-        };
-        
-        console.log('Processed team data:', processedData);
-        setTeamInfo(processedData);
+          };
+        }
+        setTeamInfo(data);
       }
     });
 
@@ -313,7 +163,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-black relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
@@ -345,56 +195,19 @@ export default function Dashboard() {
         {/* Navigation Tabs */}
         <div className="mb-8">
           <div className="flex space-x-4 border-b border-blue-500/30">
-            <button
-              onClick={() => setActiveTab('announcements')}
-              className={`px-4 py-2 ${
-                activeTab === 'announcements'
-                  ? 'border-b-2 border-blue-500 text-white'
-                  : 'text-blue-200/60 hover:text-white'
-              }`}
-            >
-              Announcements
-            </button>
-            <button
-              onClick={() => setActiveTab('information')}
-              className={`px-4 py-2 ${
-                activeTab === 'information'
-                  ? 'border-b-2 border-blue-500 text-white'
-                  : 'text-blue-200/60 hover:text-white'
-              }`}
-            >
-              Information
-            </button>
-            <button
-              onClick={() => setActiveTab('tech')}
-              className={`px-4 py-2 ${
-                activeTab === 'tech'
-                  ? 'border-b-2 border-blue-500 text-white'
-                  : 'text-blue-200/60 hover:text-white'
-              }`}
-            >
-              Tech Video
-            </button>
-            <button
-              onClick={() => setActiveTab('schedule')}
-              className={`px-4 py-2 ${
-                activeTab === 'schedule'
-                  ? 'border-b-2 border-blue-500 text-white'
-                  : 'text-blue-200/60 hover:text-white'
-              }`}
-            >
-              Schedule
-            </button>
-            <button
-              onClick={() => setActiveTab('locations')}
-              className={`px-4 py-2 ${
-                activeTab === 'locations'
-                  ? 'border-b-2 border-blue-500 text-white'
-                  : 'text-blue-200/60 hover:text-white'
-              }`}
-            >
-              Locations
-            </button>
+            {['announcements', 'information', 'tech', 'schedule'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as typeof activeTab)}
+                className={`px-4 py-2 ${
+                  activeTab === tab
+                    ? 'border-b-2 border-blue-500 text-white'
+                    : 'text-blue-200/60 hover:text-white'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -421,10 +234,102 @@ export default function Dashboard() {
             </div>
           )}
 
-          {activeTab === 'information' && teamInfo && (
-            <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Information</h2>
-              {renderInformationSection(teamInfo)}
+          {activeTab === 'information' && (
+            <div className="space-y-8">
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
+                <div className="space-y-4">
+                  {teamInfo?.information?.liaisons?.map((liaison, index) => (
+                    <div key={index} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 bg-blue-500/5 rounded-lg">
+                      <div>
+                        <p className="text-white font-medium">{liaison.name}</p>
+                        {liaison.phone && (
+                          <p className="text-blue-200/80">{liaison.phone}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
+                    <p className="text-white">42' x 28'</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Apron Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
+                    <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                      <p className="text-red-200">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Venue Information</h3>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg">Marshall Family Performing Arts Center</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <p className="text-white">4141 Spring Valley Rd, Addison, TX 75001</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                      >
+                        View in Google Maps
+                      </a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Seating Capacity</h4>
+                    <p className="text-white">600 seat auditorium</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg">DoubleTree by Hilton Hotel Dallas</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                      >
+                        View in Google Maps
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
