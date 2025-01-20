@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
-import { TeamInfo, TeamId, DashboardTeamId, TEAM_DISPLAY_NAMES } from '../../config/initializeDatabase';
+import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS } from '../../config/initializeDatabase';
+import type { TeamInfo, TeamId, DashboardTeamId, ScheduleEvent } from '../../types/team';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-interface ScheduleEvent {
-  time: string;
-  event: string;
-  location: string;
-}
 
 interface AnnouncementFormData {
   id?: string;

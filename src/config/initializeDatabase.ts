@@ -6,7 +6,7 @@ export const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berke
 export type TeamId = typeof TEAM_IDS[number];
 export type DashboardTeamId = TeamId | 'admin';
 
-export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
+export const TEAM_DISPLAY_NAMES = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Texas Raas',
   michigan: 'Michigan Wolveraas',
@@ -15,7 +15,7 @@ export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   iu: 'IU HoosierRaas',
   berkeley: 'UC Berkeley Raas Ramzat',
   msu: 'MSU RaaSparty'
-};
+} as const;
 
 export interface ScheduleEvent {
   time: string;
@@ -50,22 +50,9 @@ export interface TeamInfo {
       name: string;
       phone: string;
     }>;
-    tech: {
-      danceableSpace: string;
-      backdropSpace: string;
-      apronSpace: string;
-      propsBox: string;
-      additionalNotes?: string;
-    };
-    venue: {
-      name: string;
-      address: string;
-      seatingCapacity: string;
-    };
-    hotel: {
-      name: string;
-      address: string;
-    };
+    tech: typeof TECH_INFO;
+    venue: typeof VENUE_INFO;
+    hotel: typeof HOTEL_INFO;
   };
   techVideo: {
     title: string;
@@ -137,12 +124,12 @@ export const VENUE_INFO = {
   name: 'Marshall Family Performing Arts Center',
   address: '4141 Spring Valley Rd, Addison, TX 75001',
   seatingCapacity: '600 seat auditorium'
-};
+} as const;
 
 export const HOTEL_INFO = {
   name: 'DoubleTree by Hilton Hotel Dallas',
   address: '4099 Valley View Ln, Dallas, TX 75244'
-};
+} as const;
 
 export const TECH_INFO = {
   danceableSpace: "42' x 28'",
@@ -150,9 +137,9 @@ export const TECH_INFO = {
   apronSpace: '4 ft',
   propsBox: '7ft (length) x 5ft (depth) x 10ft (height)',
   additionalNotes: '*There will be NO RIGGING this year at Marshall Arts Center*'
-};
+} as const;
 
-export const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> = {
+export const INITIAL_LIAISONS = {
   texas: [
     { name: 'Svayam Sharma', phone: '972.510.7638' },
     { name: 'Prajith Sugatan', phone: '214.732.1833' },
@@ -192,7 +179,7 @@ export const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: strin
     { name: 'Prakrit Sinha', phone: '512.669.6980' },
     { name: 'Sarayu Varanasi', phone: '847.970.0653' }
   ]
-};
+} as const;
 
 export const initializeTeamData = async () => {
   try {
@@ -201,7 +188,6 @@ export const initializeTeamData = async () => {
       const snapshot = await get(teamRef);
       
       if (!snapshot.exists()) {
-        // Initialize with basic structure including liaisons
         await set(teamRef, {
           displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
@@ -221,7 +207,6 @@ export const initializeTeamData = async () => {
         });
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       } else {
-        // Ensure liaisons exist
         const data = snapshot.val();
         if (!data.information?.liaisons || data.information.liaisons.length === 0) {
           await set(teamRef, {
