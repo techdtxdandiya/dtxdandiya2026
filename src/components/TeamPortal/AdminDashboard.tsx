@@ -292,10 +292,13 @@ const AdminDashboard: React.FC = () => {
       await set(teamRef, {
         ...currentData,
         ...videoData,
-        title: 'Tech Time Video' // Always set this title
+        title: 'Tech Time Video'
       });
       
-      toast.success('Tech video updated successfully!');
+      // Only show success message if we're not just updating the URL
+      if (!('driveUrl' in videoData)) {
+        toast.success('Tech video updated successfully!');
+      }
     } catch (error) {
       console.error('Error updating tech video:', error);
       toast.error('Error updating tech video');
@@ -323,6 +326,22 @@ const AdminDashboard: React.FC = () => {
     } catch (error) {
       console.error('Error publishing tech video:', error);
       toast.error('Error publishing tech video');
+    }
+  };
+
+  const handleRemoveTechVideo = async (teamId: TeamId) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/techVideo`);
+      await set(teamRef, {
+        title: 'Tech Time Video',
+        driveUrl: '',
+        isPublished: false
+      });
+      
+      toast.success('Tech video removed successfully!');
+    } catch (error) {
+      console.error('Error removing tech video:', error);
+      toast.error('Error removing tech video');
     }
   };
 
@@ -965,9 +984,17 @@ const AdminDashboard: React.FC = () => {
                     <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h3>
                     <div className="flex items-center gap-2">
                       {teamData[teamId as TeamId]?.techVideo?.isPublished ? (
-                        <span className="text-sm text-green-400 bg-green-400/10 px-3 py-1 rounded-lg">
-                          Published
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-green-400 bg-green-400/10 px-3 py-1 rounded-lg">
+                            Published
+                          </span>
+                          <button
+                            onClick={() => handleRemoveTechVideo(teamId as TeamId)}
+                            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       ) : (
                         <button
                           onClick={() => handlePublishTechVideo(teamId as TeamId)}
@@ -985,8 +1012,7 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={teamData[teamId as TeamId]?.techVideo?.driveUrl || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
-                          driveUrl: e.target.value,
-                          isPublished: teamData[teamId as TeamId]?.techVideo?.isPublished || false
+                          driveUrl: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
                         placeholder="Enter Google Drive video link"
