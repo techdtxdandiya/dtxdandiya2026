@@ -8,21 +8,28 @@ const renderScheduleSection = (
   title: string,
   events: Array<{ time: string; event: string; location: string }> | undefined
 ) => {
-  if (!events || events.length === 0) return null;
+  console.log(`Rendering schedule section: ${title}`, events);
+  if (!events || events.length === 0) {
+    console.log(`No events for section: ${title}`);
+    return null;
+  }
 
   return (
     <div className="mb-8">
       <h3 className="text-2xl text-white mb-4">{title}</h3>
       <div className="space-y-3">
-        {events.map((event, index) => (
-          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-              <div className="text-blue-200 font-medium">{event.time}</div>
-              <div className="text-white">{event.event}</div>
-              <div className="text-blue-200/80">{event.location}</div>
+        {events.map((event, index) => {
+          console.log(`Rendering event ${index} in ${title}:`, event);
+          return (
+            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                <div className="text-blue-200 font-medium">{event.time}</div>
+                <div className="text-white">{event.location}</div>
+                <div className="text-blue-200/80">{event.event}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -38,6 +45,7 @@ export default function Dashboard() {
     const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
     
     if (!storedTeam || storedTeam === 'admin') {
+      console.log('No team stored or admin, redirecting to login');
       navigate("/team-portal/login");
       return;
     }
@@ -51,10 +59,20 @@ export default function Dashboard() {
         const data = snapshot.val();
         console.log('Received team data:', data);
         console.log('Schedule data:', data.schedule);
+        console.log('Schedule published status:', data.schedule?.isPublished);
+        console.log('Schedule sections:', {
+          friday: data.schedule?.friday,
+          saturdayTech: data.schedule?.saturdayTech,
+          saturdayPreShow: data.schedule?.saturdayPreShow,
+          saturdayShow: data.schedule?.saturdayShow,
+          saturdayPostShow: data.schedule?.saturdayPostShow
+        });
         setTeamInfo(data);
       } else {
         console.log('No data exists for team:', storedTeam);
       }
+    }, (error) => {
+      console.error('Error loading team data:', error);
     });
 
     return () => unsubscribe();
@@ -68,6 +86,16 @@ export default function Dashboard() {
   if (!teamInfo || !teamId) {
     return null;
   }
+
+  // Add schedule tab debug logging
+  useEffect(() => {
+    if (activeTab === 'schedule' && teamInfo) {
+      console.log('Schedule tab active, current team info:', teamInfo);
+      console.log('Schedule data:', teamInfo.schedule);
+      console.log('Schedule published:', teamInfo.schedule?.isPublished);
+      console.log('Show order:', teamInfo.schedule?.showOrder);
+    }
+  }, [activeTab, teamInfo]);
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
