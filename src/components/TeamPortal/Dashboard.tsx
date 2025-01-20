@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, set } from 'firebase/database';
-import { TEAM_LIAISONS } from '../../config/initializeDatabase';
+import { TEAM_LIAISONS, DashboardTeamId } from '../../config/initializeDatabase';
 
 interface TeamInfo {
   displayName: string;
@@ -11,7 +11,7 @@ interface TeamInfo {
     title: string;
     content: string;
     timestamp: number;
-    targetTeams?: TeamId[];
+    targetTeams?: DashboardTeamId[];
   }>;
   information: {
     liaisons: Array<{
@@ -86,8 +86,6 @@ interface TeamInfo {
   }>;
 }
 
-type TeamId = "tamu" | "texas" | "michigan" | "ucd" | "unc" | "iu" | "berkeley" | "msu" | "admin";
-
 const renderScheduleSection = (
   title: string,
   events: Array<{ time: string; event: string; location: string }> | undefined
@@ -115,11 +113,11 @@ const renderScheduleSection = (
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
-  const [teamId, setTeamId] = useState<TeamId | null>(null);
+  const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
   const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule'>('announcements');
 
   useEffect(() => {
-    const storedTeam = sessionStorage.getItem("team") as TeamId | null;
+    const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
     
     if (!storedTeam || storedTeam === 'admin') {
       navigate("/team-portal/login");
