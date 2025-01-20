@@ -50,6 +50,7 @@ export default function Dashboard() {
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log('Received team data:', data);
+        console.log('Schedule data:', data.schedule);
         setTeamInfo(data);
       } else {
         console.log('No data exists for team:', storedTeam);
@@ -300,7 +301,7 @@ export default function Dashboard() {
                   )}
 
                   {/* Friday Schedule */}
-                  {teamInfo.schedule.friday && teamInfo.schedule.friday.length > 0 && (
+                  {teamInfo.schedule.friday && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Friday</h3>
                       <div className="space-y-3">
@@ -318,7 +319,7 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Tech Schedule */}
-                  {teamInfo.schedule.saturdayTech && teamInfo.schedule.saturdayTech.length > 0 && (
+                  {teamInfo.schedule.saturdayTech && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Tech Time</h3>
                       <div className="space-y-3">
@@ -336,7 +337,7 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Pre-Show Schedule */}
-                  {teamInfo.schedule.saturdayPreShow && teamInfo.schedule.saturdayPreShow.length > 0 && (
+                  {teamInfo.schedule.saturdayPreShow && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Pre-Show</h3>
                       <div className="space-y-3">
@@ -354,7 +355,7 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Show Schedule */}
-                  {teamInfo.schedule.saturdayShow && teamInfo.schedule.saturdayShow.length > 0 && (
+                  {teamInfo.schedule.saturdayShow && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Show</h3>
                       <div className="space-y-3">
@@ -377,7 +378,7 @@ export default function Dashboard() {
                       <h3 className="text-2xl text-white mb-4">Saturday Post-Show</h3>
                       <div className="space-y-6">
                         {/* Placing Teams Schedule */}
-                        {teamInfo.schedule.saturdayPostShow.placing && teamInfo.schedule.saturdayPostShow.placing.length > 0 && (
+                        {teamInfo.schedule.saturdayPostShow.placing && (
                           <div>
                             <h4 className="text-xl text-white mb-3">Placing Teams</h4>
                             <div className="space-y-3">
@@ -395,7 +396,7 @@ export default function Dashboard() {
                         )}
 
                         {/* Non-Placing Teams Schedule */}
-                        {teamInfo.schedule.saturdayPostShow.nonPlacing && teamInfo.schedule.saturdayPostShow.nonPlacing.length > 0 && (
+                        {teamInfo.schedule.saturdayPostShow.nonPlacing && (
                           <div>
                             <h4 className="text-xl text-white mb-3">Non-Placing Teams</h4>
                             <div className="space-y-3">
