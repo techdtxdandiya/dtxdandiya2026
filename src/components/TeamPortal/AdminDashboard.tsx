@@ -277,16 +277,14 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleUpdateInformation = async (teamId: TeamId, updates: Partial<TeamInfo['information']>) => {
+  const handleUpdateLiaisons = async (teamId: TeamId, liaisons: Array<{ name: string; phone: string }>) => {
     try {
-      const teamRef = ref(db, `teams/${teamId}/information`);
-      const snapshot = await get(teamRef);
-      const currentInfo = snapshot.val() || {};
-      await set(teamRef, { ...currentInfo, ...updates });
-      toast.success('Information updated successfully!');
+      const teamRef = ref(db, `teams/${teamId}/information/liaisons`);
+      await set(teamRef, liaisons);
+      toast.success('Liaisons updated successfully!');
     } catch (error) {
-      console.error('Error updating information:', error);
-      toast.error('Error updating information');
+      console.error('Error updating liaisons:', error);
+      toast.error('Error updating liaisons');
     }
   };
 
@@ -804,7 +802,7 @@ const AdminDashboard: React.FC = () => {
                             onChange={(e) => {
                               const newLiaisons = [...teamData[teamId].information.liaisons];
                               newLiaisons[index] = { ...liaison, name: e.target.value };
-                              handleUpdateInformation(teamId, { liaisons: newLiaisons });
+                              handleUpdateLiaisons(teamId, newLiaisons);
                             }}
                             placeholder="Liaison Name"
                             className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
@@ -816,7 +814,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                                 const newLiaisons = [...teamData[teamId].information.liaisons];
                                 newLiaisons[index] = { ...liaison, phone: e.target.value };
-                                handleUpdateInformation(teamId, { liaisons: newLiaisons });
+                                handleUpdateLiaisons(teamId, newLiaisons);
                               }}
                               placeholder="Phone Number"
                               className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
@@ -838,7 +836,7 @@ const AdminDashboard: React.FC = () => {
                       <button
                         onClick={() => {
                           const newLiaisons = [...(teamData[teamId]?.information?.liaisons || []), { name: '', phone: '' }];
-                          handleUpdateInformation(teamId, { liaisons: newLiaisons });
+                          handleUpdateLiaisons(teamId, newLiaisons);
                         }}
                         className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
                       >
@@ -852,48 +850,27 @@ const AdminDashboard: React.FC = () => {
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                  <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Danceable Space</label>
-                                    <input
-                      type="text"
-                      value="42' x 28'"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-                                  <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Backdrop Space</label>
-                                    <input
-                      type="text"
-                      value="4 ft"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Apron Space</label>
-                                    <input
-                                      type="text"
-                      value="4 ft"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
+                    <p className="text-white">42' x 28'</p>
+                  </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Props Box</label>
-                    <input
-                      type="text"
-                      value="7ft (length) x 5ft (depth) x 10ft (height)"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Apron Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
+                    <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                  </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Additional Notes</label>
                     <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-200">
                       *There will be NO RIGGING this year at Marshall Arts Center*
-                                </div>
-                              </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -901,75 +878,50 @@ const AdminDashboard: React.FC = () => {
                 <h3 className="text-2xl font-semibold text-white mb-6">Venue Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Name</label>
-                    <input
-                      type="text"
-                      value="Marshall Family Performing Arts Center"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                    />
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white">Marshall Family Performing Arts Center</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Address</label>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
-                      <input
-                        type="text"
-                        value="4141 Spring Valley Rd, Addison, TX 75001"
-                        readOnly
-                        className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                      />
+                      <p className="text-white">4141 Spring Valley Rd, Addison, TX 75001</p>
                       <a
                         href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
+                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
                       >
                         View in Google Maps
                       </a>
-                          </div>
-                        </div>
-                  <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Seating Capacity</label>
-                    <input
-                      type="text"
-                      value="600 seat auditorium"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                    />
-                      </div>
+                    </div>
                   </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Seating Capacity</h4>
+                    <p className="text-white">600 seat auditorium</p>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
-                        <div className="space-y-4">
-                                <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Name</label>
-                                  <input
-                                    type="text"
-                      value="DoubleTree by Hilton Hotel Dallas"
-                      readOnly
-                      className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                                <div>
-                    <label className="block text-sm font-medium text-blue-300 mb-2">Address</label>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white">DoubleTree by Hilton Hotel Dallas</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
-                      <input
-                        type="text"
-                        value="4099 Valley View Ln, Dallas, TX 75244"
-                        readOnly
-                        className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                      />
+                      <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
                       <a
                         href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
+                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
                       >
                         View in Google Maps
                       </a>
-                                </div>
+                    </div>
                   </div>
                 </div>
               </div>

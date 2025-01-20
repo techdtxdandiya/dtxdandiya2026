@@ -152,7 +152,7 @@ export const TECH_INFO = {
   additionalNotes: '*There will be NO RIGGING this year at Marshall Arts Center*'
 };
 
-const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> = {
+export const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> = {
   texas: [
     { name: 'Svayam Sharma', phone: '972.510.7638' },
     { name: 'Prajith Sugatan', phone: '214.732.1833' },
@@ -194,7 +194,7 @@ const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> =
   ]
 };
 
-const initializeTeamData = async () => {
+export const initializeTeamData = async () => {
   try {
     for (const teamId of TEAM_IDS) {
       const teamRef = ref(db, `teams/${teamId}`);
