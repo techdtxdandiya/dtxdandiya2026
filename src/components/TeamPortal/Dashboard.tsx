@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../../config/firebase';
 import { ref, onValue, set } from 'firebase/database';
-import { TEAM_LIAISONS, DashboardTeamId } from '../../config/initializeDatabase';
+import { db, TEAM_LIAISONS, DashboardTeamId } from '../../config';
 
 interface TeamInfo {
   displayName: string;
