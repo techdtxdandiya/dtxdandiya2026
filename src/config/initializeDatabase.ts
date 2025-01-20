@@ -1,9 +1,9 @@
 import { ref, set, get } from 'firebase/database';
 import { db } from './firebase';
 
-const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berkeley', 'msu'] as const;
+export const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berkeley', 'msu'] as const;
 
-const TEAM_DISPLAY_NAMES: Record<typeof TEAM_IDS[number], string> = {
+export const TEAM_DISPLAY_NAMES: Record<typeof TEAM_IDS[number], string> = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Texas Raas',
   michigan: 'Michigan Wolveraas',
