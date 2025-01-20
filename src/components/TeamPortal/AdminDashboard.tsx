@@ -847,62 +847,46 @@ const AdminDashboard: React.FC = () => {
             <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {selectedTeams.map(teamId => (
+                <div className="grid grid-cols-1 gap-8">
+                  {Object.keys(teamData).map(teamId => (
                     <div key={teamId} className="space-y-4">
-                      <h4 className="text-xl text-white">{TEAM_DISPLAY_NAMES[teamId]}</h4>
-                      {teamData[teamId]?.information?.liaisons?.map((liaison, index) => (
-                        <div key={index} className="space-y-2">
-                                    <input
-                            type="text"
-                            value={liaison.name}
-                                      onChange={(e) => {
-                              const newLiaisons = [...teamData[teamId].information.liaisons];
-                              newLiaisons[index] = { ...liaison, name: e.target.value };
-                              handleUpdateLiaisons(teamId, newLiaisons);
-                            }}
-                            placeholder="Liaison Name"
-                            className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                          />
-                          <div className="flex gap-2">
-                                    <input
-                                      type="text"
-                              value={liaison.phone}
-                                      onChange={(e) => {
-                                const newLiaisons = [...teamData[teamId].information.liaisons];
-                                newLiaisons[index] = { ...liaison, phone: e.target.value };
-                                handleUpdateLiaisons(teamId, newLiaisons);
-                              }}
-                              placeholder="Phone Number"
-                              className="flex-1 bg-black/40 border border-blue-500/30 rounded-lg p-2"
-                            />
-                            {liaison.phone && (
-                              <a 
-                                href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
-                                className="px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-300"
-                                title="Call"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                </svg>
-                              </a>
-                            )}
-                                  </div>
-                                  </div>
-                      ))}
-                                <button
-                                  onClick={() => {
-                          const newLiaisons = [...(teamData[teamId]?.information?.liaisons || []), { name: '', phone: '' }];
-                          handleUpdateLiaisons(teamId, newLiaisons);
-                        }}
-                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
-                      >
-                        Add Liaison
-                                </button>
-                              </div>
-                            ))}
+                      <h4 className="text-xl text-white border-b border-blue-500/30 pb-2 mb-4">
+                        {TEAM_DISPLAY_NAMES[teamId as TeamId]}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS).map((liaison, index) => (
+                          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                            <div className="space-y-2">
+                              <input
+                                type="text"
+                                value={liaison.name}
+                                onChange={(e) => {
+                                  const updatedLiaisons = [...(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS)];
+                                  updatedLiaisons[index] = { ...liaison, name: e.target.value };
+                                  handleUpdateLiaisons(teamId as TeamId, updatedLiaisons);
+                                }}
+                                placeholder="Liaison Name"
+                                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white mb-2"
+                              />
+                              <input
+                                type="tel"
+                                value={liaison.phone}
+                                onChange={(e) => {
+                                  const updatedLiaisons = [...(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS)];
+                                  updatedLiaisons[index] = { ...liaison, phone: e.target.value };
+                                  handleUpdateLiaisons(teamId as TeamId, updatedLiaisons);
+                                }}
+                                placeholder="Phone Number"
+                                className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                              />
+                            </div>
                           </div>
-                        </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
@@ -961,12 +945,12 @@ const AdminDashboard: React.FC = () => {
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
-                        <div className="space-y-4">
-                                <div>
+                <div className="space-y-4">
+                  <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
                     <p className="text-white">DoubleTree by Hilton Hotel Dallas</p>
-                                </div>
-                                <div>
+                  </div>
+                  <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
                       <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
@@ -978,7 +962,7 @@ const AdminDashboard: React.FC = () => {
                       >
                         View in Google Maps
                       </a>
-                                </div>
+                    </div>
                   </div>
                 </div>
               </div>
