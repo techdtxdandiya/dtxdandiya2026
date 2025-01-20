@@ -188,6 +188,7 @@ export const initializeTeamData = async () => {
       const snapshot = await get(teamRef);
       
       if (!snapshot.exists()) {
+        // Initialize new team data
         await set(teamRef, {
           displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
@@ -207,14 +208,18 @@ export const initializeTeamData = async () => {
         });
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       } else {
+        // Update existing team data if liaisons are missing or empty
         const data = snapshot.val();
-        if (!data.information?.liaisons || data.information.liaisons.length === 0) {
-          await set(teamRef, {
-            ...data,
-            information: {
-              ...data.information,
-              liaisons: INITIAL_LIAISONS[teamId]
-            }
+        const currentLiaisons = data.information?.liaisons || [];
+        
+        // Check if liaisons need to be updated
+        if (!Array.isArray(currentLiaisons) || currentLiaisons.length === 0 || currentLiaisons.some(l => !l.name || !l.phone)) {
+          await set(ref(db, `teams/${teamId}/information`), {
+            ...data.information,
+            liaisons: INITIAL_LIAISONS[teamId],
+            tech: TECH_INFO,
+            venue: VENUE_INFO,
+            hotel: HOTEL_INFO
           });
           console.log(`Updated liaisons for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
         }
