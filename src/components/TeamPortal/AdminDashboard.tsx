@@ -289,6 +289,14 @@ const AdminDashboard: React.FC = () => {
       const snapshot = await get(teamRef);
       const currentData = snapshot.val() || {};
       
+      // Ensure URL has proper protocol
+      if ('driveUrl' in videoData && videoData.driveUrl) {
+        const url = videoData.driveUrl;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          videoData.driveUrl = `https://${url}`;
+        }
+      }
+      
       await set(teamRef, {
         ...currentData,
         ...videoData,

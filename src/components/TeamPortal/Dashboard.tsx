@@ -259,7 +259,7 @@ export default function Dashboard() {
                 <div className="p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 flex flex-col items-center justify-center">
                   <h3 className="text-2xl text-white mb-6 font-['Harry_Potter']">{teamInfo.techVideo.title}</h3>
                   <a
-                    href={teamInfo.techVideo.driveUrl}
+                    href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
