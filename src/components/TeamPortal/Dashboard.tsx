@@ -126,11 +126,15 @@ export default function Dashboard() {
     }
 
     setTeamId(storedTeam);
+    console.log('Loading data for team:', storedTeam);
     
     const teamRef = ref(db, `teams/${storedTeam}`);
     const unsubscribe = onValue(teamRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
+        console.log('Received team data:', data);
+        console.log('Liaisons:', data.information?.liaisons);
+        
         // Ensure schedule has all required fields
         if (data.schedule) {
           data.schedule = {
@@ -147,6 +151,8 @@ export default function Dashboard() {
           };
         }
         setTeamInfo(data);
+      } else {
+        console.log('No data exists for team:', storedTeam);
       }
     });
 
@@ -239,12 +245,17 @@ export default function Dashboard() {
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
                 <div className="space-y-4">
-                  {teamInfo?.information?.liaisons?.map((liaison, index) => (
+                  {teamInfo.information?.liaisons?.map((liaison, index) => (
                     <div key={index} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 bg-blue-500/5 rounded-lg">
-                      <div>
-                        <p className="text-white font-medium">{liaison.name}</p>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-white text-lg font-medium">{liaison.name}</p>
                         {liaison.phone && (
-                          <p className="text-blue-200/80">{liaison.phone}</p>
+                          <a 
+                            href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
+                            className="text-blue-300 hover:text-blue-200 transition-colors"
+                          >
+                            {liaison.phone}
+                          </a>
                         )}
                       </div>
                     </div>
