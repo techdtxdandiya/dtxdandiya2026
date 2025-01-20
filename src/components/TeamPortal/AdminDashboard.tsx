@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
 import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS } from '../../config/initializeDatabase';
-import type { TeamInfo, TeamId, DashboardTeamId, ScheduleEvent } from '../../types/team';
+import type { TeamInfo, TeamId, DashboardTeamId, Schedule, ScheduleEvent } from '../../types/team';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
@@ -114,25 +114,37 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
-  const handleUpdateSchedule = async (
-    teamId: TeamId,
-    scheduleSection: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
-    data: ScheduleEvent[] | { placing: ScheduleEvent[]; nonPlacing: ScheduleEvent[] }
-  ) => {
+  const handleUpdateScheduleSection = async (teamId: TeamId, section: keyof Schedule, data: any) => {
     try {
       const teamRef = ref(db, `teams/${teamId}/schedule`);
       const snapshot = await get(teamRef);
       const currentSchedule = snapshot.val() || {};
       await set(teamRef, {
         ...currentSchedule,
-        [scheduleSection]: data
+        [section]: data
       });
-      setUpdateMessage('Schedule updated successfully!');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      toast.success('Schedule updated successfully!');
     } catch (error) {
       console.error('Error updating schedule:', error);
-      setUpdateMessage('Error updating schedule. Please try again.');
-      setTimeout(() => setUpdateMessage(''), 3000);
+      toast.error('Error updating schedule');
+    }
+  };
+
+  const handleUpdateSchedulePublished = async (teamId: TeamId, isPublished: boolean) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/schedule`);
+      const snapshot = await get(teamRef);
+      const currentSchedule = snapshot.val() || {};
+      
+      if (isPublished && !currentSchedule.showOrder) {
+        toast.error('Please assign a show order before publishing');
+        return;
+      }
+      
+      await handleUpdateScheduleSection(teamId, 'isPublished', isPublished);
+    } catch (error) {
+      console.error('Error updating schedule published status:', error);
+      toast.error('Error updating schedule status');
     }
   };
 
@@ -367,24 +379,6 @@ const AdminDashboard: React.FC = () => {
       handleUpdateTeamData(teamId, {
         nearbyLocations: updatedLocations
       });
-    }
-  };
-
-  const handleUpdateSchedulePublished = async (teamId: TeamId, isPublished: boolean) => {
-    try {
-      const teamRef = ref(db, `teams/${teamId}/schedule`);
-      const snapshot = await get(teamRef);
-      const currentSchedule = snapshot.val() || {};
-      await set(teamRef, {
-        ...currentSchedule,
-        isPublished
-      });
-      setUpdateMessage(`Schedule ${isPublished ? 'published' : 'unpublished'} successfully!`);
-      setTimeout(() => setUpdateMessage(''), 3000);
-    } catch (error) {
-      console.error('Error updating schedule published status:', error);
-      setUpdateMessage('Error updating schedule status. Please try again.');
-      setTimeout(() => setUpdateMessage(''), 3000);
     }
   };
 
@@ -667,7 +661,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
                       newPlacing[index] = { ...event, time: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         placing: newPlacing
                                 });
@@ -679,7 +673,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
                       newPlacing[index] = { ...event, event: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         placing: newPlacing
                                 });
@@ -691,7 +685,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
                       newPlacing[index] = { ...event, location: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         placing: newPlacing
                                 });
@@ -710,7 +704,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
                       newNonPlacing[index] = { ...event, time: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         nonPlacing: newNonPlacing
                                 });
@@ -722,7 +716,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
                       newNonPlacing[index] = { ...event, event: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         nonPlacing: newNonPlacing
                                 });
@@ -734,7 +728,7 @@ const AdminDashboard: React.FC = () => {
                               onChange={(e) => {
                       const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
                       newNonPlacing[index] = { ...event, location: e.target.value };
-                      handleUpdateSchedule(teamId, 'saturdayPostShow', {
+                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                         ...teamData[teamId].schedule.saturdayPostShow,
                         nonPlacing: newNonPlacing
                                 });
@@ -753,7 +747,7 @@ const AdminDashboard: React.FC = () => {
                                   onChange={(e) => {
                   const newEvents = [...events as ScheduleEvent[]];
                   newEvents[index] = { ...event, time: e.target.value };
-                  handleUpdateSchedule(teamId, section, newEvents);
+                  handleUpdateScheduleSection(teamId, section, newEvents);
                                   }}
                                   className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                                 />
@@ -762,7 +756,7 @@ const AdminDashboard: React.FC = () => {
                                   onChange={(e) => {
                   const newEvents = [...events as ScheduleEvent[]];
                   newEvents[index] = { ...event, event: e.target.value };
-                  handleUpdateSchedule(teamId, section, newEvents);
+                  handleUpdateScheduleSection(teamId, section, newEvents);
                 }}
                 className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
               />
@@ -771,7 +765,7 @@ const AdminDashboard: React.FC = () => {
                                       onChange={(e) => {
                   const newEvents = [...events as ScheduleEvent[]];
                   newEvents[index] = { ...event, location: e.target.value };
-                  handleUpdateSchedule(teamId, section, newEvents);
+                  handleUpdateScheduleSection(teamId, section, newEvents);
                 }}
                 className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                                     />
@@ -1016,45 +1010,49 @@ const AdminDashboard: React.FC = () => {
             </div>
           )}
           {activeTab === 'schedule' && (
-            <div className="mt-6">
-              {selectedTeams.map(teamId => (
-                <div key={teamId} className="mb-12">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-semibold">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <label className="text-sm">Show Order:</label>
-                        <select
-                          value={teamData[teamId]?.schedule?.showOrder || ''}
-                          onChange={(e) => handleUpdateShowOrder(teamId, e.target.value ? parseInt(e.target.value) : null)}
-                          className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                        >
-                          <option value="">Not Assigned</option>
-                          {Array.from({ length: 8 }, (_, i) => i + 1).map(num => (
-                            <option key={num} value={num}>Team {num}</option>
-                          ))}
-                        </select>
+            <div className="space-y-8">
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Show Order Assignment</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.keys(teamData).map(teamId => (
+                    <div key={teamId} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-lg text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <label className="text-sm text-blue-300">Show Order:</label>
+                            <select
+                              value={teamData[teamId as TeamId]?.schedule?.showOrder || ''}
+                              onChange={(e) => {
+                                const showOrder = e.target.value ? parseInt(e.target.value) : null;
+                                handleUpdateScheduleSection(teamId as TeamId, 'showOrder', showOrder);
+                              }}
+                              className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                            >
+                              <option value="">Select Order</option>
+                              {Array.from({ length: 8 }, (_, i) => i + 1).map(num => (
+                                <option key={num} value={num}>Team {num}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <button
+                            onClick={() => handleUpdateSchedulePublished(teamId as TeamId, !teamData[teamId as TeamId]?.schedule?.isPublished)}
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                              teamData[teamId as TeamId]?.schedule?.isPublished
+                                ? 'bg-green-500/10 hover:bg-green-500/20 text-green-400'
+                                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                            }`}
+                          >
+                            {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
+                          </button>
                         </div>
-                      <div className="flex items-center gap-2">
-                        <label className="text-sm">Published:</label>
-                        <input
-                          type="checkbox"
-                          checked={teamData[teamId]?.schedule?.isPublished || false}
-                          onChange={(e) => handleUpdateSchedulePublished(teamId, e.target.checked)}
-                          className="w-4 h-4"
-                        />
                       </div>
                     </div>
-                  </div>
-                  {renderScheduleSection(teamId, 'friday', 'Friday')}
-                  {renderScheduleSection(teamId, 'saturdayTech', 'Saturday Tech Time')}
-                  {renderScheduleSection(teamId, 'saturdayPreShow', 'Saturday Pre-Show')}
-                  {renderScheduleSection(teamId, 'saturdayShow', 'Saturday Show')}
-                  {renderScheduleSection(teamId, 'saturdayPostShow', 'Saturday Post-Show')}
-                      </div>
-                    ))}
-                  </div>
-            )}
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

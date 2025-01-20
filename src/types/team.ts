@@ -10,15 +10,15 @@ export interface ScheduleEvent {
 }
 
 export interface Schedule {
-  showOrder: number | null;
   isPublished: boolean;
+  showOrder: number | null;
   friday: ScheduleEvent[];
   saturdayTech: ScheduleEvent[];
   saturdayPreShow: ScheduleEvent[];
   saturdayShow: ScheduleEvent[];
   saturdayPostShow: {
-    placing: ScheduleEvent[];
     nonPlacing: ScheduleEvent[];
+    placing: ScheduleEvent[];
   };
 }
 
