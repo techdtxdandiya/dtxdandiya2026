@@ -43,7 +43,9 @@ export interface TeamInfo {
   techVideo: {
     title: string;
     youtubeUrl: string;
+    driveUrl: string;
     description?: string;
+    isPublished: boolean;
   };
   schedule: Schedule;
   nearbyLocations: Array<{

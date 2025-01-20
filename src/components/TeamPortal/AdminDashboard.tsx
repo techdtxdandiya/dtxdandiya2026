@@ -19,7 +19,7 @@ interface AnnouncementFormData {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
   const [teamData, setTeamData] = useState<Record<TeamId, TeamInfo>>({} as Record<TeamId, TeamInfo>);
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
@@ -763,17 +763,22 @@ const AdminDashboard: React.FC = () => {
 
         <div className="mb-8">
           <div className="flex space-x-4 border-b border-blue-500/30">
-            {['announcements', 'information', 'tech', 'schedule'].map((tab) => (
+            {[
+              ['announcements', 'Announcements'],
+              ['information', 'Information'],
+              ['tech-time-video', 'Tech Time Video'],
+              ['schedule', 'Schedule']
+            ].map(([key, label]) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab as typeof activeTab)}
+                key={key}
+                onClick={() => setActiveTab(key as typeof activeTab)}
                 className={`px-4 py-2 transition-colors ${
-                  activeTab === tab
+                  activeTab === key
                     ? 'border-b-2 border-blue-500 text-white'
                     : 'text-blue-200/60 hover:text-white'
                 }`}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {label}
               </button>
             ))}
           </div>
@@ -922,50 +927,80 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           )}
-          {activeTab === 'tech' && (
+          {activeTab === 'tech-time-video' && (
             <div className="mt-6">
               {selectedTeams.map(teamId => (
-                      <div key={teamId} className="mb-8">
-                  <h3 className="text-xl font-semibold mb-4">{TEAM_DISPLAY_NAMES[teamId]}</h3>
-                        <div className="space-y-4">
-                                <div>
-                      <label className="block text-sm font-medium mb-1">Video Title</label>
-                                  <input
-                                    type="text"
+                <div key={teamId} className="mb-8 bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId]}</h3>
+                    <div className="flex items-center gap-2">
+                      <label className="text-sm text-blue-200">Published:</label>
+                      <input
+                        type="checkbox"
+                        checked={teamData[teamId]?.techVideo?.isPublished || false}
+                        onChange={(e) => handleUpdateTechVideo(teamId, {
+                          ...teamData[teamId]?.techVideo,
+                          isPublished: e.target.checked
+                        })}
+                        className="w-4 h-4"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-blue-300 mb-1">Video Title</label>
+                      <input
+                        type="text"
                         value={teamData[teamId]?.techVideo?.title || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId, {
                           ...teamData[teamId]?.techVideo,
                           title: e.target.value
                         })}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                                <div>
-                      <label className="block text-sm font-medium mb-1">YouTube URL</label>
-                                  <input
-                                    type="text"
+                        className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                        placeholder="Enter video title"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-300 mb-1">Google Drive URL</label>
+                      <input
+                        type="text"
+                        value={teamData[teamId]?.techVideo?.driveUrl || ''}
+                        onChange={(e) => handleUpdateTechVideo(teamId, {
+                          ...teamData[teamId]?.techVideo,
+                          driveUrl: e.target.value
+                        })}
+                        className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                        placeholder="Enter Google Drive URL"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-300 mb-1">YouTube URL</label>
+                      <input
+                        type="text"
                         value={teamData[teamId]?.techVideo?.youtubeUrl || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId, {
                           ...teamData[teamId]?.techVideo,
                           youtubeUrl: e.target.value
                         })}
-                                    className="w-full bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                                <div>
-                      <label className="block text-sm font-medium mb-1">Description</label>
-                                  <textarea
+                        className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                        placeholder="Enter YouTube URL"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-blue-300 mb-1">Description</label>
+                      <textarea
                         value={teamData[teamId]?.techVideo?.description || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId, {
                           ...teamData[teamId]?.techVideo,
                           description: e.target.value
                         })}
-                                    className="w-full h-24 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                        className="w-full h-24 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white resize-none"
+                        placeholder="Enter video description"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
           {activeTab === 'schedule' && (

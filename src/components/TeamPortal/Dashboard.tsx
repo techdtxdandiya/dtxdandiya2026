@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../config';
-import type { TeamInfo, DashboardTeamId } from '../../config/initializeDatabase';
+import type { TeamInfo, DashboardTeamId } from '../../types/team';
 
 const renderScheduleSection = (
   title: string,
@@ -32,7 +32,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
-  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech' | 'schedule'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
 
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
@@ -101,17 +101,22 @@ export default function Dashboard() {
         {/* Navigation Tabs */}
         <div className="mb-8">
           <div className="flex space-x-4 border-b border-blue-500/30">
-            {['announcements', 'information', 'tech', 'schedule'].map((tab) => (
+            {[
+              ['announcements', 'Announcements'],
+              ['information', 'Information'],
+              ['tech-time-video', 'Tech Time Video'],
+              ['schedule', 'Schedule']
+            ].map(([key, label]) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab as typeof activeTab)}
+                key={key}
+                onClick={() => setActiveTab(key as typeof activeTab)}
                 className={`px-4 py-2 ${
-                  activeTab === tab
+                  activeTab === key
                     ? 'border-b-2 border-blue-500 text-white'
                     : 'text-blue-200/60 hover:text-white'
                 }`}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {label}
               </button>
             ))}
           </div>
@@ -247,29 +252,51 @@ export default function Dashboard() {
             </div>
           )}
 
-          {activeTab === 'tech' && (
+          {activeTab === 'tech-time-video' && (
             <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Tech Video</h2>
-              {teamInfo.techVideo?.youtubeUrl ? (
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Tech Time Video</h2>
+              {teamInfo.techVideo?.isPublished ? (
                 <div className="space-y-6">
-                  <div className="aspect-w-16 aspect-h-9">
-                    <iframe
-                      src={teamInfo.techVideo.youtubeUrl.replace('watch?v=', 'embed/')}
-                      title={teamInfo.techVideo.title}
-                      className="w-full rounded-xl"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                  <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                    <h3 className="text-xl text-white mb-4">{teamInfo.techVideo.title}</h3>
-                    {teamInfo.techVideo.description && (
-                      <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.techVideo.description}</p>
-                    )}
-                  </div>
+                  {teamInfo.techVideo.driveUrl && (
+                    <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                      <h3 className="text-xl text-white mb-4">Video Files</h3>
+                      <a
+                        href={teamInfo.techVideo.driveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1 17l-5-5 1.41-1.41 3.59 3.59 7.59-7.59 1.41 1.41-9 9z"/>
+                        </svg>
+                        Access Video Files on Google Drive
+                      </a>
+                    </div>
+                  )}
+                  {teamInfo.techVideo.youtubeUrl && (
+                    <>
+                      <div className="aspect-w-16 aspect-h-9">
+                        <iframe
+                          src={teamInfo.techVideo.youtubeUrl.replace('watch?v=', 'embed/')}
+                          title={teamInfo.techVideo.title}
+                          className="w-full rounded-xl"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                      <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                        <h3 className="text-xl text-white mb-4">{teamInfo.techVideo.title}</h3>
+                        {teamInfo.techVideo.description && (
+                          <p className="text-blue-200/80 whitespace-pre-wrap">{teamInfo.techVideo.description}</p>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
-                <p className="text-blue-200/60">Tech video will be available soon.</p>
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <p className="text-blue-200/60">Tech time video will be available soon.</p>
+                </div>
               )}
             </div>
           )}

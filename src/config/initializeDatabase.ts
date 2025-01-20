@@ -57,7 +57,9 @@ export interface TeamInfo {
   techVideo: {
     title: string;
     youtubeUrl: string;
-    description?: string;
+    driveUrl: string;
+    description: string;
+    isPublished: boolean;
   };
   schedule: Schedule;
   nearbyLocations: Array<{
@@ -201,7 +203,9 @@ export const initializeTeamData = async () => {
           techVideo: {
             title: '',
             youtubeUrl: '',
-            description: ''
+            driveUrl: '',
+            description: '',
+            isPublished: false
           },
           schedule: INITIAL_SCHEDULE,
           nearbyLocations: []
@@ -222,6 +226,16 @@ export const initializeTeamData = async () => {
             hotel: HOTEL_INFO
           });
           console.log(`Updated liaisons for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
+        }
+
+        // Update tech video if missing new fields
+        if (!data.techVideo?.hasOwnProperty('isPublished') || !data.techVideo?.hasOwnProperty('driveUrl')) {
+          await set(ref(db, `teams/${teamId}/techVideo`), {
+            ...data.techVideo,
+            driveUrl: data.techVideo?.driveUrl || '',
+            isPublished: data.techVideo?.isPublished || false
+          });
+          console.log(`Updated tech video fields for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
         }
       }
     }
