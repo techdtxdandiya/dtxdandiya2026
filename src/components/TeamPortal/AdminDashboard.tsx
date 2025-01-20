@@ -1022,15 +1022,15 @@ const AdminDashboard: React.FC = () => {
                           <div className="flex items-center gap-2">
                             <label className="text-sm text-blue-300">Show Order:</label>
                             <select
-                              value={teamData[teamId as TeamId]?.schedule?.showOrder || ''}
+                              value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
                               onChange={(e) => {
                                 const showOrder = e.target.value ? parseInt(e.target.value) : null;
                                 handleUpdateScheduleSection(teamId as TeamId, 'showOrder', showOrder);
                               }}
-                              className="bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
+                              className="w-full p-2 bg-black/40 border border-blue-500/30 rounded text-white"
                             >
-                              <option value="">Select Order</option>
-                              {Array.from({ length: 8 }, (_, i) => i + 1).map(num => (
+                              <option value="">Select Option</option>
+                              {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
                                 <option key={num} value={num}>Team {num}</option>
                               ))}
                             </select>
