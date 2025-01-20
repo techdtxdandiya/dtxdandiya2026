@@ -72,8 +72,8 @@ export interface TeamInfo {
   }>;
 }
 
-export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
-  tamu: {
+export const GENERIC_SCHEDULES: Record<string, Schedule> = {
+  'Team 1': {
     isPublished: false,
     showOrder: null,
     friday: [
@@ -127,7 +127,7 @@ export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
       ]
     }
   },
-  texas: {
+  'Team 2': {
     isPublished: false,
     showOrder: null,
     friday: [
@@ -181,7 +181,7 @@ export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
       ]
     }
   },
-  michigan: {
+  'Team 3': {
     isPublished: false,
     showOrder: null,
     friday: [
@@ -233,6 +233,315 @@ export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
         { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
         { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
       ]
+    }
+  },
+  'Team 4': {
+    isPublished: false,
+    showOrder: null,
+    friday: [
+      { time: "11:55 AM", event: "Registration", location: "Oak Room" },
+      { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
+      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
+      { time: "7:25 PM", event: "Captains Meeting", location: "Near Room" },
+      { time: "8:30 PM", event: "Post-Mixer Practice", location: "Teak Room" },
+      { time: "9:30 PM", event: "Optional Practice", location: "Garden Terrace" }
+    ],
+    saturdayTech: [
+      { time: "9:05 AM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "9:30 AM", event: "Stretching", location: "DR 2" },
+      { time: "9:50 AM", event: "Hold", location: "Side Stage" },
+      { time: "10:05 AM", event: "Tech Time (20 Mins)", location: "Stage" },
+      { time: "10:40 AM", event: "Video Review (10 Mins)", location: "Viewing Room" },
+      { time: "11:00 AM", event: "Post Tech", location: "Dance and Choral Hall" },
+      { time: "11:25 AM", event: "Travel to Hotel", location: "Venue Lobby" },
+      { time: "12:50 PM", event: "Captains Travel to Venue", location: "Hotel Lobby" },
+      { time: "1:05 PM", event: "Lighting Cues", location: "Auditorium" }
+    ],
+    saturdayPreShow: [
+      { time: "3:50 PM", event: "Last Call", location: "Hotel Lobby" },
+      { time: "3:55 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "4:15 PM", event: "Photo Shoot", location: "Outside Venue" }
+    ],
+    saturdayShow: [
+      { time: "5:40 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "5:50 PM", event: "Dressing Room", location: "DR 2" },
+      { time: "6:05 PM", event: "Hold", location: "Side Stage" },
+      { time: "6:25 PM", event: "Team Performance", location: "Stage" },
+      { time: "6:40 PM", event: "Post Performance", location: "Audience" }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:15 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "10:25 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "10:45 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:25 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ],
+      placing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:45 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "11:05 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ]
+    }
+  },
+  'Team 5': {
+    isPublished: false,
+    showOrder: null,
+    friday: [
+      { time: "11:55 AM", event: "Registration", location: "Oak Room" },
+      { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
+      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
+      { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
+      { time: "9:05 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
+      { time: "9:50 PM", event: "Optional Practice", location: "Garden Terrace" }
+    ],
+    saturdayTech: [
+      { time: "9:35 AM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "10:00 AM", event: "Stretching", location: "DR 1" },
+      { time: "10:20 AM", event: "Hold", location: "Side Stage" },
+      { time: "10:35 AM", event: "Tech Time (20 Mins)", location: "Stage" },
+      { time: "11:10 AM", event: "Video Review (10 Mins)", location: "Viewing Room" },
+      { time: "11:30 AM", event: "Post Tech", location: "Dance and Choral Hall" },
+      { time: "11:55 AM", event: "Travel to Hotel", location: "Venue Lobby" },
+      { time: "1:00 PM", event: "Captains Travel to Venue", location: "Hotel Lobby" },
+      { time: "1:15 PM", event: "Lighting Cues", location: "Auditorium" }
+    ],
+    saturdayPreShow: [
+      { time: "4:00 PM", event: "Last Call", location: "Hotel Lobby" },
+      { time: "4:05 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "4:25 PM", event: "Photo Shoot", location: "Outside Venue" }
+    ],
+    saturdayShow: [
+      { time: "6:10 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "6:20 PM", event: "Dressing Room", location: "DR 1" },
+      { time: "6:35 PM", event: "Hold", location: "Side Stage" },
+      { time: "6:55 PM", event: "Team Performance", location: "Stage" },
+      { time: "7:10 PM", event: "Post Performance", location: "Audience" }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:15 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "10:25 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "10:45 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:25 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ],
+      placing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:45 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "11:05 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ]
+    }
+  },
+  'Team 6': {
+    isPublished: false,
+    showOrder: null,
+    friday: [
+      { time: "11:55 AM", event: "Registration", location: "Oak Room" },
+      { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
+      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
+      { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
+      { time: "9:05 PM", event: "Post-Mixer Practice", location: "Teak Room" },
+      { time: "10:10 PM", event: "Optional Practice", location: "Garden Terrace" }
+    ],
+    saturdayTech: [
+      { time: "10:05 AM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "10:30 AM", event: "Stretching", location: "DR 2" },
+      { time: "10:50 AM", event: "Hold", location: "Side Stage" },
+      { time: "11:05 AM", event: "Tech Time (20 Mins)", location: "Stage" },
+      { time: "11:40 AM", event: "Video Review (10 Mins)", location: "Viewing Room" },
+      { time: "12:00 PM", event: "Post Tech", location: "Dance and Choral Hall" },
+      { time: "12:25 PM", event: "Travel to Hotel", location: "Venue Lobby" },
+      { time: "1:10 PM", event: "Captains Travel to Venue", location: "Hotel Lobby" },
+      { time: "1:25 PM", event: "Lighting Cues", location: "Auditorium" }
+    ],
+    saturdayPreShow: [
+      { time: "4:10 PM", event: "Last Call", location: "Hotel Lobby" },
+      { time: "4:15 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "4:35 PM", event: "Photo Shoot", location: "Outside Venue" }
+    ],
+    saturdayShow: [
+      { time: "6:25 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "6:35 PM", event: "Dressing Room", location: "DR 2" },
+      { time: "6:50 PM", event: "Hold", location: "Side Stage" },
+      { time: "7:10 PM", event: "Team Performance", location: "Stage" },
+      { time: "7:25 PM", event: "Post Performance", location: "Audience" }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:15 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "10:25 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "10:45 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:25 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ],
+      placing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:45 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "11:05 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ]
+    }
+  },
+  'Team 7': {
+    isPublished: false,
+    showOrder: null,
+    friday: [
+      { time: "11:55 AM", event: "Registration", location: "Oak Room" },
+      { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
+      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
+      { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
+      { time: "9:40 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
+      { time: "10:30 PM", event: "Optional Practice", location: "Garden Terrace" }
+    ],
+    saturdayTech: [
+      { time: "10:35 AM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "11:00 AM", event: "Stretching", location: "DR 1" },
+      { time: "11:20 AM", event: "Hold", location: "Side Stage" },
+      { time: "11:35 AM", event: "Tech Time (20 Mins)", location: "Stage" },
+      { time: "12:10 PM", event: "Video Review (10 Mins)", location: "Viewing Room" },
+      { time: "12:30 PM", event: "Post Tech", location: "Dance and Choral Hall" },
+      { time: "12:55 PM", event: "Travel to Hotel", location: "Venue Lobby" },
+      { time: "1:20 PM", event: "Captains Travel to Venue", location: "Hotel Lobby" },
+      { time: "1:35 PM", event: "Lighting Cues", location: "Auditorium" }
+    ],
+    saturdayPreShow: [
+      { time: "4:20 PM", event: "Last Call", location: "Hotel Lobby" },
+      { time: "4:25 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "4:45 PM", event: "Photo Shoot", location: "Outside Venue" }
+    ],
+    saturdayShow: [
+      { time: "6:40 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "6:50 PM", event: "Dressing Room", location: "DR 1" },
+      { time: "7:05 PM", event: "Hold", location: "Side Stage" },
+      { time: "7:25 PM", event: "Team Performance", location: "Stage" },
+      { time: "7:40 PM", event: "Post Performance", location: "Audience" }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:15 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "10:25 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "10:45 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:25 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ],
+      placing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:45 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "11:05 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ]
+    }
+  },
+  'Team 8': {
+    isPublished: false,
+    showOrder: null,
+    friday: [
+      { time: "11:55 AM", event: "Registration", location: "Oak Room" },
+      { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
+      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
+      { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
+      { time: "9:40 PM", event: "Post-Mixer Practice", location: "Teak Room" },
+      { time: "10:50 PM", event: "Optional Practice", location: "Garden Terrace" }
+    ],
+    saturdayTech: [
+      { time: "11:05 AM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "11:30 AM", event: "Stretching", location: "DR 2" },
+      { time: "11:50 AM", event: "Hold", location: "Side Stage" },
+      { time: "12:05 PM", event: "Tech Time (20 Mins)", location: "Stage" },
+      { time: "12:40 PM", event: "Video Review (10 Mins)", location: "Viewing Room" },
+      { time: "1:00 PM", event: "Post Tech", location: "Dance and Choral Hall" },
+      { time: "1:25 PM", event: "Travel to Hotel", location: "Venue Lobby" },
+      { time: "1:30 PM", event: "Captains Travel to Venue", location: "Hotel Lobby" },
+      { time: "1:45 PM", event: "Lighting Cues", location: "Auditorium" }
+    ],
+    saturdayPreShow: [
+      { time: "4:30 PM", event: "Last Call", location: "Hotel Lobby" },
+      { time: "4:35 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "4:55 PM", event: "Photo Shoot", location: "Outside Venue" }
+    ],
+    saturdayShow: [
+      { time: "6:55 PM", event: "Travel to Venue", location: "Hotel Lobby" },
+      { time: "7:05 PM", event: "Dressing Room", location: "DR 2" },
+      { time: "7:20 PM", event: "Hold", location: "Side Stage" },
+      { time: "7:40 PM", event: "Team Performance", location: "Stage" },
+      { time: "7:55 PM", event: "Post Performance", location: "Audience" }
+    ],
+    saturdayPostShow: {
+      nonPlacing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:15 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "10:25 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "10:45 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:25 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ],
+      placing: [
+        { time: "9:35 PM", event: "Travel to Hotel", location: "Venue" },
+        { time: "9:35 PM", event: "Dinner Distribution", location: "Hotel" },
+        { time: "10:45 PM", event: "Last Call", location: "Hotel Lobby" },
+        { time: "11:05 PM", event: "Travel to Afterparty", location: "Van" },
+        { time: "11:25 PM", event: "Afterparty", location: "VYB Lounge" },
+        { time: "1:35 AM", event: "Bus Departs", location: "Outside VYB Lounge" }
+      ]
+    }
+  }
+};
+
+export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
+  tamu: {
+    isPublished: false,
+    showOrder: null,
+    friday: [],
+    saturdayTech: [],
+    saturdayPreShow: [],
+    saturdayShow: [],
+    saturdayPostShow: {
+      nonPlacing: [],
+      placing: []
+    }
+  },
+  texas: {
+    isPublished: false,
+    showOrder: null,
+    friday: [],
+    saturdayTech: [],
+    saturdayPreShow: [],
+    saturdayShow: [],
+    saturdayPostShow: {
+      nonPlacing: [],
+      placing: []
+    }
+  },
+  michigan: {
+    isPublished: false,
+    showOrder: null,
+    friday: [],
+    saturdayTech: [],
+    saturdayPreShow: [],
+    saturdayShow: [],
+    saturdayPostShow: {
+      nonPlacing: [],
+      placing: []
     }
   },
   ucd: {

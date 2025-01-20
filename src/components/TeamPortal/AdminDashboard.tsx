@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
-import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS } from '../../config/initializeDatabase';
+import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS, GENERIC_SCHEDULES } from '../../config/initializeDatabase';
 import type { TeamInfo, TeamId, DashboardTeamId, Schedule, ScheduleEvent } from '../../types/team';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -289,7 +289,7 @@ const AdminDashboard: React.FC = () => {
         });
         
         toast.success('Announcement deleted successfully');
-      } else {
+    } else {
         console.error('Team data not found');
         toast.error('Team data not found');
       }
@@ -394,6 +394,21 @@ const AdminDashboard: React.FC = () => {
       handleUpdateTeamData(teamId, {
         nearbyLocations: updatedLocations
       });
+    }
+  };
+
+  const handleAssignShowOrder = async (teamId: TeamId, showOrder: number) => {
+    try {
+      const teamRef = ref(db, `teams/${teamId}/schedule`);
+      const genericSchedule = GENERIC_SCHEDULES[`Team ${showOrder}`];
+      await set(teamRef, {
+        ...genericSchedule,
+        showOrder
+      });
+      toast.success('Show order assigned and schedule updated successfully!');
+    } catch (error) {
+      console.error('Error assigning show order:', error);
+      toast.error('Error assigning show order');
     }
   };
 
@@ -847,7 +862,7 @@ const AdminDashboard: React.FC = () => {
                 {label}
               </button>
             ))}
-          </div>
+                                  </div>
         </div>
 
         <div className="max-w-[1200px] mx-auto">
@@ -866,10 +881,10 @@ const AdminDashboard: React.FC = () => {
                         {(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS).map((liaison, index) => (
                           <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                             <div className="space-y-2">
-                              <input
-                                type="text"
+                                    <input
+                                      type="text"
                                 value={liaison.name}
-                                onChange={(e) => {
+                                      onChange={(e) => {
                                   const updatedLiaisons = [...(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS)];
                                   updatedLiaisons[index] = { ...liaison, name: e.target.value };
                                   handleUpdateLiaisons(teamId as TeamId, updatedLiaisons);
@@ -880,22 +895,22 @@ const AdminDashboard: React.FC = () => {
                               <input
                                 type="tel"
                                 value={liaison.phone}
-                                onChange={(e) => {
+                                      onChange={(e) => {
                                   const updatedLiaisons = [...(teamData[teamId as TeamId].information?.liaisons || INITIAL_LIAISONS)];
                                   updatedLiaisons[index] = { ...liaison, phone: e.target.value };
                                   handleUpdateLiaisons(teamId as TeamId, updatedLiaisons);
                                 }}
                                 placeholder="Phone Number"
                                 className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-                              />
-                            </div>
-                          </div>
+                                    />
+                                  </div>
+                                </div>
                         ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
@@ -954,12 +969,12 @@ const AdminDashboard: React.FC = () => {
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
-                <div className="space-y-4">
-                  <div>
+                        <div className="space-y-4">
+                                <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
                     <p className="text-white">DoubleTree by Hilton Hotel Dallas</p>
-                  </div>
-                  <div>
+                                </div>
+                                <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
                       <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
@@ -971,8 +986,8 @@ const AdminDashboard: React.FC = () => {
                       >
                         View in Google Maps
                       </a>
-                    </div>
-                  </div>
+                                </div>
+                                </div>
                 </div>
               </div>
             </div>
@@ -1007,20 +1022,20 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <div>
+                                <div>
                       <label className="block text-sm font-medium text-blue-300 mb-1">Video Link</label>
-                      <input
-                        type="text"
+                                  <input
+                                    type="text"
                         value={teamData[teamId as TeamId]?.techVideo?.driveUrl || ''}
                         onChange={(e) => handleUpdateTechVideo(teamId as TeamId, {
                           driveUrl: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
                         placeholder="Enter Google Drive video link"
-                      />
-                    </div>
-                  </div>
-                </div>
+                                  />
+                                </div>
+                                </div>
+                              </div>
               ))}
             </div>
           )}
@@ -1040,7 +1055,9 @@ const AdminDashboard: React.FC = () => {
                               value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
                               onChange={(e) => {
                                 const showOrder = e.target.value ? parseInt(e.target.value) : null;
-                                handleUpdateScheduleSection(teamId as TeamId, 'showOrder', showOrder);
+                                if (showOrder) {
+                                  handleAssignShowOrder(teamId as TeamId, showOrder);
+                                }
                               }}
                               className="w-full p-2 bg-black/40 border border-blue-500/30 rounded text-white"
                             >
@@ -1061,11 +1078,11 @@ const AdminDashboard: React.FC = () => {
                             {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
                           </button>
                         </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    ))}
+                  </div>
+          </div>
             </div>
           )}
         </div>
