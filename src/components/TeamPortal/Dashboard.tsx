@@ -301,11 +301,11 @@ export default function Dashboard() {
                   )}
 
                   {/* Friday Schedule */}
-                  {teamInfo.schedule.friday && (
+                  {(teamInfo.schedule.friday || []).length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Friday</h3>
                       <div className="space-y-3">
-                        {teamInfo.schedule.friday.map((event, index) => (
+                        {(teamInfo.schedule.friday || []).map((event, index) => (
                           <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                             <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                               <div className="text-blue-200 font-medium">{event.time}</div>
@@ -319,11 +319,11 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Tech Schedule */}
-                  {teamInfo.schedule.saturdayTech && (
+                  {(teamInfo.schedule.saturdayTech || []).length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Tech Time</h3>
                       <div className="space-y-3">
-                        {teamInfo.schedule.saturdayTech.map((event, index) => (
+                        {(teamInfo.schedule.saturdayTech || []).map((event, index) => (
                           <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                             <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                               <div className="text-blue-200 font-medium">{event.time}</div>
@@ -337,11 +337,11 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Pre-Show Schedule */}
-                  {teamInfo.schedule.saturdayPreShow && (
+                  {(teamInfo.schedule.saturdayPreShow || []).length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Pre-Show</h3>
                       <div className="space-y-3">
-                        {teamInfo.schedule.saturdayPreShow.map((event, index) => (
+                        {(teamInfo.schedule.saturdayPreShow || []).map((event, index) => (
                           <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                             <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                               <div className="text-blue-200 font-medium">{event.time}</div>
@@ -355,11 +355,11 @@ export default function Dashboard() {
                   )}
 
                   {/* Saturday Show Schedule */}
-                  {teamInfo.schedule.saturdayShow && (
+                  {(teamInfo.schedule.saturdayShow || []).length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Show</h3>
                       <div className="space-y-3">
-                        {teamInfo.schedule.saturdayShow.map((event, index) => (
+                        {(teamInfo.schedule.saturdayShow || []).map((event, index) => (
                           <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                             <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                               <div className="text-blue-200 font-medium">{event.time}</div>
@@ -378,11 +378,11 @@ export default function Dashboard() {
                       <h3 className="text-2xl text-white mb-4">Saturday Post-Show</h3>
                       <div className="space-y-6">
                         {/* Placing Teams Schedule */}
-                        {teamInfo.schedule.saturdayPostShow.placing && (
+                        {(teamInfo.schedule.saturdayPostShow.placing || []).length > 0 && (
                           <div>
                             <h4 className="text-xl text-white mb-3">Placing Teams</h4>
                             <div className="space-y-3">
-                              {teamInfo.schedule.saturdayPostShow.placing.map((event, index) => (
+                              {(teamInfo.schedule.saturdayPostShow.placing || []).map((event, index) => (
                                 <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                                   <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                                     <div className="text-blue-200 font-medium">{event.time}</div>
@@ -396,11 +396,11 @@ export default function Dashboard() {
                         )}
 
                         {/* Non-Placing Teams Schedule */}
-                        {teamInfo.schedule.saturdayPostShow.nonPlacing && (
+                        {(teamInfo.schedule.saturdayPostShow.nonPlacing || []).length > 0 && (
                           <div>
                             <h4 className="text-xl text-white mb-3">Non-Placing Teams</h4>
                             <div className="space-y-3">
-                              {teamInfo.schedule.saturdayPostShow.nonPlacing.map((event, index) => (
+                              {(teamInfo.schedule.saturdayPostShow.nonPlacing || []).map((event, index) => (
                                 <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                                   <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
                                     <div className="text-blue-200 font-medium">{event.time}</div>
