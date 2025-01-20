@@ -417,39 +417,6 @@ export default function Dashboard() {
               )}
             </div>
           )}
-
-          {activeTab === 'locations' && (
-            <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Nearby Locations</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {teamInfo.nearbyLocations?.map((location) => (
-                  <div key={location.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-xl text-white">{location.name}</h3>
-                      <span className={`text-sm px-3 py-1 rounded-full ${
-                        location.type === 'Food' ? 'bg-green-500/20 text-green-200' :
-                        location.type === 'Practice' ? 'bg-blue-500/20 text-blue-200' :
-                        location.type === 'Hotel' ? 'bg-yellow-500/20 text-yellow-200' :
-                        location.type === 'Emergency' ? 'bg-red-500/20 text-red-200' :
-                        'bg-purple-500/20 text-purple-200'
-                      }`}>
-                        {location.type}
-                      </span>
-                    </div>
-                    <div className="space-y-2 text-blue-200/80">
-                      <p>{location.address}</p>
-                      {location.distance && (
-                        <p className="text-blue-200/60">Distance: {location.distance}</p>
-                      )}
-                      {location.notes && (
-                        <p className="text-blue-200/60 whitespace-pre-wrap">{location.notes}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
