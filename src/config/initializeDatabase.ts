@@ -132,43 +132,43 @@ const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedu
 
 const TEAM_LIAISONS: Record<typeof TEAM_IDS[number], Array<{ name: string; phone: string }>> = {
   texas: [
-    { name: 'svayam', phone: '' },
-    { name: 'prajith', phone: '' },
-    { name: 'aayushi', phone: '' }
+    { name: 'Svayam Sharma', phone: '972.510.7638' },
+    { name: 'Prajith Sugatan', phone: '214.732.1833' },
+    { name: 'Aayushi Madalia', phone: '512.773.0779' }
   ],
   berkeley: [
-    { name: 'subhash m', phone: '' },
-    { name: 'aarya', phone: '' },
-    { name: 'satya', phone: '' }
+    { name: 'Subhash Madiraju', phone: '857.499.4545' },
+    { name: 'Aryaa Shah', phone: '469.514.1422' },
+    { name: 'Satya Rallabandi', phone: '214.897.1156' }
   ],
   msu: [
-    { name: 'subhash e', phone: '' },
-    { name: 'jerin', phone: '' },
-    { name: 'disha', phone: '' }
+    { name: 'Subhash E', phone: '901.232.6813' },
+    { name: 'Jerin Vandannoor', phone: '972.804.0459' },
+    { name: 'Disha', phone: '254.421.7696' }
   ],
   iu: [
-    { name: 'shivan', phone: '' },
-    { name: 'ishani', phone: '' },
-    { name: 'divya', phone: '' }
+    { name: 'Shivan Golechha', phone: '972.903.2550' },
+    { name: 'Ishani Gupta', phone: '737.217.7600' },
+    { name: 'Divya Patel', phone: '936.232.8316' }
   ],
   unc: [
-    { name: 'shivani', phone: '' },
-    { name: 'suhas', phone: '' },
-    { name: 'samarth', phone: '' }
+    { name: 'Shivani Kumar', phone: '469.64.2710' },
+    { name: 'Suhas Nalla', phone: '214.973.1625' },
+    { name: 'Samarth Bikki', phone: '512.917.8857' }
   ],
   michigan: [
-    { name: 'ahimsa', phone: '' },
-    { name: 'vijyal', phone: '' },
-    { name: 'punjan', phone: '' }
+    { name: 'Ahimsa Yukta', phone: '832.323.3820' },
+    { name: 'Vijval Atyam ', phone: '214.298.0080' },
+    { name: 'Punjan Patel', phone: '469.810.3614' }
   ],
   tamu: [
-    { name: 'adrian', phone: '' },
-    { name: 'rupali', phone: '' }
+    { name: 'Adrian Gaspar', phone: '732.668.1820' },
+    { name: 'Rupali Venkatesa', phone: '901.468.9016' }
   ],
   ucd: [
-    { name: 'pranav b', phone: '' },
-    { name: 'prakrit', phone: '' },
-    { name: 'sarayu', phone: '' }
+    { name: 'Pranav B', phone: '469.400.3883' },
+    { name: 'Prakrit Sinha', phone: '512.669.6980' },
+    { name: 'Sarayu Varanasi', phone: '847.970.0653' }
   ]
 };
 
