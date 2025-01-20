@@ -6,48 +6,6 @@ export const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berke
 export type TeamId = typeof TEAM_IDS[number];
 export type DashboardTeamId = TeamId | 'admin';
 
-export const TEAM_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> = {
-  texas: [
-    { name: 'Svayam Sharma', phone: '972.510.7638' },
-    { name: 'Prajith Sugatan', phone: '214.732.1833' },
-    { name: 'Aayushi Madalia', phone: '512.773.0779' }
-  ],
-  berkeley: [
-    { name: 'Subhash Madiraju', phone: '857.499.4545' },
-    { name: 'Aryaa Shah', phone: '469.514.1422' },
-    { name: 'Satya Rallabandi', phone: '214.897.1156' }
-  ],
-  msu: [
-    { name: 'Subhash E', phone: '901.232.6813' },
-    { name: 'Jerin Vandannoor', phone: '972.804.0459' },
-    { name: 'Disha', phone: '254.421.7696' }
-  ],
-  iu: [
-    { name: 'Shivan Golechha', phone: '972.903.2550' },
-    { name: 'Ishani Gupta', phone: '737.217.7600' },
-    { name: 'Divya Patel', phone: '936.232.8316' }
-  ],
-  unc: [
-    { name: 'Shivani Kumar', phone: '469.64.2710' },
-    { name: 'Suhas Nalla', phone: '214.973.1625' },
-    { name: 'Samarth Bikki', phone: '512.917.8857' }
-  ],
-  michigan: [
-    { name: 'Ahimsa Yukta', phone: '832.323.3820' },
-    { name: 'Vijval Atyam ', phone: '214.298.0080' },
-    { name: 'Punjan Patel', phone: '469.810.3614' }
-  ],
-  tamu: [
-    { name: 'Adrian Gaspar', phone: '732.668.1820' },
-    { name: 'Rupali Venkatesa', phone: '901.468.9016' }
-  ],
-  ucd: [
-    { name: 'Pranav B', phone: '469.400.3883' },
-    { name: 'Prakrit Sinha', phone: '512.669.6980' },
-    { name: 'Sarayu Varanasi', phone: '847.970.0653' }
-  ]
-};
-
 export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Texas Raas',
@@ -78,14 +36,14 @@ export interface Schedule {
   };
 }
 
-export interface TeamData {
+export interface TeamInfo {
   displayName: string;
   announcements: Array<{
     id: string;
     title: string;
     content: string;
     timestamp: number;
-    targetTeams?: typeof TEAM_IDS[number][];
+    targetTeams?: TeamId[];
   }>;
   information: {
     liaisons: Array<{
@@ -112,7 +70,7 @@ export interface TeamData {
   techVideo: {
     title: string;
     youtubeUrl: string;
-    description: string;
+    description?: string;
   };
   schedule: Schedule;
   nearbyLocations: Array<{
@@ -194,6 +152,48 @@ export const TECH_INFO = {
   additionalNotes: '*There will be NO RIGGING this year at Marshall Arts Center*'
 };
 
+const INITIAL_LIAISONS: Record<TeamId, Array<{ name: string; phone: string }>> = {
+  texas: [
+    { name: 'Svayam Sharma', phone: '972.510.7638' },
+    { name: 'Prajith Sugatan', phone: '214.732.1833' },
+    { name: 'Aayushi Madalia', phone: '512.773.0779' }
+  ],
+  berkeley: [
+    { name: 'Subhash Madiraju', phone: '857.499.4545' },
+    { name: 'Aryaa Shah', phone: '469.514.1422' },
+    { name: 'Satya Rallabandi', phone: '214.897.1156' }
+  ],
+  msu: [
+    { name: 'Subhash E', phone: '901.232.6813' },
+    { name: 'Jerin Vandannoor', phone: '972.804.0459' },
+    { name: 'Disha', phone: '254.421.7696' }
+  ],
+  iu: [
+    { name: 'Shivan Golechha', phone: '972.903.2550' },
+    { name: 'Ishani Gupta', phone: '737.217.7600' },
+    { name: 'Divya Patel', phone: '936.232.8316' }
+  ],
+  unc: [
+    { name: 'Shivani Kumar', phone: '469.64.2710' },
+    { name: 'Suhas Nalla', phone: '214.973.1625' },
+    { name: 'Samarth Bikki', phone: '512.917.8857' }
+  ],
+  michigan: [
+    { name: 'Ahimsa Yukta', phone: '832.323.3820' },
+    { name: 'Vijval Atyam', phone: '214.298.0080' },
+    { name: 'Punjan Patel', phone: '469.810.3614' }
+  ],
+  tamu: [
+    { name: 'Adrian Gaspar', phone: '732.668.1820' },
+    { name: 'Rupali Venkatesa', phone: '901.468.9016' }
+  ],
+  ucd: [
+    { name: 'Pranav B', phone: '469.400.3883' },
+    { name: 'Prakrit Sinha', phone: '512.669.6980' },
+    { name: 'Sarayu Varanasi', phone: '847.970.0653' }
+  ]
+};
+
 const initializeTeamData = async () => {
   try {
     for (const teamId of TEAM_IDS) {
@@ -201,12 +201,12 @@ const initializeTeamData = async () => {
       const snapshot = await get(teamRef);
       
       if (!snapshot.exists()) {
-        // Initialize new team data
-        const initialData: TeamData = {
+        // Initialize with basic structure including liaisons
+        await set(teamRef, {
           displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
           information: {
-            liaisons: TEAM_LIAISONS[teamId],
+            liaisons: INITIAL_LIAISONS[teamId],
             tech: TECH_INFO,
             venue: VENUE_INFO,
             hotel: HOTEL_INFO
@@ -218,42 +218,20 @@ const initializeTeamData = async () => {
           },
           schedule: INITIAL_SCHEDULE,
           nearbyLocations: []
-        };
-        await set(teamRef, initialData);
+        });
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       } else {
-        // Update existing team data structure if needed
-        const data = snapshot.val() as Partial<TeamData>;
-        const updates: Partial<TeamData> = {};
-        
-        // Ensure all required fields exist
-        if (!data.announcements) updates.announcements = [];
-        if (!data.information) {
-          updates.information = {
-            liaisons: TEAM_LIAISONS[teamId],
-            tech: TECH_INFO,
-            venue: VENUE_INFO,
-            hotel: HOTEL_INFO
-          };
-        }
-        if (!data.techVideo) {
-          updates.techVideo = {
-            title: '',
-            youtubeUrl: '',
-            description: ''
-          };
-        }
-        if (!data.schedule) {
-          updates.schedule = INITIAL_SCHEDULE;
-        } else {
-          updates.schedule = updateSchedule(data.schedule);
-        }
-        if (!data.nearbyLocations) updates.nearbyLocations = [];
-        
-        // Apply updates if needed
-        if (Object.keys(updates).length > 0) {
-          await set(teamRef, { ...data, ...updates });
-          console.log(`Updated data structure for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
+        // Ensure liaisons exist
+        const data = snapshot.val();
+        if (!data.information?.liaisons || data.information.liaisons.length === 0) {
+          await set(teamRef, {
+            ...data,
+            information: {
+              ...data.information,
+              liaisons: INITIAL_LIAISONS[teamId]
+            }
+          });
+          console.log(`Updated liaisons for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
         }
       }
     }
