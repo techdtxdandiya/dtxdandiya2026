@@ -299,8 +299,8 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  <div className="space-y-8">
-                    {/* Friday Schedule */}
+                  {/* Friday Schedule */}
+                  {teamInfo.schedule.friday && teamInfo.schedule.friday.length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Friday</h3>
                       <div className="space-y-3">
@@ -315,8 +315,10 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
+                  )}
 
-                    {/* Saturday Tech Schedule */}
+                  {/* Saturday Tech Schedule */}
+                  {teamInfo.schedule.saturdayTech && teamInfo.schedule.saturdayTech.length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Tech Time</h3>
                       <div className="space-y-3">
@@ -331,8 +333,10 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
+                  )}
 
-                    {/* Saturday Pre-Show Schedule */}
+                  {/* Saturday Pre-Show Schedule */}
+                  {teamInfo.schedule.saturdayPreShow && teamInfo.schedule.saturdayPreShow.length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Pre-Show</h3>
                       <div className="space-y-3">
@@ -347,8 +351,10 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
+                  )}
 
-                    {/* Saturday Show Schedule */}
+                  {/* Saturday Show Schedule */}
+                  {teamInfo.schedule.saturdayShow && teamInfo.schedule.saturdayShow.length > 0 && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Show</h3>
                       <div className="space-y-3">
@@ -363,45 +369,51 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
+                  )}
 
-                    {/* Saturday Post-Show Schedule */}
+                  {/* Saturday Post-Show Schedule */}
+                  {teamInfo.schedule.saturdayPostShow && (
                     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                       <h3 className="text-2xl text-white mb-4">Saturday Post-Show</h3>
                       <div className="space-y-6">
                         {/* Placing Teams Schedule */}
-                        <div>
-                          <h4 className="text-xl text-white mb-3">Placing Teams</h4>
-                          <div className="space-y-3">
-                            {teamInfo.schedule.saturdayPostShow.placing.map((event, index) => (
-                              <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                                <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                                  <div className="text-blue-200 font-medium">{event.time}</div>
-                                  <div className="text-white">{event.event}</div>
-                                  <div className="text-blue-200/80">{event.location}</div>
+                        {teamInfo.schedule.saturdayPostShow.placing && teamInfo.schedule.saturdayPostShow.placing.length > 0 && (
+                          <div>
+                            <h4 className="text-xl text-white mb-3">Placing Teams</h4>
+                            <div className="space-y-3">
+                              {teamInfo.schedule.saturdayPostShow.placing.map((event, index) => (
+                                <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                                  <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                                    <div className="text-blue-200 font-medium">{event.time}</div>
+                                    <div className="text-white">{event.event}</div>
+                                    <div className="text-blue-200/80">{event.location}</div>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {/* Non-Placing Teams Schedule */}
-                        <div>
-                          <h4 className="text-xl text-white mb-3">Non-Placing Teams</h4>
-                          <div className="space-y-3">
-                            {teamInfo.schedule.saturdayPostShow.nonPlacing.map((event, index) => (
-                              <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                                <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                                  <div className="text-blue-200 font-medium">{event.time}</div>
-                                  <div className="text-white">{event.event}</div>
-                                  <div className="text-blue-200/80">{event.location}</div>
+                        {teamInfo.schedule.saturdayPostShow.nonPlacing && teamInfo.schedule.saturdayPostShow.nonPlacing.length > 0 && (
+                          <div>
+                            <h4 className="text-xl text-white mb-3">Non-Placing Teams</h4>
+                            <div className="space-y-3">
+                              {teamInfo.schedule.saturdayPostShow.nonPlacing.map((event, index) => (
+                                <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                                  <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                                    <div className="text-blue-200 font-medium">{event.time}</div>
+                                    <div className="text-white">{event.event}</div>
+                                    <div className="text-blue-200/80">{event.location}</div>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               ) : (
                 <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
