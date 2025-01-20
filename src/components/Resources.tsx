@@ -77,9 +77,12 @@ export default function Resources() {
                       </span>
                     </div>
                     <div className="flex-1 text-right">
-                      <span className="text-white/70 font-['Harry_Potter'] group-hover:text-emerald-400 transition-colors duration-300">
+                      <a 
+                        href={`tel:${contact.phone.replace(/[^0-9]/g, '')}`}
+                        className="text-white/70 font-['Harry_Potter'] group-hover:text-emerald-400 transition-colors duration-300"
+                      >
                         {contact.phone}
-                      </span>
+                      </a>
                     </div>
                   </motion.div>
                 ))}
