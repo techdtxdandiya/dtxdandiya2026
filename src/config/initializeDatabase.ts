@@ -14,13 +14,13 @@ export const TEAM_DISPLAY_NAMES: Record<typeof TEAM_IDS[number], string> = {
   msu: 'MSU RaaSparty'
 };
 
-interface ScheduleEvent {
+export interface ScheduleEvent {
   time: string;
   event: string;
   location: string;
 }
 
-interface Schedule {
+export interface Schedule {
   showOrder: number | null;
   isPublished: boolean;
   friday: ScheduleEvent[];
@@ -33,7 +33,7 @@ interface Schedule {
   };
 }
 
-interface TeamData {
+export interface TeamData {
   displayName: string;
   announcements: Array<{
     id: string;
@@ -80,7 +80,7 @@ interface TeamData {
   }>;
 }
 
-const INITIAL_SCHEDULE: Schedule = {
+export const INITIAL_SCHEDULE: Schedule = {
   showOrder: null,
   isPublished: false,
   friday: [],
@@ -93,7 +93,7 @@ const INITIAL_SCHEDULE: Schedule = {
   }
 };
 
-const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedule => {
+export const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedule => {
   const schedule = { ...INITIAL_SCHEDULE };
   
   if (!existingSchedule) return schedule;
@@ -172,18 +172,18 @@ export const TEAM_LIAISONS: Record<typeof TEAM_IDS[number], Array<{ name: string
   ]
 };
 
-const VENUE_INFO = {
+export const VENUE_INFO = {
   name: 'Marshall Family Performing Arts Center',
   address: '4141 Spring Valley Rd, Addison, TX 75001',
   seatingCapacity: '600 seat auditorium'
 };
 
-const HOTEL_INFO = {
+export const HOTEL_INFO = {
   name: 'DoubleTree by Hilton Hotel Dallas',
   address: '4099 Valley View Ln, Dallas, TX 75244'
 };
 
-const TECH_INFO = {
+export const TECH_INFO = {
   danceableSpace: "42' x 28'",
   backdropSpace: '4 ft',
   apronSpace: '4 ft',
