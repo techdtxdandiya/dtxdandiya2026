@@ -141,7 +141,22 @@ const AdminDashboard: React.FC = () => {
         return;
       }
       
-      await handleUpdateScheduleSection(teamId, 'isPublished', isPublished);
+      // Initialize empty schedule arrays when publishing
+      const updatedSchedule = {
+        ...currentSchedule,
+        isPublished,
+        friday: currentSchedule.friday || [],
+        saturdayTech: currentSchedule.saturdayTech || [],
+        saturdayPreShow: currentSchedule.saturdayPreShow || [],
+        saturdayShow: currentSchedule.saturdayShow || [],
+        saturdayPostShow: currentSchedule.saturdayPostShow || {
+          placing: [],
+          nonPlacing: []
+        }
+      };
+      
+      await set(teamRef, updatedSchedule);
+      toast.success('Schedule updated successfully!');
     } catch (error) {
       console.error('Error updating schedule published status:', error);
       toast.error('Error updating schedule status');
