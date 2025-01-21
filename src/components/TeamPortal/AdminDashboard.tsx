@@ -36,32 +36,17 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     const teamsRef = ref(db, 'teams');
-    return onValue(teamsRef, (snapshot) => {
+    const unsubscribe = onValue(teamsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log('Received teams data:', data);
         setTeamData(data);
       }
     });
+
+    return () => unsubscribe();
   }, []);
 
-  // Add team selection logging
-  const handleTeamSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const teamId = e.target.value as TeamId;
-    console.log('Team selection changed to:', teamId);
-    console.log('Available team data:', Object.keys(teamData));
-    if (teamId && teamId in teamData) {
-      const selectedTeamData = teamData[teamId];
-      console.log('Selected team data:', {
-        displayName: selectedTeamData.displayName,
-        hasAnnouncements: !!selectedTeamData.announcements,
-        announcementCount: selectedTeamData.announcements?.length || 0
-      });
-    }
-    setSelectedTeamForAnnouncements(teamId || null);
-  };
-
-  // Add logging to team selection
   useEffect(() => {
     if (selectedTeamForAnnouncements) {
       console.log('Selected team changed to:', selectedTeamForAnnouncements);
@@ -69,6 +54,16 @@ const AdminDashboard: React.FC = () => {
       console.log('Team announcements:', teamData[selectedTeamForAnnouncements]?.announcements);
     }
   }, [selectedTeamForAnnouncements, teamData]);
+
+  useEffect(() => {
+    if (activeTab === 'schedule' && teamData) {
+      Object.keys(teamData).forEach(teamId => {
+        console.log(`Schedule data for ${teamId}:`, teamData[teamId as TeamId]?.schedule);
+        console.log(`Schedule published:`, teamData[teamId as TeamId]?.schedule?.isPublished);
+        console.log(`Show order:`, teamData[teamId as TeamId]?.schedule?.showOrder);
+      });
+    }
+  }, [activeTab, teamData]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('team');
@@ -580,7 +575,20 @@ const AdminDashboard: React.FC = () => {
             <div className="w-full sm:w-auto">
               <select
                 value={selectedTeamForAnnouncements || ''}
-                onChange={handleTeamSelectionChange}
+                onChange={(e) => {
+                  const teamId = e.target.value as TeamId;
+                  console.log('Team selection changed to:', teamId);
+                  console.log('Available team data:', Object.keys(teamData));
+                  if (teamId && teamId in teamData) {
+                    const selectedTeamData = teamData[teamId];
+                    console.log('Selected team data:', {
+                      displayName: selectedTeamData.displayName,
+                      hasAnnouncements: !!selectedTeamData.announcements,
+                      announcementCount: selectedTeamData.announcements?.length || 0
+                    });
+                  }
+                  setSelectedTeamForAnnouncements(teamId || null);
+                }}
                 className="w-full sm:w-64 bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
               >
                 <option value="">Select a team</option>
