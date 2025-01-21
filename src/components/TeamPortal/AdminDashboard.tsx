@@ -401,10 +401,27 @@ const AdminDashboard: React.FC = () => {
     try {
       const teamRef = ref(db, `teams/${teamId}/schedule`);
       const genericSchedule = GENERIC_SCHEDULES[`Team ${showOrder}`];
-      await set(teamRef, {
-        ...genericSchedule,
-        showOrder
-      });
+      
+      if (!genericSchedule) {
+        toast.error('Invalid show order');
+        return;
+      }
+
+      // Initialize with empty arrays if undefined
+      const schedule = {
+        isPublished: false,
+        showOrder: showOrder,
+        friday: genericSchedule.friday || [],
+        saturdayTech: genericSchedule.saturdayTech || [],
+        saturdayPreShow: genericSchedule.saturdayPreShow || [],
+        saturdayShow: genericSchedule.saturdayShow || [],
+        saturdayPostShow: {
+          placing: genericSchedule.saturdayPostShow?.placing || [],
+          nonPlacing: genericSchedule.saturdayPostShow?.nonPlacing || []
+        }
+      };
+
+      await set(teamRef, schedule);
       toast.success('Show order assigned and schedule updated successfully!');
     } catch (error) {
       console.error('Error assigning show order:', error);
@@ -673,136 +690,143 @@ const AdminDashboard: React.FC = () => {
     section: keyof Omit<TeamInfo['schedule'], 'showOrder' | 'isPublished'>,
     title: string
   ) => {
-    const events = section === 'saturdayPostShow' 
-      ? teamData[teamId]?.schedule?.[section]
-      : teamData[teamId]?.schedule?.[section] || [];
+    if (!teamData[teamId]?.schedule) {
+      return null;
+    }
 
+    const schedule = teamData[teamId].schedule;
+    
+    if (section === 'saturdayPostShow') {
+      const postShowData = schedule[section] || { placing: [], nonPlacing: [] };
+      return (
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-2">{title}</h3>
+          <div className="mb-4">
+            <h4 className="text-lg mb-2">Placing Teams</h4>
+            {(postShowData.placing || []).map((event, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  value={event.time || ''}
+                  onChange={(e) => {
+                    const newPlacing = [...(postShowData.placing || [])];
+                    newPlacing[index] = { ...event, time: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      placing: newPlacing
+                    });
+                  }}
+                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+                <input
+                  value={event.event || ''}
+                  onChange={(e) => {
+                    const newPlacing = [...(postShowData.placing || [])];
+                    newPlacing[index] = { ...event, event: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      placing: newPlacing
+                    });
+                  }}
+                  className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+                <input
+                  value={event.location || ''}
+                  onChange={(e) => {
+                    const newPlacing = [...(postShowData.placing || [])];
+                    newPlacing[index] = { ...event, location: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      placing: newPlacing
+                    });
+                  }}
+                  className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            <h4 className="text-lg mb-2">Non-Placing Teams</h4>
+            {(postShowData.nonPlacing || []).map((event, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  value={event.time || ''}
+                  onChange={(e) => {
+                    const newNonPlacing = [...(postShowData.nonPlacing || [])];
+                    newNonPlacing[index] = { ...event, time: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      nonPlacing: newNonPlacing
+                    });
+                  }}
+                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+                <input
+                  value={event.event || ''}
+                  onChange={(e) => {
+                    const newNonPlacing = [...(postShowData.nonPlacing || [])];
+                    newNonPlacing[index] = { ...event, event: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      nonPlacing: newNonPlacing
+                    });
+                  }}
+                  className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+                <input
+                  value={event.location || ''}
+                  onChange={(e) => {
+                    const newNonPlacing = [...(postShowData.nonPlacing || [])];
+                    newNonPlacing[index] = { ...event, location: e.target.value };
+                    handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
+                      ...postShowData,
+                      nonPlacing: newNonPlacing
+                    });
+                  }}
+                  className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    const events = schedule[section] || [];
     return (
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        {section === 'saturdayPostShow' ? (
-          <>
-            <div className="mb-4">
-              <h4 className="text-lg mb-2">Placing Teams</h4>
-              {(teamData[teamId]?.schedule?.saturdayPostShow?.placing || []).map((event, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                            <input
-                    value={event.time}
-                              onChange={(e) => {
-                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
-                      newPlacing[index] = { ...event, time: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        placing: newPlacing
-                                });
-                              }}
-                    className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                            <input
-                    value={event.event}
-                              onChange={(e) => {
-                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
-                      newPlacing[index] = { ...event, event: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        placing: newPlacing
-                                });
-                              }}
-                    className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                  />
-                  <input
-                    value={event.location}
-                              onChange={(e) => {
-                      const newPlacing = [...teamData[teamId].schedule.saturdayPostShow.placing];
-                      newPlacing[index] = { ...event, location: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        placing: newPlacing
-                                });
-                              }}
-                    className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                  />
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-              <h4 className="text-lg mb-2">Non-Placing Teams</h4>
-              {(teamData[teamId]?.schedule?.saturdayPostShow?.nonPlacing || []).map((event, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                            <input
-                    value={event.time}
-                              onChange={(e) => {
-                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
-                      newNonPlacing[index] = { ...event, time: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        nonPlacing: newNonPlacing
-                                });
-                              }}
-                    className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                            <input
-                    value={event.event}
-                              onChange={(e) => {
-                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
-                      newNonPlacing[index] = { ...event, event: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        nonPlacing: newNonPlacing
-                                });
-                              }}
-                    className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                  />
-                  <input
-                    value={event.location}
-                              onChange={(e) => {
-                      const newNonPlacing = [...teamData[teamId].schedule.saturdayPostShow.nonPlacing];
-                      newNonPlacing[index] = { ...event, location: e.target.value };
-                      handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
-                        ...teamData[teamId].schedule.saturdayPostShow,
-                        nonPlacing: newNonPlacing
-                                });
-                              }}
-                    className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                            />
-                      </div>
-                    ))}
-                  </div>
-          </>
-        ) : (
-          (events as ScheduleEvent[]).map((event, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                value={event.time}
-                                  onChange={(e) => {
-                  const newEvents = [...events as ScheduleEvent[]];
-                  newEvents[index] = { ...event, time: e.target.value };
-                  handleUpdateScheduleSection(teamId, section, newEvents);
-                                  }}
-                                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                />
-                                <input
-                value={event.event}
-                                  onChange={(e) => {
-                  const newEvents = [...events as ScheduleEvent[]];
-                  newEvents[index] = { ...event, event: e.target.value };
-                  handleUpdateScheduleSection(teamId, section, newEvents);
-                }}
-                className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-              />
-                                    <input
-                value={event.location}
-                                      onChange={(e) => {
-                  const newEvents = [...events as ScheduleEvent[]];
-                  newEvents[index] = { ...event, location: e.target.value };
-                  handleUpdateScheduleSection(teamId, section, newEvents);
-                }}
-                className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                                    />
-                                  </div>
-          ))
-        )}
-                                  </div>
+        {(events as ScheduleEvent[]).map((event, index) => (
+          <div key={index} className="flex gap-2 mb-2">
+            <input
+              value={event.time || ''}
+              onChange={(e) => {
+                const newEvents = [...events];
+                newEvents[index] = { ...event, time: e.target.value };
+                handleUpdateScheduleSection(teamId, section, newEvents);
+              }}
+              className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+            />
+            <input
+              value={event.event || ''}
+              onChange={(e) => {
+                const newEvents = [...events];
+                newEvents[index] = { ...event, event: e.target.value };
+                handleUpdateScheduleSection(teamId, section, newEvents);
+              }}
+              className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+            />
+            <input
+              value={event.location || ''}
+              onChange={(e) => {
+                const newEvents = [...events];
+                newEvents[index] = { ...event, location: e.target.value };
+                handleUpdateScheduleSection(teamId, section, newEvents);
+              }}
+              className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+            />
+          </div>
+        ))}
+      </div>
     );
   };
 

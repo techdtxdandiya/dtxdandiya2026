@@ -4,42 +4,75 @@ import { ref, onValue } from 'firebase/database';
 import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 
-const renderScheduleSection = (
-  title: string,
-  events: Array<{ time: string; event: string; location: string }> | undefined
-) => {
-  console.log(`Rendering schedule section: ${title}`, events);
-  if (!events || events.length === 0) {
-    console.log(`No events for section: ${title}`);
-    return null;
-  }
-
-  return (
-    <div className="mb-8">
-      <h3 className="text-2xl text-white mb-4">{title}</h3>
-      <div className="space-y-3">
-        {events.map((event, index) => {
-          console.log(`Rendering event ${index} in ${title}:`, event);
-          return (
-            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                <div className="text-blue-200 font-medium">{event.time}</div>
-                <div className="text-white">{event.location}</div>
-                <div className="text-blue-200/80">{event.event}</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
   const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
+
+  const renderScheduleSection = (
+    title: string,
+    events: Array<{ time: string; event: string; location: string }> | undefined
+  ) => {
+    if (!events || events.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="mb-8">
+        <h3 className="text-2xl text-white mb-4">{title}</h3>
+        <div className="space-y-3">
+          {events.map((event, index) => (
+            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
+                <div className="text-blue-200 font-medium">{event.time}</div>
+                <div className="text-white">{event.event}</div>
+                <div className="text-blue-200/80">{event.location}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderSchedule = () => {
+    if (!teamInfo?.schedule?.isPublished) {
+      return (
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule will be available soon.</p>
+        </div>
+      );
+    }
+
+    if (!teamInfo.schedule.showOrder) {
+      return (
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule has not been assigned yet.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-8">
+        {teamInfo.schedule.showOrder && (
+          <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+            <p className="text-xl text-white">Performance Order: Team {teamInfo.schedule.showOrder}</p>
+          </div>
+        )}
+        {renderScheduleSection("Friday", teamInfo.schedule.friday)}
+        {renderScheduleSection("Saturday Tech Time", teamInfo.schedule.saturdayTech)}
+        {renderScheduleSection("Saturday Pre-Show", teamInfo.schedule.saturdayPreShow)}
+        {renderScheduleSection("Saturday Show", teamInfo.schedule.saturdayShow)}
+        {teamInfo.schedule.saturdayPostShow && (
+          <>
+            {renderScheduleSection("Saturday Post-Show (Non-Placing)", teamInfo.schedule.saturdayPostShow.nonPlacing)}
+            {renderScheduleSection("Saturday Post-Show (Placing)", teamInfo.schedule.saturdayPostShow.placing)}
+          </>
+        )}
+      </div>
+    );
+  };
 
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
@@ -320,135 +353,7 @@ export default function Dashboard() {
           {activeTab === 'schedule' && (
             <div>
               <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
-              {teamInfo.schedule?.isPublished ? (
-                <div className="space-y-8">
-                  {teamInfo.schedule.showOrder !== null && (
-                    <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                      <p className="text-xl text-white">Performance Order: Team {teamInfo.schedule.showOrder}</p>
-                    </div>
-                  )}
-
-                  {/* Friday Schedule */}
-                  {(teamInfo.schedule.friday || []).length > 0 && (
-                    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                      <h3 className="text-2xl text-white mb-4">Friday</h3>
-                      <div className="space-y-3">
-                        {(teamInfo.schedule.friday || []).map((event, index) => (
-                          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                              <div className="text-blue-200 font-medium">{event.time}</div>
-                              <div className="text-white">{event.event}</div>
-                              <div className="text-blue-200/80">{event.location}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Saturday Tech Schedule */}
-                  {(teamInfo.schedule.saturdayTech || []).length > 0 && (
-                    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                      <h3 className="text-2xl text-white mb-4">Saturday Tech Time</h3>
-                      <div className="space-y-3">
-                        {(teamInfo.schedule.saturdayTech || []).map((event, index) => (
-                          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                              <div className="text-blue-200 font-medium">{event.time}</div>
-                              <div className="text-white">{event.event}</div>
-                              <div className="text-blue-200/80">{event.location}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Saturday Pre-Show Schedule */}
-                  {(teamInfo.schedule.saturdayPreShow || []).length > 0 && (
-                    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                      <h3 className="text-2xl text-white mb-4">Saturday Pre-Show</h3>
-                      <div className="space-y-3">
-                        {(teamInfo.schedule.saturdayPreShow || []).map((event, index) => (
-                          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                              <div className="text-blue-200 font-medium">{event.time}</div>
-                              <div className="text-white">{event.event}</div>
-                              <div className="text-blue-200/80">{event.location}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Saturday Show Schedule */}
-                  {(teamInfo.schedule.saturdayShow || []).length > 0 && (
-                    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                      <h3 className="text-2xl text-white mb-4">Saturday Show</h3>
-                      <div className="space-y-3">
-                        {(teamInfo.schedule.saturdayShow || []).map((event, index) => (
-                          <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                            <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                              <div className="text-blue-200 font-medium">{event.time}</div>
-                              <div className="text-white">{event.event}</div>
-                              <div className="text-blue-200/80">{event.location}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Saturday Post-Show Schedule */}
-                  {teamInfo.schedule.saturdayPostShow && (
-                    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                      <h3 className="text-2xl text-white mb-4">Saturday Post-Show</h3>
-                      <div className="space-y-6">
-                        {/* Placing Teams Schedule */}
-                        {(teamInfo.schedule.saturdayPostShow.placing || []).length > 0 && (
-                          <div>
-                            <h4 className="text-xl text-white mb-3">Placing Teams</h4>
-                            <div className="space-y-3">
-                              {(teamInfo.schedule.saturdayPostShow.placing || []).map((event, index) => (
-                                <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                                  <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                                    <div className="text-blue-200 font-medium">{event.time}</div>
-                                    <div className="text-white">{event.event}</div>
-                                    <div className="text-blue-200/80">{event.location}</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Non-Placing Teams Schedule */}
-                        {(teamInfo.schedule.saturdayPostShow.nonPlacing || []).length > 0 && (
-                          <div>
-                            <h4 className="text-xl text-white mb-3">Non-Placing Teams</h4>
-                            <div className="space-y-3">
-                              {(teamInfo.schedule.saturdayPostShow.nonPlacing || []).map((event, index) => (
-                                <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                                  <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                                    <div className="text-blue-200 font-medium">{event.time}</div>
-                                    <div className="text-white">{event.event}</div>
-                                    <div className="text-blue-200/80">{event.location}</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <p className="text-blue-200/60">Schedule will be available soon.</p>
-                </div>
-              )}
+              {renderSchedule()}
             </div>
           )}
         </div>
