@@ -1075,7 +1075,7 @@ const AdminDashboard: React.FC = () => {
                           driveUrl: e.target.value
                         })}
                         className="w-full bg-black/40 border border-blue-500/30 rounded-lg p-2 text-white"
-                        placeholder="Enter Google Drive video link"
+                        placeholder="Enter video link"
                                   />
                                 </div>
                                 </div>
