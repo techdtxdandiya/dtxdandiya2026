@@ -11,6 +11,7 @@
     "init-db": "node src/config/initializeDatabase.js"
   },
   "dependencies": {
+    "@types/react-scroll": "^1.8.10",
     "firebase": "^10.7.2",
     "framer-motion": "^11.0.3",
     "lucide-react": "^0.320.0",
@@ -18,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.21.3",
+    "react-scroll": "^1.9.0",
     "react-toastify": "^11.0.3"
   },
   "devDependencies": {
