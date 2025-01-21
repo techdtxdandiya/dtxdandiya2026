@@ -29,15 +29,20 @@ export default function Dashboard() {
   // Static schedule data for judges and reps
   const staticScheduleData = {
     friday: [
-      { time: '4:00 PM', event: 'Check-in Opens', location: 'Main Lobby' },
-      { time: '5:00 PM', event: 'Orientation', location: 'Auditorium' },
-      { time: '6:00 PM', event: 'Tech Time Begins', location: 'Stage' }
+      { event: "Registration", location: "Hotel Oak Room", time: "12:00 PM" },
+      { event: "Dinner", location: "Hotel Garden Terrace", time: "4:00 PM" },
+      { event: "Mixer", location: "Hotel Garden Terrace", time: "5:00 PM" },
+      { event: "Captains Meeting", location: "Outside Event Rooms", time: "7:25 PM" },
+      { event: "Practice", location: "Hotel Event Rooms", time: "7:30 PM" },
     ],
     saturday: [
-      { time: '8:00 AM', event: 'Arrival', location: 'Main Entrance' },
-      { time: '9:00 AM', event: 'Morning Briefing', location: 'Green Room' },
-      { time: '10:00 AM', event: 'Show Preparations', location: 'Backstage' },
-      { time: '11:00 AM', event: 'Show Begins', location: 'Auditorium' }
+      { event: "Props", location: "Marshall Center", time: "5:30 AM" },
+      { event: "Tech Time", location: "Marshall Center", time: "8:35 AM" },
+      { event: "Photoshoot", location: "Marshall Center", time: "3:50 PM" },
+      { event: "Doors Open", location: "Marshall Center", time: "5:00 PM" },
+      { event: "Showtime", location: "Marshall Center", time: "5:30 PM" },
+      { event: "Awards", location: "Marshall Center", time: "9:00 PM" },
+      { event: "Afterparty", location: "VYB Lounge", time: "10:00 PM" },
     ]
   };
 
@@ -226,7 +231,7 @@ export default function Dashboard() {
     } else if (userType === 'judge') {
       return 'Judges Portal';
     } else if (userType === 'reps') {
-      return 'Team Representatives Portal';
+      return 'Representatives Portal';
     }
     return '';
   };
@@ -381,23 +386,6 @@ export default function Dashboard() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <a
-                      href="https://www.youtube.com/watch?v="
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                      </svg>
-                      Watch on YouTube
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </a>
                   </div>
                 </div>
               </div>
