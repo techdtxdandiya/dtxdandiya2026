@@ -66,9 +66,9 @@ export default function Dashboard() {
           {events.map((event, index) => (
             <div key={index} className="p-3 sm:p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
               <div className="flex flex-col sm:grid sm:grid-cols-[auto,1fr,auto] gap-2 sm:gap-4 items-start sm:items-center">
-                <div className="text-blue-200 font-medium order-1">{event.time}</div>
-                <div className="text-white order-3 sm:order-2">{event.event}</div>
-                <div className="text-blue-200/80 text-sm order-2 sm:order-3">{event.location}</div>
+                <div className="text-blue-200 font-medium font-sans order-1">{event.time}</div>
+                <div className="text-white font-sans order-3 sm:order-2">{event.event}</div>
+                <div className="text-blue-200/80 text-sm font-sans order-2 sm:order-3">{event.location}</div>
               </div>
             </div>
           ))}
