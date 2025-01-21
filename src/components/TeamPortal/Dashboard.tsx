@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
+import { FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -216,7 +217,7 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'information' && (
-            <div className="space-y-6 sm:space-y-8">
+            <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
                 <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -420,6 +421,103 @@ export default function Dashboard() {
                             </svg>
                           </a>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Nearby Places Section */}
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h3 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
+                
+                {/* Food Options */}
+                <div className="mb-6">
+                  <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-2">
+                      <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-sans">Chick-fil-A</p>
+                        <a 
+                          href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                        >
+                          13347 Montfort Dr, Dallas, TX 75240
+                          <FaExternalLinkAlt className="text-xs" />
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-2">
+                      <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-sans">In-N-Out Burger</p>
+                        <a 
+                          href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                        >
+                          7940 Belt Line Rd, Dallas, TX 75254
+                          <FaExternalLinkAlt className="text-xs" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Prop Repair Places */}
+                <div>
+                  <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-2">
+                      <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-sans">At Home</p>
+                        <a 
+                          href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                        >
+                          13710 Dallas Pkwy, Dallas, TX 75240
+                          <FaExternalLinkAlt className="text-xs" />
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-2">
+                      <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-sans">Hobby Lobby</p>
+                        <a 
+                          href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                        >
+                          14555 Dallas Pkwy, Dallas, TX 75254
+                          <FaExternalLinkAlt className="text-xs" />
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-2">
+                      <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-sans">Joann Fabrics and Crafts</p>
+                        <a 
+                          href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                        >
+                          13710 Dallas Pkwy, Dallas, TX 75240
+                          <FaExternalLinkAlt className="text-xs" />
+                        </a>
                       </div>
                     </div>
                   </div>
