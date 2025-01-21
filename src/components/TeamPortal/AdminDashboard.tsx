@@ -516,8 +516,8 @@ const AdminDashboard: React.FC = () => {
             <div className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg">
               <FiAlertCircle />
               <span>{errorMessage}</span>
-            </div>
-          )}
+          </div>
+        )}
 
           <div className="flex justify-between items-center pt-4 border-t border-blue-500/20">
             <div className="flex gap-2">
@@ -555,7 +555,7 @@ const AdminDashboard: React.FC = () => {
               {isSubmitting ? 'Sending...' : 'Send Announcement'}
             </button>
           </div>
-        </div>
+          </div>
 
         {previewMode && announcementForm.title && announcementForm.content && (
           <div className="mt-6 border-t border-blue-500/20 pt-6">
@@ -652,8 +652,8 @@ const AdminDashboard: React.FC = () => {
                       >
                         <FiEdit2 className="text-blue-400" />
                       </button>
-                      <button
-                        onClick={() => {
+                                <button
+                                  onClick={() => {
                           console.log('Deleting announcement:', announcement.id);
                           handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements);
                         }}
@@ -661,11 +661,11 @@ const AdminDashboard: React.FC = () => {
                         title="Delete announcement"
                       >
                         <FiTrash2 className="text-red-400" />
-                      </button>
+                                </button>
                     </div>
-                  </div>
-                </div>
-              ))}
+                              </div>
+                            </div>
+                          ))}
             </div>
           ) : (
             <div className="text-center py-12 px-4">
@@ -681,7 +681,7 @@ const AdminDashboard: React.FC = () => {
   const renderAnnouncementsSection = () => (
     <div className="space-y-6">
       <div className="flex space-x-4 mb-6">
-                                <button
+                          <button
           onClick={() => setActiveAnnouncementTab('new')}
           className={`px-4 py-2 rounded-lg transition-colors ${
             activeAnnouncementTab === 'new'
@@ -880,7 +880,7 @@ const AdminDashboard: React.FC = () => {
         {updateMessage && (
           <div className="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-lg text-green-200">
             {updateMessage}
-          </div>
+                                  </div>
         )}
 
         <div className="mb-8">
@@ -972,6 +972,10 @@ const AdminDashboard: React.FC = () => {
                   <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
                     <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Dimensions</h4>
+                    <p className="text-white">42" x 4"</p>
                   </div>
                   <div className="md:col-span-2">
                     <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-200">
@@ -1117,9 +1121,9 @@ const AdminDashboard: React.FC = () => {
                             {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
                           </button>
                         </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 
@@ -1143,8 +1147,8 @@ const AdminDashboard: React.FC = () => {
                   </div>
                 );
               })}
-            </div>
-          )}
+                  </div>
+                )}
           {activeTab === 'reports' && (
             <div>
               <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Anonymous Reports</h2>
@@ -1169,8 +1173,8 @@ const AdminDashboard: React.FC = () => {
                   <div className="text-center py-12">
                     <p className="text-blue-200/60 font-sans">No reports have been submitted yet.</p>
                   </div>
-                )}
-              </div>
+            )}
+          </div>
             </div>
           )}
         </div>

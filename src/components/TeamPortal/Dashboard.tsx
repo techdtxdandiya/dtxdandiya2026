@@ -229,7 +229,7 @@ export default function Dashboard() {
               ['schedule', 'Schedule'],
               ['report', 'Report']
             ].map(([key, label]) => (
-              <button
+            <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
                 className={`px-4 py-3 sm:py-2 font-['Harry_Potter'] text-lg sm:text-base transition-all duration-300 ${
@@ -241,7 +241,7 @@ export default function Dashboard() {
                 }`}
               >
                 {label}
-              </button>
+            </button>
             ))}
           </div>
         </div>
@@ -346,6 +346,17 @@ export default function Dashboard() {
                       <div>
                         <h4 className="text-blue-300 text-sm font-sans font-medium">Props Box</h4>
                         <p className="text-white font-sans">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-300 text-sm font-sans font-medium">Props Dimensions</h4>
+                        <p className="text-white font-sans">42" x 4"</p>
                       </div>
                     </div>
                     <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
@@ -676,7 +687,7 @@ export default function Dashboard() {
                       </button>
                     </div>
                   </form>
-                </div>
+                  </div>
               </div>
             </div>
           )}
