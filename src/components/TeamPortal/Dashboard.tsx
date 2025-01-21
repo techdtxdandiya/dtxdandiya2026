@@ -3,14 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
-import { FiMapPin, FiPhone, FiMail, FiExternalLink, FiCalendar, FiClock, FiMapPin as FiLocation } from 'react-icons/fi';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
-  const [activeSection, setActiveSection] = useState<string>('schedule');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
   const [scheduleData, setScheduleData] = useState<TeamInfo['schedule'] | null>(null);
+
+  // Move debug logging to a separate effect
+  useEffect(() => {
+    if (activeTab === 'schedule' && teamInfo) {
+      console.log('Schedule tab active, current team info:', teamInfo);
+      console.log('Schedule data:', teamInfo.schedule);
+      console.log('Schedule published:', teamInfo.schedule?.isPublished);
+      console.log('Show order:', teamInfo.schedule?.showOrder);
+    }
+  }, [activeTab, teamInfo]);
 
   // Main data loading effect
   useEffect(() => {
@@ -23,14 +32,20 @@ export default function Dashboard() {
     }
 
     setTeamId(storedTeam);
+    console.log('Loading data for team:', storedTeam);
     
     const teamRef = ref(db, `teams/${storedTeam}`);
     const unsubscribe = onValue(teamRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
+        console.log('Received team data:', data);
         setTeamInfo(data);
         setScheduleData(data.schedule || null);
+      } else {
+        console.log('No data exists for team:', storedTeam);
       }
+    }, (error) => {
+      console.error('Error loading team data:', error);
     });
 
     return () => unsubscribe();
@@ -40,24 +55,20 @@ export default function Dashboard() {
     title: string,
     events: Array<{ time: string; event: string; location: string }> | undefined
   ) => {
-    if (!events || events.length === 0) return null;
+    if (!events || events.length === 0) {
+      return null;
+    }
 
     return (
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-white/90 mb-3">{title}</h3>
-        <div className="space-y-2">
+      <div className="mb-8">
+        <h3 className="text-2xl text-white mb-4">{title}</h3>
+        <div className="space-y-3">
           {events.map((event, index) => (
-            <div key={index} className="p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 hover:border-blue-500/30 transition-colors">
+            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
               <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                <div className="flex items-center gap-2 text-blue-200/90">
-                  <FiClock className="w-4 h-4" />
-                  <span>{event.time}</span>
-                </div>
-                <div className="text-white/90">{event.event}</div>
-                <div className="flex items-center gap-2 text-blue-200/70">
-                  <FiLocation className="w-4 h-4" />
-                  <span>{event.location}</span>
-                </div>
+                <div className="text-blue-200 font-medium">{event.time}</div>
+                <div className="text-white">{event.event}</div>
+                <div className="text-blue-200/80">{event.location}</div>
               </div>
             </div>
           ))}
@@ -69,188 +80,50 @@ export default function Dashboard() {
   const renderSchedule = () => {
     if (!scheduleData) {
       return (
-        <div className="text-center py-8">
-          <p className="text-white/60">Schedule will be available soon.</p>
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.isPublished) {
       return (
-        <div className="text-center py-8">
-          <p className="text-white/60">Schedule will be available soon.</p>
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.showOrder) {
       return (
-        <div className="text-center py-8">
-          <p className="text-white/60">Schedule has not been assigned yet.</p>
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule has not been assigned yet.</p>
         </div>
       );
     }
 
     return (
       <div className="space-y-8">
-        <div className="inline-flex items-center px-4 py-2 bg-blue-500/10 rounded-lg">
-          <span className="text-blue-200">Performance Order {scheduleData.showOrder}</span>
+        <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+          <p className="text-xl text-white">Performance Order {scheduleData.showOrder}</p>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Friday Events */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 text-xl text-white/90">
-              <FiCalendar className="w-5 h-5" />
-              <h2 className="font-semibold">Friday</h2>
-            </div>
-            {renderScheduleSection("", scheduleData.friday)}
-          </div>
-
-          {/* Saturday Events */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 text-xl text-white/90">
-              <FiCalendar className="w-5 h-5" />
-              <h2 className="font-semibold">Saturday</h2>
-            </div>
-            {renderScheduleSection("Tech Time", scheduleData.saturdayTech)}
-            {renderScheduleSection("Pre-Show", scheduleData.saturdayPreShow)}
-            {renderScheduleSection("Show", scheduleData.saturdayShow)}
-            {scheduleData.saturdayPostShow && (
-              <>
-                {renderScheduleSection("Post-Show (Non-Placing)", scheduleData.saturdayPostShow.nonPlacing)}
-                {renderScheduleSection("Post-Show (Placing)", scheduleData.saturdayPostShow.placing)}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderInformation = () => {
-    if (!teamInfo) return null;
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Liaisons Card */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-          <h3 className="text-lg font-semibold text-white/90 mb-4">Liaisons</h3>
-          <div className="space-y-3">
-            {teamInfo.information.liaisons.map((liaison, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
-                  <FiPhone className="w-4 h-4 text-blue-200" />
-                </div>
-                <div>
-                  <div className="text-white/90">{liaison.name}</div>
-                  <a href={`tel:${liaison.phone}`} className="text-blue-200/70 text-sm hover:text-blue-200">
-                    {liaison.phone}
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Venue Card */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-          <h3 className="text-lg font-semibold text-white/90 mb-4">Venue</h3>
-          <div className="space-y-3">
-            <div className="text-white/90">{teamInfo.information.venue.name}</div>
-            <div className="flex items-center gap-2">
-              <FiMapPin className="text-blue-200/70" />
-              <span className="text-white/70">{teamInfo.information.venue.address}</span>
-            </div>
-            <div className="text-blue-200/70 text-sm">
-              {teamInfo.information.venue.seatingCapacity}
-            </div>
-          </div>
-        </div>
-
-        {/* Hotel Card */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-          <h3 className="text-lg font-semibold text-white/90 mb-4">Hotel</h3>
-          <div className="space-y-3">
-            <div className="text-white/90">{teamInfo.information.hotel.name}</div>
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <FiMapPin className="text-blue-200/70" />
-                <span className="text-white/70">{teamInfo.information.hotel.address}</span>
-              </div>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(teamInfo.information.hotel.address)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
-              >
-                <FiExternalLink className="w-4 h-4" />
-                <span>Map</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Tech Info Card */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4">
-          <h3 className="text-lg font-semibold text-white/90 mb-4">Tech Information</h3>
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="text-blue-200/70 text-sm">Danceable Space</div>
-                <div className="text-white/90">{teamInfo.information.tech.danceableSpace}</div>
-              </div>
-              <div>
-                <div className="text-blue-200/70 text-sm">Backdrop Space</div>
-                <div className="text-white/90">{teamInfo.information.tech.backdropSpace}</div>
-              </div>
-              <div>
-                <div className="text-blue-200/70 text-sm">Apron Space</div>
-                <div className="text-white/90">{teamInfo.information.tech.apronSpace}</div>
-              </div>
-              <div>
-                <div className="text-blue-200/70 text-sm">Props Box</div>
-                <div className="text-white/90">{teamInfo.information.tech.propsBox}</div>
-              </div>
-            </div>
-            <div className="text-red-400/90 text-sm mt-4">
-              {teamInfo.information.tech.additionalNotes}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderTechVideo = () => {
-    if (!teamInfo?.techVideo) return null;
-
-    return (
-      <div className="max-w-2xl mx-auto">
-        {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-            <h3 className="text-xl font-['Harry_Potter'] text-white/90 mb-6 text-center">
-              {teamInfo.techVideo.title}
-            </h3>
-            <div className="flex justify-center">
-              <a
-                href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
-              >
-                <span className="text-white text-lg">Access Video</span>
-                <FiExternalLink className="w-5 h-5 text-white transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-white/60">Tech time video will be available soon.</p>
-          </div>
+        {renderScheduleSection("Friday", scheduleData.friday)}
+        {renderScheduleSection("Saturday Tech Time", scheduleData.saturdayTech)}
+        {renderScheduleSection("Saturday Pre-Show", scheduleData.saturdayPreShow)}
+        {renderScheduleSection("Saturday Show", scheduleData.saturdayShow)}
+        {scheduleData.saturdayPostShow && (
+          <>
+            {renderScheduleSection("Saturday Post-Show (Non-Placing)", scheduleData.saturdayPostShow.nonPlacing)}
+            {renderScheduleSection("Saturday Post-Show (Placing)", scheduleData.saturdayPostShow.placing)}
+          </>
         )}
       </div>
     );
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("team");
+    navigate("/team-portal/login");
   };
 
   if (!teamInfo || !teamId) {
@@ -258,53 +131,231 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] font-sans">
+    <div className="min-h-screen bg-black relative overflow-hidden">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-900/10 via-black to-black pointer-events-none" />
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
+          <div className="absolute inset-0" 
+            style={{
+              background: `
+                radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.15), transparent 70%)
+              `
+            }}
+          />
+        </div>
+      </div>
 
-      {/* Content */}
-      <div className="relative">
+      <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/10">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl md:text-4xl font-['Harry_Potter'] text-white glow-text-intense">
-                {teamInfo.displayName}
-              </h1>
+        <div className="flex justify-between items-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense">
+            {teamInfo.displayName}
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
+          >
+            Mischief Managed
+          </button>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="mb-8">
+          <div className="flex space-x-4 border-b border-blue-500/30">
+            {[
+              ['announcements', 'Announcements'],
+              ['information', 'Information'],
+              ['tech-time-video', 'Tech Time Video'],
+              ['schedule', 'Schedule']
+            ].map(([key, label]) => (
               <button
-                onClick={() => {
-                  sessionStorage.removeItem("team");
-                  navigate("/team-portal/login");
-                }}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white/90 transition-all duration-300"
+                key={key}
+                onClick={() => setActiveTab(key as typeof activeTab)}
+                className={`px-4 py-2 ${
+                  activeTab === key
+                    ? 'border-b-2 border-blue-500 text-white'
+                    : 'text-blue-200/60 hover:text-white'
+                }`}
               >
-                Logout
+                {label}
               </button>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="container mx-auto px-4 py-6">
-          <div className="space-y-8">
-            {/* Schedule Section */}
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold text-white/90">Schedule</h2>
+        {/* Content */}
+        <div className="space-y-8">
+          {activeTab === 'announcements' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Announcements</h2>
+              <div className="space-y-4">
+                {teamInfo.announcements?.length > 0 ? (
+                  teamInfo.announcements.map((announcement) => (
+                    <div key={announcement.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                      <h3 className="text-xl text-white mb-2">{announcement.title}</h3>
+                      <p className="text-blue-200/80 whitespace-pre-wrap mb-4">{announcement.content}</p>
+                      <p className="text-sm text-blue-200/60">
+                        Posted: {new Date(announcement.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-blue-200/60">No announcements at this time.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'information' && (
+            <div className="space-y-8">
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
+                <div className="space-y-4">
+                  {teamInfo.information?.liaisons?.map((liaison, index) => (
+                    <div key={index} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 bg-blue-500/5 rounded-lg">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-white text-lg font-medium">{liaison.name}</p>
+                        {liaison.phone && (
+                          <a 
+                            href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
+                            className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                            {liaison.phone}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
+                    <p className="text-white">42' x 28'</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Apron Space</h4>
+                    <p className="text-white">4 ft</p>
+                  </div>
+                  <div className="p-4 bg-blue-500/5 rounded-lg">
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
+                    <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                      <p className="text-red-200">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Venue Information</h3>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg">Marshall Family Performing Arts Center</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <p className="text-white">4141 Spring Valley Rd, Addison, TX 75001</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                      >
+                        View in Google Maps
+                      </a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Seating Capacity</h4>
+                    <p className="text-white">600 seat auditorium</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg">DoubleTree by Hilton Hotel Dallas</p>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                      >
+                        View in Google Maps
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'tech-time-video' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Tech Time Video</h2>
+              {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
+                <div className="p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 flex flex-col items-center justify-center">
+                  <h3 className="text-2xl text-white mb-6 font-['Harry_Potter']">{teamInfo.techVideo.title}</h3>
+                  <a
+                    href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
+                  >
+                    <span className="text-white text-lg">Access Video</span>
+                    <svg 
+                      className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M14 5l7 7m0 0l-7 7m7-7H3" 
+                      />
+                    </svg>
+                  </a>
+                </div>
+              ) : (
+                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <p className="text-blue-200/60">Tech time video will be available soon.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'schedule' && (
+            <div>
+              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
               {renderSchedule()}
-            </section>
-
-            {/* Tech Video Section */}
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold text-white/90">Tech Time Video</h2>
-              {renderTechVideo()}
-            </section>
-
-            {/* Information Section */}
-            <section className="space-y-6">
-              <h2 className="text-2xl font-semibold text-white/90">Information</h2>
-              {renderInformation()}
-            </section>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
