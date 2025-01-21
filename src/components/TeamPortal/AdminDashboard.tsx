@@ -154,10 +154,12 @@ const AdminDashboard: React.FC = () => {
       };
       
       await set(teamRef, updatedSchedule);
-      toast.success('Schedule updated successfully!');
+      toast.success(isPublished 
+        ? `Schedule published and now visible to Team ${currentSchedule.showOrder}` 
+        : 'Schedule unpublished and hidden from team');
     } catch (error) {
       console.error('Error updating schedule published status:', error);
-      toast.error('Error updating schedule status');
+      toast.error(isPublished ? 'Failed to publish schedule' : 'Failed to unpublish schedule');
     }
   };
 
@@ -427,7 +429,7 @@ const AdminDashboard: React.FC = () => {
 
       console.log('Setting schedule:', schedule);
       await set(teamRef, schedule);
-      toast.success('Show order assigned and schedule updated successfully!');
+      toast.success(`Show order ${showOrder} assigned. Publish schedule when ready.`);
     } catch (error) {
       console.error('Error assigning show order:', error);
       toast.error('Error assigning show order');
@@ -1091,24 +1093,21 @@ const AdminDashboard: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <h4 className="text-lg text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
                         <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <label className="text-sm text-blue-300">Show Order:</label>
-                            <select
-                              value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
-                              onChange={(e) => {
-                                const showOrder = e.target.value ? parseInt(e.target.value) : null;
-                                if (showOrder) {
-                                  handleAssignShowOrder(teamId as TeamId, showOrder);
-                                }
-                              }}
-                              className="w-full p-2 bg-black/40 border border-blue-500/30 rounded text-white"
-                            >
-                              <option value="">Select Option</option>
-                              {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
-                                <option key={num} value={num}>Team {num}</option>
-                              ))}
-                            </select>
-                          </div>
+                          <select
+                            value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
+                            onChange={(e) => {
+                              const showOrder = e.target.value ? parseInt(e.target.value) : null;
+                              if (showOrder) {
+                                handleAssignShowOrder(teamId as TeamId, showOrder);
+                              }
+                            }}
+                            className="w-32 p-2 bg-black/40 border border-blue-500/30 rounded text-white"
+                          >
+                            <option value="">Select Option</option>
+                            {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+                              <option key={num} value={num}>Team {num}</option>
+                            ))}
+                          </select>
                           <button
                             onClick={() => handleUpdateSchedulePublished(teamId as TeamId, !teamData[teamId as TeamId]?.schedule?.isPublished)}
                             className={`px-4 py-2 rounded-lg transition-colors ${
@@ -1120,11 +1119,11 @@ const AdminDashboard: React.FC = () => {
                             {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
                           </button>
                         </div>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-          </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
