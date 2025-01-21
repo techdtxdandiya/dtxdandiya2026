@@ -5,7 +5,6 @@ import { ref, onValue, update, get, set } from 'firebase/database';
 import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS, GENERIC_SCHEDULES, INITIAL_SCHEDULE } from '../../config/initializeDatabase';
 import type { TeamInfo, TeamId, DashboardTeamId, Schedule, ScheduleEvent } from '../../types/team';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -514,14 +513,10 @@ const AdminDashboard: React.FC = () => {
         </div>
 
           {errorMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg"
-            >
+            <div className="flex items-center gap-2 text-red-400 bg-red-900/20 p-3 rounded-lg">
               <FiAlertCircle />
               <span>{errorMessage}</span>
-            </motion.div>
+            </div>
           )}
 
           <div className="flex justify-between items-center pt-4 border-t border-blue-500/20">
@@ -630,73 +625,53 @@ const AdminDashboard: React.FC = () => {
 
           {selectedTeamForAnnouncements ? (
             <div className="space-y-4">
-              <AnimatePresence mode="popLayout">
-                {selectedTeamAnnouncements.length > 0 ? (
-                  selectedTeamAnnouncements.map((announcement, index) => (
-                    <motion.div
-                      key={announcement.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
-                      className="group bg-black/40 p-4 rounded-lg border border-blue-500/10 hover:border-blue-500/30 transition-colors"
-                    >
-                      <div className="flex justify-between items-start gap-4">
-                        <div className="flex-1">
-                          <h4 className="text-lg font-medium text-white mb-2">{announcement.title}</h4>
-                          <p className="text-blue-200/80 whitespace-pre-wrap mb-3">{announcement.content}</p>
-                          <div className="flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
-                            <span>{new Date(announcement.timestamp).toLocaleString()}</span>
-                            {announcement.targetTeams && announcement.targetTeams.length > 0 && (
-                              <>
-                                <span>•</span>
-                                <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-                            onClick={() => handleEditAnnouncement(announcement)}
-                            className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
-                            title="Edit announcement"
-                          >
-                            <FiEdit2 className="text-blue-400" />
-            </button>
-            <button
-                            onClick={() => {
-                              console.log('Deleting announcement:', announcement.id);
-                              handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements);
-                            }}
-                            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
-                            title="Delete announcement"
-                          >
-                            <FiTrash2 className="text-red-400" />
-            </button>
-          </div>
+              {selectedTeamAnnouncements.map((announcement) => (
+                <div
+                  key={announcement.id}
+                  className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20"
+                >
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1">
+                      <h4 className="text-lg font-medium text-white mb-2">{announcement.title}</h4>
+                      <p className="text-blue-200/80 whitespace-pre-wrap mb-3">{announcement.content}</p>
+                      <div className="flex flex-wrap gap-2 items-center text-sm text-blue-300/60">
+                        <span>{new Date(announcement.timestamp).toLocaleString()}</span>
+                        {announcement.targetTeams && announcement.targetTeams.length > 0 && (
+                          <>
+                            <span>•</span>
+                            <span>Sent to: {announcement.targetTeams.map(id => TEAM_DISPLAY_NAMES[id]).join(', ')}</span>
+                          </>
+                        )}
                       </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <motion.p 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-blue-200/60 text-center py-8"
-                  >
-                    No announcements yet for {TEAM_DISPLAY_NAMES[selectedTeamForAnnouncements]}
-                  </motion.p>
-                )}
-              </AnimatePresence>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditAnnouncement(announcement)}
+                        className="p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
+                        title="Edit announcement"
+                      >
+                        <FiEdit2 className="text-blue-400" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          console.log('Deleting announcement:', announcement.id);
+                          handleDeleteAnnouncement(announcement.id, selectedTeamForAnnouncements);
+                        }}
+                        className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+                        title="Delete announcement"
+                      >
+                        <FiTrash2 className="text-red-400" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12 px-4"
-            >
+            <div className="text-center py-12 px-4">
               <p className="text-blue-200/60 mb-2">Select a team to view and manage their announcements</p>
               <p className="text-blue-200/40 text-sm">You can edit, delete, or view the history of announcements for each team</p>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
@@ -903,14 +878,9 @@ const AdminDashboard: React.FC = () => {
                                   </div>
 
         {updateMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-lg text-green-200"
-          >
+          <div className="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-lg text-green-200">
             {updateMessage}
-          </motion.div>
+          </div>
         )}
 
         <div className="mb-8">
