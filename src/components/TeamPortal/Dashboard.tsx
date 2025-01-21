@@ -60,15 +60,19 @@ export default function Dashboard() {
     }
 
     return (
-      <div className="mb-6 sm:mb-8">
-        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-3 sm:mb-4">{title}</h3>
-        <div className="space-y-2 sm:space-y-3">
+      <div className="mb-8">
+        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4 px-1">{title}</h3>
+        <div className="space-y-3">
           {events.map((event, index) => (
-            <div key={index} className="p-3 sm:p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-              <div className="flex flex-col sm:grid sm:grid-cols-[auto,1fr,auto] gap-2 sm:gap-4 items-start sm:items-center">
-                <div className="text-blue-200 font-medium font-sans order-1">{event.time}</div>
-                <div className="text-white font-sans order-3 sm:order-2">{event.event}</div>
-                <div className="text-blue-200/80 text-sm font-sans order-2 sm:order-3">{event.location}</div>
+            <div key={index} className="bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-colors">
+              <div className="flex flex-col sm:grid sm:grid-cols-[140px,1fr,180px] items-start sm:items-center">
+                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 border-b sm:border-b-0 sm:border-r border-blue-500/20">
+                  <div className="text-blue-300 font-medium font-sans">{event.time}</div>
+                </div>
+                <div className="px-4 py-3 sm:py-4 text-white font-sans">{event.event}</div>
+                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-blue-500/5 rounded-b-xl sm:rounded-none sm:rounded-r-xl text-blue-200/80 text-sm font-sans">
+                  {event.location}
+                </div>
               </div>
             </div>
           ))}
@@ -80,32 +84,34 @@ export default function Dashboard() {
   const renderSchedule = () => {
     if (!scheduleData) {
       return (
-        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center font-sans">Schedule will be available soon.</p>
+        <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-blue-200/80 text-center font-sans">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.isPublished) {
       return (
-        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center font-sans">Schedule will be available soon.</p>
+        <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-blue-200/80 text-center font-sans">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.showOrder) {
       return (
-        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center font-sans">Schedule has not been assigned yet.</p>
+        <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-blue-200/80 text-center font-sans">Schedule has not been assigned yet.</p>
         </div>
       );
     }
 
     return (
-      <div className="space-y-6 sm:space-y-8">
-        <div className="mb-6 sm:mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-          <p className="text-xl sm:text-2xl text-white font-['Harry_Potter'] text-center sm:text-left">Performance Order {scheduleData.showOrder}</p>
+      <div className="space-y-8">
+        <div className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-2xl sm:text-3xl text-white font-['Harry_Potter'] text-center">
+            Performance Order: {scheduleData.showOrder}
+          </p>
         </div>
         {renderScheduleSection("Friday", scheduleData.friday)}
         {renderScheduleSection("Saturday Tech Time", scheduleData.saturdayTech)}
