@@ -60,15 +60,15 @@ export default function Dashboard() {
     }
 
     return (
-      <div className="mb-8">
-        <h3 className="text-2xl text-white mb-4">{title}</h3>
-        <div className="space-y-3">
+      <div className="mb-6 sm:mb-8">
+        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-3 sm:mb-4">{title}</h3>
+        <div className="space-y-2 sm:space-y-3">
           {events.map((event, index) => (
-            <div key={index} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-              <div className="grid grid-cols-[auto,1fr,auto] gap-4 items-center">
-                <div className="text-blue-200 font-medium">{event.time}</div>
-                <div className="text-white">{event.event}</div>
-                <div className="text-blue-200/80">{event.location}</div>
+            <div key={index} className="p-3 sm:p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+              <div className="flex flex-col sm:grid sm:grid-cols-[auto,1fr,auto] gap-2 sm:gap-4 items-start sm:items-center">
+                <div className="text-blue-200 font-medium order-1">{event.time}</div>
+                <div className="text-white order-3 sm:order-2">{event.event}</div>
+                <div className="text-blue-200/80 text-sm order-2 sm:order-3">{event.location}</div>
               </div>
             </div>
           ))}
@@ -80,32 +80,32 @@ export default function Dashboard() {
   const renderSchedule = () => {
     if (!scheduleData) {
       return (
-        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center">Schedule will be available soon.</p>
+        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center font-sans">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.isPublished) {
       return (
-        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center">Schedule will be available soon.</p>
+        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center font-sans">Schedule will be available soon.</p>
         </div>
       );
     }
 
     if (!scheduleData.showOrder) {
       return (
-        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-          <p className="text-white text-center">Schedule has not been assigned yet.</p>
+        <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center font-sans">Schedule has not been assigned yet.</p>
         </div>
       );
     }
 
     return (
-      <div className="space-y-8">
-        <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-          <p className="text-xl text-white">Performance Order {scheduleData.showOrder}</p>
+      <div className="space-y-6 sm:space-y-8">
+        <div className="mb-6 sm:mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+          <p className="text-xl sm:text-2xl text-white font-['Harry_Potter'] text-center sm:text-left">Performance Order {scheduleData.showOrder}</p>
         </div>
         {renderScheduleSection("Friday", scheduleData.friday)}
         {renderScheduleSection("Saturday Tech Time", scheduleData.saturdayTech)}
@@ -146,15 +146,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12">
+      <div className="relative z-10 container mx-auto px-3 sm:px-4 py-8 sm:py-12">
         {/* Header */}
-        <div className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
+          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
             {teamInfo.displayName}
           </h1>
           <button
             onClick={handleLogout}
-            className="px-6 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
+            className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
           >
             Mischief Managed
           </button>
@@ -162,7 +162,7 @@ export default function Dashboard() {
 
         {/* Navigation Tabs */}
         <div className="mb-8">
-          <div className="flex space-x-4 border-b border-blue-500/30">
+          <div className="flex flex-col sm:flex-row border-b border-blue-500/30">
             {[
               ['announcements', 'Announcements'],
               ['information', 'Information'],
@@ -172,10 +172,12 @@ export default function Dashboard() {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
-                className={`px-4 py-2 font-['Harry_Potter'] ${
+                className={`px-4 py-3 sm:py-2 font-['Harry_Potter'] text-lg sm:text-base transition-all duration-300 ${
                   activeTab === key
-                    ? 'border-b-2 border-blue-500 text-white'
-                    : 'text-blue-200/60 hover:text-white'
+                    ? 'bg-blue-500/20 sm:bg-transparent border-b-2 border-blue-500 text-white'
+                    : 'text-blue-200/60 hover:text-white hover:bg-blue-500/10 sm:hover:bg-transparent'
+                } ${
+                  key === 'announcements' ? 'rounded-t-lg sm:rounded-none' : ''
                 }`}
               >
                 {label}
@@ -185,41 +187,46 @@ export default function Dashboard() {
         </div>
 
         {/* Content */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {activeTab === 'announcements' && (
             <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Announcements</h2>
-              <div className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Announcements</h2>
+              <div className="space-y-3 sm:space-y-4">
                 {teamInfo.announcements?.length > 0 ? (
                   teamInfo.announcements.map((announcement) => (
-                    <div key={announcement.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                      <h3 className="text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
-                      <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-4">{announcement.content}</p>
-                      <p className="text-sm text-blue-200/60 font-sans">
+                    <div key={announcement.id} className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                      <h3 className="text-lg sm:text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
+                      <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-3 sm:mb-4">{announcement.content}</p>
+                      <p className="text-xs sm:text-sm text-blue-200/60 font-sans">
                         Posted: {new Date(announcement.timestamp).toLocaleString()}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-blue-200/60 font-sans">No announcements at this time.</p>
+                  <p className="text-blue-200/60 font-sans text-center py-4">No announcements at this time.</p>
                 )}
               </div>
             </div>
           )}
 
           {activeTab === 'information' && (
-            <div className="space-y-8">
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Liaisons Information</h3>
-                <div className="space-y-4">
+            <div className="space-y-6 sm:space-y-8">
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+                <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {teamInfo.information?.liaisons?.map((liaison, index) => (
-                    <div key={index} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 bg-blue-500/5 rounded-lg">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-white text-lg font-medium">{liaison.name}</p>
+                    <div key={index} className="flex items-center gap-4 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-white font-medium truncate">{liaison.name}</p>
                         {liaison.phone && (
                           <a 
                             href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
-                            className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2"
+                            className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2 text-sm"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -233,80 +240,149 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Tech Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Danceable Space</h4>
-                    <p className="text-white font-sans">42' x 28'</p>
-                  </div>
-                  <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Backdrop Space</h4>
-                    <p className="text-white font-sans">4 ft</p>
-                  </div>
-                  <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Apron Space</h4>
-                    <p className="text-white font-sans">4 ft</p>
-                  </div>
-                  <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Props Box</h4>
-                    <p className="text-white font-sans">7ft (length) x 5ft (depth) x 10ft (height)</p>
-                  </div>
-                  <div className="md:col-span-2">
-                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                      <p className="text-red-200">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+                  <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-300 text-sm font-sans font-medium">Danceable Space</h4>
+                        <p className="text-white font-sans">42' x 28'</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-300 text-sm font-sans font-medium">Backdrop Space</h4>
+                        <p className="text-white font-sans">4 ft</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-300 text-sm font-sans font-medium">Apron Space</h4>
+                        <p className="text-white font-sans">4 ft</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                      <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 2h10v7h-2l-1 2H8l-1-2H5V5z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-blue-300 text-sm font-sans font-medium">Props Box</h4>
+                        <p className="text-white font-sans">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                      <p className="text-red-200 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Venue Information</h3>
                 <div className="space-y-6">
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Name</h4>
-                    <p className="text-white text-lg font-sans">Marshall Family Performing Arts Center</p>
-                  </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Address</h4>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <p className="text-white font-sans">4141 Spring Valley Rd, Addison, TX 75001</p>
-                      <a
-                        href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
-                      >
-                        View in Google Maps
-                      </a>
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+                    <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Venue Information</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 00-1-1H7a1 1 0 00-1 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm3 1h6v7H7V5z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
+                          <p className="text-white font-sans">Marshall Family Performing Arts Center</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
+                          <p className="text-white font-sans mb-2">4141 Spring Valley Rd, Addison, TX 75001</p>
+                          <a
+                            href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
+                          >
+                            View in Google Maps
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                              <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-blue-300 text-sm font-sans font-medium">Seating Capacity</h4>
+                          <p className="text-white font-sans">600 seat auditorium</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Seating Capacity</h4>
-                    <p className="text-white font-sans">600 seat auditorium</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Hotel Information</h3>
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Name</h4>
-                    <p className="text-white text-lg font-sans">DoubleTree by Hilton Hotel Dallas</p>
-                  </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Address</h4>
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <p className="text-white font-sans">4099 Valley View Ln, Dallas, TX 75244</p>
-                      <a
-                        href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
-                      >
-                        View in Google Maps
-                      </a>
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+                    <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
+                          <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
+                        <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
+                          <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
+                          <a
+                            href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
+                          >
+                            View in Google Maps
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                              <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -316,15 +392,15 @@ export default function Dashboard() {
 
           {activeTab === 'tech-time-video' && (
             <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Tech Time Video</h2>
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Tech Time Video</h2>
               {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
-                <div className="p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 flex flex-col items-center justify-center">
-                  <h3 className="text-2xl text-white mb-6 font-['Harry_Potter']">{teamInfo.techVideo.title}</h3>
+                <div className="p-4 sm:p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20 flex flex-col items-center justify-center">
+                  <h3 className="text-xl sm:text-2xl text-white mb-4 sm:mb-6 font-['Harry_Potter'] text-center">{teamInfo.techVideo.title}</h3>
                   <a
                     href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
+                    className="w-full sm:w-auto group flex items-center justify-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
                   >
                     <span className="text-white text-lg font-sans">Access Video</span>
                     <svg 
@@ -343,8 +419,8 @@ export default function Dashboard() {
                   </a>
                 </div>
               ) : (
-                <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <p className="text-blue-200/60 font-sans">Tech time video will be available soon.</p>
+                <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <p className="text-blue-200/60 font-sans text-center">Tech time video will be available soon.</p>
                 </div>
               )}
             </div>
@@ -352,7 +428,7 @@ export default function Dashboard() {
 
           {activeTab === 'schedule' && (
             <div>
-              <h2 className="text-3xl font-['Harry_Potter'] text-white mb-6">Schedule</h2>
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Schedule</h2>
               {renderSchedule()}
             </div>
           )}
