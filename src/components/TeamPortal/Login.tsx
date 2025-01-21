@@ -12,7 +12,9 @@ const TEAM_PASSWORDS: { [key: string]: string } = {
   "iu": "hagrid",
   "berkeley": "hogwarts",
   "msu": "potter",
-  "admin": "dumbledore" // admin password
+  "admin": "dumbledore", // admin password
+  "judge": "owl", // judge password
+  "reps": "dobby" // reps password
 };
 
 export default function Login() {
