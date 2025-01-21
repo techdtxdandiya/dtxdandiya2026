@@ -725,88 +725,88 @@ const AdminDashboard: React.FC = () => {
             <h4 className="text-lg mb-2">Placing Teams</h4>
             {(postShowData.placing || []).map((event, index) => (
               <div key={index} className="flex gap-2 mb-2">
-                <input
+                            <input
                   value={event.time || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newPlacing = [...(postShowData.placing || [])];
                     newPlacing[index] = { ...event, time: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       placing: newPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                />
-                <input
+                            />
+                            <input
                   value={event.event || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newPlacing = [...(postShowData.placing || [])];
                     newPlacing[index] = { ...event, event: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       placing: newPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                 />
                 <input
                   value={event.location || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newPlacing = [...(postShowData.placing || [])];
                     newPlacing[index] = { ...event, location: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       placing: newPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                 />
-              </div>
-            ))}
-          </div>
-          <div>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
             <h4 className="text-lg mb-2">Non-Placing Teams</h4>
             {(postShowData.nonPlacing || []).map((event, index) => (
               <div key={index} className="flex gap-2 mb-2">
-                <input
+                            <input
                   value={event.time || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newNonPlacing = [...(postShowData.nonPlacing || [])];
                     newNonPlacing[index] = { ...event, time: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       nonPlacing: newNonPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                />
-                <input
+                            />
+                            <input
                   value={event.event || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newNonPlacing = [...(postShowData.nonPlacing || [])];
                     newNonPlacing[index] = { ...event, event: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       nonPlacing: newNonPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
                 />
                 <input
                   value={event.location || ''}
-                  onChange={(e) => {
+                              onChange={(e) => {
                     const newNonPlacing = [...(postShowData.nonPlacing || [])];
                     newNonPlacing[index] = { ...event, location: e.target.value };
                     handleUpdateScheduleSection(teamId, 'saturdayPostShow', {
                       ...postShowData,
                       nonPlacing: newNonPlacing
-                    });
-                  }}
+                                });
+                              }}
                   className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-                />
-              </div>
-            ))}
-          </div>
+                            />
+                      </div>
+                    ))}
+                  </div>
         </div>
       );
     }
@@ -817,36 +817,36 @@ const AdminDashboard: React.FC = () => {
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
         {(events as ScheduleEvent[]).map((event, index) => (
           <div key={index} className="flex gap-2 mb-2">
-            <input
+                                <input
               value={event.time || ''}
-              onChange={(e) => {
+                                  onChange={(e) => {
                 const newEvents = [...events];
                 newEvents[index] = { ...event, time: e.target.value };
                 handleUpdateScheduleSection(teamId, section, newEvents);
-              }}
-              className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-            />
-            <input
+                                  }}
+                                  className="w-32 bg-black/40 border border-purple-500/30 rounded-lg p-2"
+                                />
+                                <input
               value={event.event || ''}
-              onChange={(e) => {
+                                  onChange={(e) => {
                 const newEvents = [...events];
                 newEvents[index] = { ...event, event: e.target.value };
                 handleUpdateScheduleSection(teamId, section, newEvents);
               }}
               className="flex-1 bg-black/40 border border-purple-500/30 rounded-lg p-2"
             />
-            <input
+                                    <input
               value={event.location || ''}
-              onChange={(e) => {
+                                      onChange={(e) => {
                 const newEvents = [...events];
                 newEvents[index] = { ...event, location: e.target.value };
                 handleUpdateScheduleSection(teamId, section, newEvents);
               }}
               className="w-48 bg-black/40 border border-purple-500/30 rounded-lg p-2"
-            />
-          </div>
+                                    />
+                                  </div>
         ))}
-      </div>
+                                  </div>
     );
   };
 
@@ -1119,11 +1119,11 @@ const AdminDashboard: React.FC = () => {
                             {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
                           </button>
                         </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    ))}
+                  </div>
+          </div>
             </div>
           )}
         </div>

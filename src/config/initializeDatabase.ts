@@ -603,25 +603,25 @@ export const initializeTeamData = async () => {
       const snapshot = await get(teamRef);
       
       if (!snapshot.exists()) {
-        await set(teamRef, {
-          displayName: TEAM_DISPLAY_NAMES[teamId],
+      await set(teamRef, {
+        displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
           information: {
             liaisons: INITIAL_LIAISONS[teamId],
             tech: TECH_INFO,
             venue: VENUE_INFO,
             hotel: HOTEL_INFO
-          },
-          techVideo: {
+        },
+        techVideo: {
             title: 'Tech Time Video',
-            youtubeUrl: '',
+          youtubeUrl: '',
             driveUrl: '',
             description: '',
             isPublished: false
           },
           schedule: INITIAL_SCHEDULE,
-          nearbyLocations: []
-        });
+        nearbyLocations: []
+      });
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       }
     }
