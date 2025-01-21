@@ -9,14 +9,14 @@ interface ScheduleItem {
 
 const fridaySchedule: ScheduleItem[] = [
   { what: "Registration", where: "Hotel Oak Room", when: "12:00 PM" },
-  { what: "Check-In", where: "Hotel Lobby", when: "2:45 PM" },
   { what: "Dinner", where: "Hotel Garden Terrace", when: "4:00 PM" },
   { what: "Mixer", where: "Hotel Garden Terrace", when: "5:00 PM" },
+  { what: "Captains Meeting", where: "Outside Event Rooms", when: "7:25 PM" },
   { what: "Practice", where: "Hotel Event Rooms", when: "7:30 PM" },
 ];
 
 const saturdaySchedule: ScheduleItem[] = [
-  { what: "Props", where: "Marshall Center", when: "6:00 AM" },
+  { what: "Props", where: "Marshall Center", when: "5:30 AM" },
   { what: "Tech Time", where: "Marshall Center", when: "8:35 AM" },
   { what: "Photoshoot", where: "Marshall Center", when: "3:50 PM" },
   { what: "Doors Open", where: "Marshall Center", when: "5:00 PM" },
