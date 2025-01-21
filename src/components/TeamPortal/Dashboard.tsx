@@ -105,7 +105,7 @@ export default function Dashboard() {
     return (
       <div className="space-y-8">
         <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-          <p className="text-xl text-white">Performance Order: Team {scheduleData.showOrder}</p>
+          <p className="text-xl text-white">Performance Order {scheduleData.showOrder}</p>
         </div>
         {renderScheduleSection("Friday", scheduleData.friday)}
         {renderScheduleSection("Saturday Tech Time", scheduleData.saturdayTech)}
