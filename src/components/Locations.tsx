@@ -30,7 +30,7 @@ export default function Locations() {
   return (
     <div className="bg-black relative overflow-hidden py-16">
       {/* Title */}
-      <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-16 glow-text-white mx-auto">
+      <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-16 glow-text-intense mx-auto">
         Enchanted Venues
       </h2>
 
