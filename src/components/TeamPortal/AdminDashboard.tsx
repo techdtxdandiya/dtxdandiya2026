@@ -1110,6 +1110,70 @@ const AdminDashboard: React.FC = () => {
               ))}
             </div>
           )}
+          {activeTab === 'schedule' && (
+            <div className="space-y-8">
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Show Order Assignment</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.keys(teamData).map(teamId => (
+                    <div key={teamId} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h4 className="text-lg text-white font-['Harry_Potter']">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
+                        <div className="flex items-center gap-4 w-full sm:w-auto">
+                          <select
+                            value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
+                            onChange={(e) => {
+                              const showOrder = e.target.value ? parseInt(e.target.value) : null;
+                              if (showOrder) {
+                                handleAssignShowOrder(teamId as TeamId, showOrder);
+                              }
+                            }}
+                            className="w-32 p-2 bg-black/40 border border-blue-500/30 rounded text-white"
+                          >
+                            <option value="">Select Order</option>
+                            {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
+                              <option key={num} value={num}>Team {num}</option>
+                            ))}
+                          </select>
+                          <button
+                            onClick={() => handleUpdateSchedulePublished(teamId as TeamId, !teamData[teamId as TeamId]?.schedule?.isPublished)}
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                              teamData[teamId as TeamId]?.schedule?.isPublished
+                                ? 'bg-green-500/10 hover:bg-green-500/20 text-green-400'
+                                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                            }`}
+                          >
+                            {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Schedule Details Section */}
+              {Object.keys(teamData).map(teamId => {
+                if (!teamData[teamId as TeamId]?.schedule?.showOrder) return null;
+                
+                return (
+                  <div key={teamId} className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-2xl font-['Harry_Potter'] text-white">
+                        {TEAM_DISPLAY_NAMES[teamId as TeamId]} - Team {teamData[teamId as TeamId]?.schedule?.showOrder}
+                      </h3>
+                    </div>
+
+                    {renderScheduleSection(teamId as TeamId, 'friday', 'Friday')}
+                    {renderScheduleSection(teamId as TeamId, 'saturdayTech', 'Saturday Tech Time')}
+                    {renderScheduleSection(teamId as TeamId, 'saturdayPreShow', 'Saturday Pre-Show')}
+                    {renderScheduleSection(teamId as TeamId, 'saturdayShow', 'Saturday Show')}
+                    {renderScheduleSection(teamId as TeamId, 'saturdayPostShow', 'Saturday Post-Show')}
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {activeTab === 'reports' && (
             <div>
               <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Anonymous Reports</h2>
