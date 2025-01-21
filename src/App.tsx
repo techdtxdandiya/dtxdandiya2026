@@ -10,6 +10,7 @@ import MagicalCursor from './components/MagicalCursor';
 import Login from './components/TeamPortal/Login';
 import Dashboard from './components/TeamPortal/Dashboard';
 import Locations from './components/Locations';
+import Livestream from './components/Livestream';
 import NotFound from './components/NotFound';
 import AdminDashboard from './components/TeamPortal/AdminDashboard';
 
@@ -78,6 +79,9 @@ function HomePage() {
 
       {/* Locations Section */}
       <Locations />
+
+      {/* Livestream Section */}
+      <Livestream />
 
       {/* About Us Section */}
       <AboutUs />
