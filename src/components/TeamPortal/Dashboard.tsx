@@ -439,14 +439,90 @@ export default function Dashboard() {
             <div>
               <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
               <div className="space-y-4">
-                {/* ... food options content ... */}
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Chick-fil-A</p>
+                    <a 
+                      href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13347 Montfort Dr, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">In-N-Out Burger</p>
+                    <a 
+                      href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      7940 Belt Line Rd, Dallas, TX 75254
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div>
               <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
               <div className="space-y-4">
-                {/* ... prop repair places content ... */}
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">At Home</p>
+                    <a 
+                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13710 Dallas Pkwy, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Hobby Lobby</p>
+                    <a 
+                      href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      14555 Dallas Pkwy, Dallas, TX 75254
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Joann Fabrics and Crafts</p>
+                    <a 
+                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13710 Dallas Pkwy, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
