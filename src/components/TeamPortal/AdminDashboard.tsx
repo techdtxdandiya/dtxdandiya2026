@@ -917,6 +917,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex flex-wrap gap-2">
             {[
               ['announcements', 'Announcements'],
+              ['information', 'Information'],
               ['schedule', 'Schedule'],
               ['tech-time-video', 'Tech Time Video'],
               ['reports', 'Reports']
