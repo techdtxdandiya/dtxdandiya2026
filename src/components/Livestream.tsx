@@ -27,8 +27,8 @@ export default function Livestream() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense inline-block relative">
-            The Pensieve's View
+          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text inline-block relative">
+            Live Stream
             <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-white/0 via-white/5 to-white/0 rounded-lg blur-lg -z-10"></div>
           </h2>
         </motion.div>
@@ -47,7 +47,7 @@ export default function Livestream() {
               <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-white/20">
                 <iframe
                   className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube.com/embed/VpE0IVrtri0"
+                  src="https://www.youtube.com/embed/"
                   title="DTX Dandiya 2025 Livestream"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

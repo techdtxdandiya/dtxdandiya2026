@@ -358,7 +358,7 @@ export default function Dashboard() {
                       <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
                         <iframe
                           className="absolute top-0 left-0 w-full h-full"
-                          src="https://www.youtube.com/embed/VpE0IVrtri0"
+                          src="https://www.youtube.com/embed/"
                           title="DTX Dandiya 2025 Livestream"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
@@ -366,7 +366,7 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center justify-center">
                         <a
-                          href="https://www.youtube.com/watch?v=VpE0IVrtri0"
+                          href="https://www.youtube.com/watch?v="
                           target="_blank"
                           rel="noopener noreferrer"
                           className="group flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
