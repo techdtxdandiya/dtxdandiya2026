@@ -9,6 +9,47 @@ export default function Dashboard() {
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
   const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
+  const [scheduleData, setScheduleData] = useState<TeamInfo['schedule'] | null>(null);
+
+  // Move debug logging to a separate effect
+  useEffect(() => {
+    if (activeTab === 'schedule' && teamInfo) {
+      console.log('Schedule tab active, current team info:', teamInfo);
+      console.log('Schedule data:', teamInfo.schedule);
+      console.log('Schedule published:', teamInfo.schedule?.isPublished);
+      console.log('Show order:', teamInfo.schedule?.showOrder);
+    }
+  }, [activeTab, teamInfo]);
+
+  // Main data loading effect
+  useEffect(() => {
+    const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
+    
+    if (!storedTeam || storedTeam === 'admin') {
+      console.log('No team stored or admin, redirecting to login');
+      navigate("/team-portal/login");
+      return;
+    }
+
+    setTeamId(storedTeam);
+    console.log('Loading data for team:', storedTeam);
+    
+    const teamRef = ref(db, `teams/${storedTeam}`);
+    const unsubscribe = onValue(teamRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        console.log('Received team data:', data);
+        setTeamInfo(data);
+        setScheduleData(data.schedule || null);
+      } else {
+        console.log('No data exists for team:', storedTeam);
+      }
+    }, (error) => {
+      console.error('Error loading team data:', error);
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   const renderScheduleSection = (
     title: string,
@@ -37,7 +78,7 @@ export default function Dashboard() {
   };
 
   const renderSchedule = () => {
-    if (!teamInfo?.schedule) {
+    if (!scheduleData) {
       return (
         <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
           <p className="text-white text-center">Schedule will be available soon.</p>
@@ -45,7 +86,7 @@ export default function Dashboard() {
       );
     }
 
-    if (!teamInfo.schedule.isPublished) {
+    if (!scheduleData.isPublished) {
       return (
         <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
           <p className="text-white text-center">Schedule will be available soon.</p>
@@ -53,7 +94,7 @@ export default function Dashboard() {
       );
     }
 
-    if (!teamInfo.schedule.showOrder) {
+    if (!scheduleData.showOrder) {
       return (
         <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
           <p className="text-white text-center">Schedule has not been assigned yet.</p>
@@ -61,63 +102,24 @@ export default function Dashboard() {
       );
     }
 
-    const schedule = teamInfo.schedule;
-
     return (
       <div className="space-y-8">
         <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-          <p className="text-xl text-white">Performance Order: Team {schedule.showOrder}</p>
+          <p className="text-xl text-white">Performance Order: Team {scheduleData.showOrder}</p>
         </div>
-        {renderScheduleSection("Friday", schedule.friday || [])}
-        {renderScheduleSection("Saturday Tech Time", schedule.saturdayTech || [])}
-        {renderScheduleSection("Saturday Pre-Show", schedule.saturdayPreShow || [])}
-        {renderScheduleSection("Saturday Show", schedule.saturdayShow || [])}
-        {schedule.saturdayPostShow && (
+        {renderScheduleSection("Friday", scheduleData.friday)}
+        {renderScheduleSection("Saturday Tech Time", scheduleData.saturdayTech)}
+        {renderScheduleSection("Saturday Pre-Show", scheduleData.saturdayPreShow)}
+        {renderScheduleSection("Saturday Show", scheduleData.saturdayShow)}
+        {scheduleData.saturdayPostShow && (
           <>
-            {renderScheduleSection("Saturday Post-Show (Non-Placing)", schedule.saturdayPostShow.nonPlacing || [])}
-            {renderScheduleSection("Saturday Post-Show (Placing)", schedule.saturdayPostShow.placing || [])}
+            {renderScheduleSection("Saturday Post-Show (Non-Placing)", scheduleData.saturdayPostShow.nonPlacing)}
+            {renderScheduleSection("Saturday Post-Show (Placing)", scheduleData.saturdayPostShow.placing)}
           </>
         )}
       </div>
     );
   };
-
-  useEffect(() => {
-    const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
-    
-    if (!storedTeam || storedTeam === 'admin') {
-      console.log('No team stored or admin, redirecting to login');
-      navigate("/team-portal/login");
-      return;
-    }
-
-    setTeamId(storedTeam);
-    console.log('Loading data for team:', storedTeam);
-    
-    const teamRef = ref(db, `teams/${storedTeam}`);
-    const unsubscribe = onValue(teamRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        console.log('Received team data:', data);
-        console.log('Schedule data:', data.schedule);
-        console.log('Schedule published status:', data.schedule?.isPublished);
-        console.log('Schedule sections:', {
-          friday: data.schedule?.friday,
-          saturdayTech: data.schedule?.saturdayTech,
-          saturdayPreShow: data.schedule?.saturdayPreShow,
-          saturdayShow: data.schedule?.saturdayShow,
-          saturdayPostShow: data.schedule?.saturdayPostShow
-        });
-        setTeamInfo(data);
-      } else {
-        console.log('No data exists for team:', storedTeam);
-      }
-    }, (error) => {
-      console.error('Error loading team data:', error);
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("team");
@@ -127,16 +129,6 @@ export default function Dashboard() {
   if (!teamInfo || !teamId) {
     return null;
   }
-
-  // Add schedule tab debug logging
-  useEffect(() => {
-    if (activeTab === 'schedule' && teamInfo) {
-      console.log('Schedule tab active, current team info:', teamInfo);
-      console.log('Schedule data:', teamInfo.schedule);
-      console.log('Schedule published:', teamInfo.schedule?.isPublished);
-      console.log('Show order:', teamInfo.schedule?.showOrder);
-    }
-  }, [activeTab, teamInfo]);
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
