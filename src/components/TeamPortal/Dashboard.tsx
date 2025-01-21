@@ -127,7 +127,7 @@ export default function Dashboard() {
                 <div className={`hidden sm:flex w-32 ${
                   index % 2 === 0 ? 'justify-end' : 'justify-start'
                 }`}>
-                  <div className="px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium">
+                  <div className="px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-sans">
                     {event.time}
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export default function Dashboard() {
                 }`}>
                   <div className="group relative p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
                     {/* Mobile Time Badge */}
-                    <div className="sm:hidden mb-2 inline-block px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium">
+                    <div className="sm:hidden mb-2 inline-block px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-sans">
                       {event.time}
                     </div>
 
