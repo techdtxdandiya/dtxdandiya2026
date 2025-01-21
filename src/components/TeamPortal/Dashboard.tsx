@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, set, push, serverTimestamp } from 'firebase/database';
 import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 import { FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [teamInfo, setTeamInfo] = useState<TeamInfo | null>(null);
   const [teamId, setTeamId] = useState<DashboardTeamId | null>(null);
-  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule' | 'report'>('announcements');
   const [scheduleData, setScheduleData] = useState<TeamInfo['schedule'] | null>(null);
+  const [reportForm, setReportForm] = useState({ description: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Move debug logging to a separate effect
   useEffect(() => {
@@ -133,6 +136,30 @@ export default function Dashboard() {
     navigate("/team-portal/login");
   };
 
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reportForm.description.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      const reportsRef = ref(db, 'reports');
+      const newReportRef = push(reportsRef);
+      await set(newReportRef, {
+        description: reportForm.description,
+        timestamp: serverTimestamp(),
+        teamId: teamId // This helps admins know which team submitted it while keeping individual anonymity
+      });
+      
+      toast.success('Report submitted successfully');
+      setReportForm({ description: '' });
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      toast.error('Failed to submit report. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (!teamInfo || !teamId) {
     return null;
   }
@@ -174,7 +201,8 @@ export default function Dashboard() {
               ['announcements', 'Announcements'],
               ['information', 'Information'],
               ['tech-time-video', 'Tech Time Video'],
-              ['schedule', 'Schedule']
+              ['schedule', 'Schedule'],
+              ['report', 'Report']
             ].map(([key, label]) => (
               <button
                 key={key}
@@ -567,6 +595,67 @@ export default function Dashboard() {
             <div>
               <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Schedule</h2>
               {renderSchedule()}
+            </div>
+          )}
+
+          {activeTab === 'report' && (
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Anonymous Report</h2>
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                <div className="max-w-2xl mx-auto">
+                  <div className="mb-6">
+                    <p className="text-blue-200 font-sans mb-4">
+                      This form is for reporting any concerns, incidents, or feedback anonymously. Your submission will be sent directly to the DTX Dandiya administrators for review.
+                    </p>
+                    <p className="text-blue-200/80 font-sans text-sm">
+                      * While this form is anonymous, we store your team ID for administrative purposes. Your individual identity remains protected.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleReportSubmit} className="space-y-6">
+                    <div>
+                      <label htmlFor="description" className="block text-white font-sans mb-2">
+                        Description
+                      </label>
+                      <textarea
+                        id="description"
+                        value={reportForm.description}
+                        onChange={(e) => setReportForm({ description: e.target.value })}
+                        placeholder="Please provide details of your report..."
+                        className="w-full h-48 px-4 py-3 bg-black/40 border border-blue-500/30 rounded-lg text-white placeholder-blue-200/50 focus:outline-none focus:border-blue-500/60 transition-colors font-sans"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-sans transition-all duration-300 flex items-center gap-2 ${
+                          isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            Submit Report
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           )}
         </div>

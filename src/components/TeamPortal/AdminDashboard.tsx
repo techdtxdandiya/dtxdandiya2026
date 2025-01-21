@@ -19,7 +19,7 @@ interface AnnouncementFormData {
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule'>('announcements');
+  const [activeTab, setActiveTab] = useState<'announcements' | 'information' | 'tech-time-video' | 'schedule' | 'reports'>('announcements');
   const [teamData, setTeamData] = useState<Record<TeamId, TeamInfo>>({} as Record<TeamId, TeamInfo>);
   const [selectedTeams, setSelectedTeams] = useState<TeamId[]>([]);
   const [updateMessage, setUpdateMessage] = useState<string>('');
@@ -33,6 +33,12 @@ const AdminDashboard: React.FC = () => {
   const [activeAnnouncementTab, setActiveAnnouncementTab] = useState<'new' | 'manage'>('new');
   const [selectedTeamForAnnouncements, setSelectedTeamForAnnouncements] = useState<TeamId | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
+  const [reports, setReports] = useState<Array<{
+    id: string;
+    description: string;
+    timestamp: number;
+    teamId: TeamId;
+  }>>([]);
 
   useEffect(() => {
     const teamsRef = ref(db, 'teams');
@@ -64,6 +70,27 @@ const AdminDashboard: React.FC = () => {
       });
     }
   }, [activeTab, teamData]);
+
+  useEffect(() => {
+    if (activeTab === 'reports') {
+      const reportsRef = ref(db, 'reports');
+      const unsubscribe = onValue(reportsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const reportsData = snapshot.val();
+          const formattedReports = Object.entries(reportsData).map(([id, data]: [string, any]) => ({
+            id,
+            description: data.description,
+            timestamp: data.timestamp,
+            teamId: data.teamId
+          })).sort((a, b) => b.timestamp - a.timestamp);
+          
+          setReports(formattedReports);
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [activeTab]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('team');
@@ -887,26 +914,26 @@ const AdminDashboard: React.FC = () => {
         )}
 
         <div className="mb-8">
-          <div className="flex space-x-4 border-b border-blue-500/30">
+          <div className="flex flex-wrap gap-2">
             {[
               ['announcements', 'Announcements'],
-              ['information', 'Information'],
+              ['schedule', 'Schedule'],
               ['tech-time-video', 'Tech Time Video'],
-              ['schedule', 'Schedule']
+              ['reports', 'Reports']
             ].map(([key, label]) => (
               <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
-                className={`px-4 py-2 transition-colors ${
+                className={`px-6 py-2 rounded-lg font-['Harry_Potter'] transition-all duration-300 ${
                   activeTab === key
-                    ? 'border-b-2 border-blue-500 text-white'
-                    : 'text-blue-200/60 hover:text-white'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-500/10 text-blue-200/60 hover:bg-blue-500/20 hover:text-white'
                 }`}
               >
                 {label}
               </button>
             ))}
-                                  </div>
+          </div>
         </div>
 
         <div className="max-w-[1200px] mx-auto">
@@ -1083,47 +1110,32 @@ const AdminDashboard: React.FC = () => {
               ))}
             </div>
           )}
-          {activeTab === 'schedule' && (
-            <div className="space-y-8">
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Show Order Assignment</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.keys(teamData).map(teamId => (
-                    <div key={teamId} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-                      <div className="flex justify-between items-center">
-                        <h4 className="text-lg text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
-                        <div className="flex items-center gap-4">
-                          <select
-                            value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
-                            onChange={(e) => {
-                              const showOrder = e.target.value ? parseInt(e.target.value) : null;
-                              if (showOrder) {
-                                handleAssignShowOrder(teamId as TeamId, showOrder);
-                              }
-                            }}
-                            className="w-32 p-2 bg-black/40 border border-blue-500/30 rounded text-white"
-                          >
-                            <option value="">Select Option</option>
-                            {Array.from({ length: 8 }, (_, i) => i + 1).map((num) => (
-                              <option key={num} value={num}>Team {num}</option>
-                            ))}
-                          </select>
-                          <button
-                            onClick={() => handleUpdateSchedulePublished(teamId as TeamId, !teamData[teamId as TeamId]?.schedule?.isPublished)}
-                            className={`px-4 py-2 rounded-lg transition-colors ${
-                              teamData[teamId as TeamId]?.schedule?.isPublished
-                                ? 'bg-green-500/10 hover:bg-green-500/20 text-green-400'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white'
-                            }`}
-                          >
-                            {teamData[teamId as TeamId]?.schedule?.isPublished ? 'Published' : 'Publish'}
-                          </button>
+          {activeTab === 'reports' && (
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Anonymous Reports</h2>
+              <div className="space-y-6">
+                {reports.length > 0 ? (
+                  reports.map((report) => (
+                    <div key={report.id} className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-blue-300 font-sans text-sm">
+                            Team: {teamData[report.teamId]?.displayName || TEAM_DISPLAY_NAMES[report.teamId] || report.teamId}
+                          </span>
+                          <span className="text-blue-200/60 font-sans text-sm">
+                            {report.timestamp ? new Date(report.timestamp).toLocaleString() : 'Time not available'}
+                          </span>
                         </div>
-                        </div>
+                        <p className="text-white font-sans whitespace-pre-wrap">{report.description}</p>
                       </div>
-                    ))}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-blue-200/60 font-sans">No reports have been submitted yet.</p>
                   </div>
-          </div>
+                )}
+              </div>
             </div>
           )}
         </div>

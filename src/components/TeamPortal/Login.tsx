@@ -4,14 +4,14 @@ import { IoArrowBack } from "react-icons/io5";
 
 // Team passwords with Harry Potter theme
 const TEAM_PASSWORDS: { [key: string]: string } = {
-  "tamu": "quidditch",
-  "texas": "hogsmeade",
-  "michigan": "butterbeer",
-  "ucd": "azkaban",
-  "unc": "hogwarts",
-  "iu": "diagonalley",
-  "berkeley": "gringotts",
-  "msu": "hufflepuff",
+  "tamu": "witch",
+  "texas": "magic",
+  "michigan": "spell",
+  "ucd": "wand",
+  "unc": "lumos",
+  "iu": "hagrid",
+  "berkeley": "hogwarts",
+  "msu": "potter",
   "admin": "dumbledore" // admin password
 };
 
