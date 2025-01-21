@@ -27,7 +27,7 @@ export default function Livestream() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text inline-block relative">
+          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense inline-block relative">
             Live Stream
             <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-white/0 via-white/5 to-white/0 rounded-lg blur-lg -z-10"></div>
           </h2>
@@ -65,6 +65,17 @@ export default function Livestream() {
           </div>
         </motion.div>
       </div>
+
+      {/* Ambient Light Effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(220,38,38,0.1)_0%,_transparent_60%)]"></div>
+      </div>
+
+      {/* Decorative Corner Elements */}
+      <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-white/20 rounded-tl-lg"></div>
+      <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-white/20 rounded-tr-lg"></div>
+      <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-white/20 rounded-bl-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-white/20 rounded-br-lg"></div>
     </div>
   );
 } 
