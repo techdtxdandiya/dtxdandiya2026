@@ -5,10 +5,8 @@ import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link as ScrollLink, Element } from 'react-scroll';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
+import '../styles/magical-effects.css';
+import { format } from 'date-fns';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -17,16 +15,22 @@ export default function Dashboard() {
   const [scheduleData, setScheduleData] = useState<TeamInfo['schedule'] | null>(null);
   const [activeSection, setActiveSection] = useState('announcements');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<'lumos' | 'nox'>('nox');
   const headerRef = useRef<HTMLDivElement>(null);
 
-  // Navigation items
+  // Navigation items with magical icons
   const navigationItems = [
-    { id: 'announcements', label: 'Announcements', icon: '📢' },
-    { id: 'schedule', label: 'Schedule', icon: '📅' },
-    { id: 'tech-time-video', label: 'Tech Time', icon: '🎥' },
-    { id: 'information', label: 'Information', icon: 'ℹ️' }
+    { id: 'announcements', label: 'Announcements', icon: '📜' },
+    { id: 'schedule', label: 'Schedule', icon: '⌛' },
+    { id: 'tech-time-video', label: 'Tech Time', icon: '🔮' },
+    { id: 'information', label: 'Information', icon: '📚' }
   ];
 
+  const toggleTheme = () => {
+    setTheme(theme === 'lumos' ? 'nox' : 'lumos');
+  };
+
+  // Scroll effect for navigation
   useEffect(() => {
     const handleScroll = () => {
       const sections = navigationItems.map(item => item.id);
@@ -48,6 +52,7 @@ export default function Dashboard() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Data fetching
   useEffect(() => {
     const storedTeam = sessionStorage.getItem("team") as DashboardTeamId | null;
     
@@ -72,145 +77,53 @@ export default function Dashboard() {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Add this new type for calendar events
-  type CalendarEvent = {
-    title: string;
-    start: string;
-    end?: string;
-    location?: string;
-    backgroundColor?: string;
-    borderColor?: string;
-    textColor?: string;
-    classNames?: string[];
+  // Render timeline event
+  const renderTimelineEvent = (
+    event: { time: string; event: string; location: string },
+    index: number,
+    isCurrentEvent: boolean = false
+  ) => {
+    return (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: index * 0.1 }}
+        className={`magical-card timeline-event ${isCurrentEvent ? 'current-event' : ''} ${
+          isCurrentEvent ? 'magical-glow' : ''
+        }`}
+      >
+        <div className="flex items-center gap-4 p-4">
+          <div className="timeline-time">
+            <div className="text-lg font-medium text-accent-primary">
+              {format(new Date(`2024-02-07T${event.time}`), 'h:mm a')}
+            </div>
+          </div>
+          <div className="timeline-content flex-grow">
+            <h4 className="text-lg font-medium mb-1">{event.event}</h4>
+            <p className="text-sm text-secondary">{event.location}</p>
+          </div>
+        </div>
+      </motion.div>
+    );
   };
 
-  // Add new function to convert schedule data to calendar events
-  const convertScheduleToEvents = (): CalendarEvent[] => {
-    if (!scheduleData) return [];
-
-    const events: CalendarEvent[] = [];
-    const today = new Date();
-    const friday = new Date(today.getTime());
-    friday.setDate(today.getDate() - today.getDay() + 5); // Get to Friday
-
-    // Helper function to create date string
-    const createDateTimeString = (date: Date, timeStr: string) => {
-      const [hours, minutes] = timeStr.split(':').map(num => parseInt(num));
-      const newDate = new Date(date.getTime());
-      newDate.setHours(hours, minutes);
-      return newDate.toISOString();
-    };
-
-    // Add Friday events
-    scheduleData.friday?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(friday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(147, 51, 234, 0.2)',
-        borderColor: 'rgba(147, 51, 234, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    // Add Saturday events
-    const saturday = new Date(friday.getTime());
-    saturday.setDate(friday.getDate() + 1);
-
-    // Tech Time events
-    scheduleData.saturdayTech?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(saturday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-        borderColor: 'rgba(59, 130, 246, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    // Pre-Show events
-    scheduleData.saturdayPreShow?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(saturday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(234, 179, 8, 0.2)',
-        borderColor: 'rgba(234, 179, 8, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    // Show events
-    scheduleData.saturdayShow?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(saturday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(239, 68, 68, 0.2)',
-        borderColor: 'rgba(239, 68, 68, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    // Post-Show events
-    scheduleData.saturdayPostShow?.nonPlacing?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(saturday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(16, 185, 129, 0.2)',
-        borderColor: 'rgba(16, 185, 129, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    scheduleData.saturdayPostShow?.placing?.forEach(event => {
-      events.push({
-        title: event.event,
-        start: createDateTimeString(saturday, event.time),
-        location: event.location,
-        backgroundColor: 'rgba(236, 72, 153, 0.2)',
-        borderColor: 'rgba(236, 72, 153, 0.3)',
-        textColor: '#f3f4f6',
-        classNames: ['backdrop-blur-sm']
-      });
-    });
-
-    return events;
-  };
-
-  const renderScheduleGrid = (
-    events: Array<{ time: string; event: string; location: string }> | undefined
+  // Render schedule section
+  const renderScheduleSection = (
+    title: string,
+    events: Array<{ time: string; event: string; location: string }> | undefined,
+    date: string
   ) => {
     if (!events || events.length === 0) return null;
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {events.map((event, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="bg-white/5 backdrop-blur-lg rounded-lg p-3 hover:bg-white/10 transition-all duration-300"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 w-16 text-sm font-medium text-purple-300">
-                {event.time}
-              </div>
-              <div className="flex-grow">
-                <div className="text-white font-medium">{event.event}</div>
-                <div className="text-purple-300 text-sm">{event.location}</div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+      <div className="schedule-section space-y-4">
+        <h3 className="text-xl font-['Harry_Potter'] text-accent-primary mb-4">
+          {title} - {date}
+        </h3>
+        <div className="timeline-thread pl-4">
+          {events.map((event, index) => renderTimelineEvent(event, index))}
+        </div>
       </div>
     );
   };
@@ -220,40 +133,36 @@ export default function Dashboard() {
     navigate("/team-portal/login");
   };
 
-  // Add this new function to render calendar events
-  const renderEventContent = (eventInfo: any) => {
-    return (
-      <div className="p-1">
-        <div className="font-medium">{eventInfo.event.title}</div>
-        {eventInfo.event.extendedProps.location && (
-          <div className="text-xs opacity-75">{eventInfo.event.extendedProps.location}</div>
-        )}
-      </div>
-    );
-  };
-
   if (!teamInfo || !teamId) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] font-inter">
-      {/* Magical Particle Effect */}
+    <div className={`min-h-screen magical-parchment theme-${theme}`}>
+      {/* Magical Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent" />
-        <div className="absolute inset-0 opacity-30 mix-blend-screen bg-[url('/assets/magical-particles.png')] animate-float" />
+        <div className="absolute inset-0 bg-gradient-radial from-accent-primary/5 via-transparent to-transparent" />
       </div>
 
-      {/* Header */}
-      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 bg-[#1a1a2e]/80 backdrop-blur-xl border-b border-purple-500/10">
+      {/* Header with Spellbook Navigation */}
+      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 magical-card">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl md:text-3xl font-['Harry_Potter'] bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 text-transparent bg-clip-text">
+            <h1 className="floating-element text-2xl md:text-3xl font-['Harry_Potter'] magical-glow">
               {teamInfo.displayName}
             </h1>
 
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 magical-card rounded-full"
+              aria-label={`Switch to ${theme === 'lumos' ? 'dark' : 'light'} mode`}
+            >
+              {theme === 'lumos' ? '🌙' : '☀️'}
+            </button>
+
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
+            <nav className="hidden md:flex spellbook-nav">
               {navigationItems.map(item => (
                 <ScrollLink
                   key={item.id}
@@ -262,32 +171,32 @@ export default function Dashboard() {
                   smooth={true}
                   offset={-80}
                   duration={500}
-                  className={`cursor-pointer transition-all duration-300 flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                  className={`cursor-pointer transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg ${
                     activeSection === item.id
-                      ? 'bg-purple-500/20 text-purple-200'
-                      : 'text-purple-300/60 hover:text-purple-200'
+                      ? 'magical-card magical-glow'
+                      : 'hover:magical-card'
                   }`}
                 >
-                  <span className="text-sm">{item.icon}</span>
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className="text-lg">{item.icon}</span>
+                  <span className="font-medium">{item.label}</span>
                 </ScrollLink>
               ))}
               <button
                 onClick={handleLogout}
-                className="ml-4 px-4 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 rounded-full text-purple-200 text-sm font-medium transition-all duration-300"
+                className="ml-4 magical-card px-4 py-2 rounded-lg"
               >
-                Logout
+                🚪 Exit
               </button>
             </nav>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-purple-200 hover:bg-purple-500/10 rounded-lg transition-colors"
+              className="md:hidden magical-card p-2 rounded-lg"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-              </svg>
+              <span className="text-xl">
+                {isMobileMenuOpen ? '📕' : '📖'}
+              </span>
             </button>
           </div>
 
@@ -298,7 +207,7 @@ export default function Dashboard() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mt-4 pb-2"
+                className="md:hidden mt-4 spellbook-nav"
               >
                 <div className="flex flex-col space-y-2">
                   {navigationItems.map(item => (
@@ -312,8 +221,8 @@ export default function Dashboard() {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`cursor-pointer transition-all duration-300 flex items-center gap-2 px-3 py-2 rounded-lg ${
                         activeSection === item.id
-                          ? 'bg-purple-500/20 text-purple-200'
-                          : 'text-purple-300/60 hover:text-purple-200'
+                          ? 'magical-card magical-glow'
+                          : 'hover:magical-card'
                       }`}
                     >
                       <span>{item.icon}</span>
@@ -322,10 +231,10 @@ export default function Dashboard() {
                   ))}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg text-purple-200 font-medium transition-all duration-300"
+                    className="flex items-center gap-2 magical-card px-3 py-2 rounded-lg"
                   >
                     <span>🚪</span>
-                    <span>Logout</span>
+                    <span>Exit</span>
                   </button>
                 </div>
               </motion.nav>
@@ -337,12 +246,12 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 pt-24 pb-16 space-y-12">
         {/* Announcements Section */}
-        <Element name="announcements" id="announcements">
-          <section className="space-y-4">
-            <h2 className="text-2xl font-['Harry_Potter'] text-purple-200 flex items-center gap-2">
-              <span>📢</span> Announcements
+        <Element name="announcements" id="announcements" className="ink-reveal">
+          <section className="space-y-6">
+            <h2 className="text-2xl font-['Harry_Potter'] magical-glow flex items-center gap-2">
+              <span className="floating-element">📜</span> Announcements
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {teamInfo.announcements?.length > 0 ? (
                 teamInfo.announcements.map((announcement, index) => (
                   <motion.div
@@ -350,17 +259,17 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-white/5 backdrop-blur-lg rounded-lg p-4 hover:bg-white/10 transition-all duration-300 border border-purple-500/10"
+                    className="magical-card p-4"
                   >
-                    <h3 className="text-lg font-medium text-purple-200 mb-2">{announcement.title}</h3>
-                    <p className="text-purple-300 text-sm whitespace-pre-wrap mb-3">{announcement.content}</p>
-                    <p className="text-xs text-purple-400">
-                      {new Date(announcement.timestamp).toLocaleString()}
+                    <h3 className="text-lg font-medium mb-2">{announcement.title}</h3>
+                    <p className="text-sm whitespace-pre-wrap mb-3">{announcement.content}</p>
+                    <p className="text-xs text-secondary">
+                      {format(new Date(announcement.timestamp), 'PPpp')}
                     </p>
                   </motion.div>
                 ))
               ) : (
-                <div className="col-span-2 bg-white/5 backdrop-blur-lg rounded-lg p-4 text-center text-purple-300">
+                <div className="col-span-2 magical-card p-4 text-center">
                   No announcements at this time.
                 </div>
               )}
@@ -369,238 +278,176 @@ export default function Dashboard() {
         </Element>
 
         {/* Schedule Section */}
-        <Element name="schedule" id="schedule">
-          <section className="space-y-6">
-            <h2 className="text-2xl font-['Harry_Potter'] text-purple-200 flex items-center gap-2">
-              <span>📅</span> Schedule
+        <Element name="schedule" id="schedule" className="ink-reveal">
+          <section className="space-y-8">
+            <h2 className="text-2xl font-['Harry_Potter'] magical-glow flex items-center gap-2">
+              <span className="floating-element">⌛</span> Schedule
             </h2>
             
             {scheduleData?.showOrder && (
-              <div className="bg-purple-500/10 backdrop-blur-lg rounded-lg px-4 py-3 inline-block">
-                <p className="text-purple-200 font-medium">Performance Order: {scheduleData.showOrder}</p>
+              <div className="magical-card px-6 py-3 inline-block">
+                <p className="font-medium flex items-center gap-2">
+                  <span className="text-xl">🎭</span>
+                  Performance Order: {scheduleData.showOrder}
+                </p>
               </div>
             )}
 
-            <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Calendar View */}
-                <div className="lg:col-span-3">
-                  <div className="fc-custom-theme">
-                    <FullCalendar
-                      plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
-                      initialView="timeGridTwoDay"
-                      views={{
-                        timeGridTwoDay: {
-                          type: 'timeGrid',
-                          duration: { days: 2 },
-                          buttonText: '2 day'
-                        }
-                      }}
-                      headerToolbar={{
-                        left: 'timeGridTwoDay,listTwoDay',
-                        center: 'title',
-                        right: 'prev,next'
-                      }}
-                      events={convertScheduleToEvents()}
-                      slotMinTime="08:00:00"
-                      slotMaxTime="24:00:00"
-                      allDaySlot={false}
-                      height="auto"
-                      eventContent={renderEventContent}
-                      slotLabelFormat={{
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        meridiem: 'short'
-                      }}
-                      eventTimeFormat={{
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        meridiem: 'short'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Legend */}
-                <div className="lg:col-span-2 space-y-4">
-                  <h3 className="text-lg font-medium text-purple-200 mb-4">Event Types</h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="flex items-center gap-3 p-2 bg-purple-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-purple-500/50" />
-                      <span className="text-purple-200">Friday Events</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-blue-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-blue-500/50" />
-                      <span className="text-purple-200">Tech Time</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-yellow-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-yellow-500/50" />
-                      <span className="text-purple-200">Pre-Show</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-red-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-red-500/50" />
-                      <span className="text-purple-200">Show</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-green-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-green-500/50" />
-                      <span className="text-purple-200">Post-Show (Non-Placing)</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-pink-500/20 rounded-lg">
-                      <div className="w-4 h-4 rounded-full bg-pink-500/50" />
-                      <span className="text-purple-200">Post-Show (Placing)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="space-y-12">
+              {renderScheduleSection("Friday Events", scheduleData?.friday, "February 7, 2024")}
+              {renderScheduleSection("Saturday Tech Time", scheduleData?.saturdayTech, "February 8, 2024")}
+              {renderScheduleSection("Saturday Pre-Show", scheduleData?.saturdayPreShow, "February 8, 2024")}
+              {renderScheduleSection("Saturday Show", scheduleData?.saturdayShow, "February 8, 2024")}
+              {scheduleData?.saturdayPostShow && (
+                <>
+                  {renderScheduleSection("Post-Show (Non-Placing)", scheduleData.saturdayPostShow.nonPlacing, "February 8, 2024")}
+                  {renderScheduleSection("Post-Show (Placing)", scheduleData.saturdayPostShow.placing, "February 8, 2024")}
+                </>
+              )}
             </div>
           </section>
         </Element>
 
         {/* Tech Time Video Section */}
-        <Element name="tech-time-video" id="tech-time-video">
-          <section className="space-y-4">
-            <h2 className="text-2xl font-['Harry_Potter'] text-purple-200 flex items-center gap-2">
-              <span>🎥</span> Tech Time Video
+        <Element name="tech-time-video" id="tech-time-video" className="ink-reveal">
+          <section className="space-y-6">
+            <h2 className="text-2xl font-['Harry_Potter'] magical-glow flex items-center gap-2">
+              <span className="floating-element">🔮</span> Tech Time Video
             </h2>
             {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-6 text-center border border-purple-500/10">
-                <h3 className="text-xl font-medium text-purple-200 mb-4">{teamInfo.techVideo.title}</h3>
+              <div className="magical-card p-8 text-center">
+                <h3 className="text-xl font-medium mb-6">{teamInfo.techVideo.title}</h3>
                 <a
                   href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center gap-3 magical-card px-6 py-3 rounded-lg hover:magical-glow"
                 >
                   <span>Watch Video</span>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+                  <span className="text-xl">📽️</span>
                 </a>
               </div>
             ) : (
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 text-center text-purple-300">
-                Tech time video will be available soon.
+              <div className="magical-card p-6 text-center">
+                <p>Tech time video will be available soon.</p>
               </div>
             )}
           </section>
         </Element>
 
         {/* Information Section */}
-        <Element name="information" id="information">
-          <section className="space-y-6">
-            <h2 className="text-2xl font-['Harry_Potter'] text-purple-200 flex items-center gap-2">
-              <span>ℹ️</span> Information
+        <Element name="information" id="information" className="ink-reveal">
+          <section className="space-y-8">
+            <h2 className="text-2xl font-['Harry_Potter'] magical-glow flex items-center gap-2">
+              <span className="floating-element">📚</span> Information
             </h2>
             
-            {/* Grid Layout for Information Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Liaisons Card */}
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
-                <h3 className="text-lg font-medium text-purple-200 mb-4">Liaisons</h3>
-                <div className="space-y-3">
+              <div className="magical-card p-6">
+                <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                  <span>🤝</span> Liaisons
+                </h3>
+                <div className="space-y-4">
                   {teamInfo.information?.liaisons?.map((liaison, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-3 p-2 bg-purple-500/10 rounded-lg"
+                      className="magical-card p-3"
                     >
-                      <div className="flex-grow">
-                        <p className="text-purple-200 font-medium">{liaison.name}</p>
-                        {liaison.phone && (
-                          <a
-                            href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
-                            className="text-sm text-purple-300 hover:text-purple-200 transition-colors flex items-center gap-1"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                            {liaison.phone}
-                          </a>
-                        )}
-                      </div>
+                      <p className="font-medium mb-1">{liaison.name}</p>
+                      {liaison.phone && (
+                        <a
+                          href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
+                          className="text-sm flex items-center gap-2 hover:magical-glow"
+                        >
+                          <span>📞</span>
+                          {liaison.phone}
+                        </a>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Tech Details Card */}
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
-                <h3 className="text-lg font-medium text-purple-200 mb-4">Tech Details</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <p className="text-sm text-purple-300 mb-1">Danceable Space</p>
-                    <p className="text-purple-200 font-medium">42' x 28'</p>
+              <div className="magical-card p-6">
+                <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                  <span>🎭</span> Tech Details
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="magical-card p-3">
+                    <p className="text-sm mb-1">Danceable Space</p>
+                    <p className="font-medium">42' x 28'</p>
                   </div>
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <p className="text-sm text-purple-300 mb-1">Backdrop Space</p>
-                    <p className="text-purple-200 font-medium">4 ft</p>
+                  <div className="magical-card p-3">
+                    <p className="text-sm mb-1">Backdrop Space</p>
+                    <p className="font-medium">4 ft</p>
                   </div>
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <p className="text-sm text-purple-300 mb-1">Apron Space</p>
-                    <p className="text-purple-200 font-medium">4 ft</p>
+                  <div className="magical-card p-3">
+                    <p className="text-sm mb-1">Apron Space</p>
+                    <p className="font-medium">4 ft</p>
                   </div>
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <p className="text-sm text-purple-300 mb-1">Props Box</p>
-                    <p className="text-purple-200 font-medium">7' × 5' × 10'</p>
+                  <div className="magical-card p-3">
+                    <p className="text-sm mb-1">Props Box</p>
+                    <p className="font-medium">7' × 5' × 10'</p>
                   </div>
                 </div>
-                <div className="mt-3 p-2 bg-red-500/10 rounded-lg border border-red-500/20">
-                  <p className="text-red-300 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+                <div className="mt-4 magical-card p-3 border-red-500/20">
+                  <p className="text-sm text-red-400">*There will be NO RIGGING this year at Marshall Arts Center*</p>
                 </div>
               </div>
 
               {/* Venue Card */}
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
-                <h3 className="text-lg font-medium text-purple-200 mb-4">Venue</h3>
-                <div className="space-y-3">
+              <div className="magical-card p-6">
+                <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                  <span>🏛️</span> Venue
+                </h3>
+                <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Name</p>
-                    <p className="text-purple-200">Marshall Family Performing Arts Center</p>
+                    <p className="text-sm mb-1">Name</p>
+                    <p className="font-medium">Marshall Family Performing Arts Center</p>
                   </div>
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Address</p>
-                    <p className="text-purple-200 mb-2">4141 Spring Valley Rd, Addison, TX 75001</p>
+                    <p className="text-sm mb-1">Address</p>
+                    <p className="font-medium mb-2">4141 Spring Valley Rd, Addison, TX 75001</p>
                     <a
                       href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg text-purple-200 text-sm transition-colors"
+                      className="inline-flex items-center gap-2 magical-card px-3 py-1.5 rounded-lg hover:magical-glow"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Open in Maps
+                      <span>🗺️</span>
+                      <span>View Map</span>
                     </a>
                   </div>
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Seating Capacity</p>
-                    <p className="text-purple-200">600 seat auditorium</p>
+                    <p className="text-sm mb-1">Seating Capacity</p>
+                    <p className="font-medium">600 seat auditorium</p>
                   </div>
                 </div>
               </div>
 
               {/* Hotel Card */}
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
-                <h3 className="text-lg font-medium text-purple-200 mb-4">Hotel</h3>
-                <div className="space-y-3">
+              <div className="magical-card p-6">
+                <h3 className="text-xl font-medium mb-4 flex items-center gap-2">
+                  <span>🏨</span> Hotel
+                </h3>
+                <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Name</p>
-                    <p className="text-purple-200">DoubleTree by Hilton Hotel Dallas</p>
+                    <p className="text-sm mb-1">Name</p>
+                    <p className="font-medium">DoubleTree by Hilton Hotel Dallas</p>
                   </div>
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Address</p>
-                    <p className="text-purple-200 mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
+                    <p className="text-sm mb-1">Address</p>
+                    <p className="font-medium mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
                     <a
                       href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg text-purple-200 text-sm transition-colors"
+                      className="inline-flex items-center gap-2 magical-card px-3 py-1.5 rounded-lg hover:magical-glow"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Open in Maps
+                      <span>🗺️</span>
+                      <span>View Map</span>
                     </a>
                   </div>
                 </div>
@@ -611,65 +458,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
-
-// Add these styles to your CSS/SCSS file or in a style tag in your HTML
-<style>
-{`
-  .fc-custom-theme {
-    --fc-border-color: rgba(147, 51, 234, 0.2);
-    --fc-button-bg-color: rgba(147, 51, 234, 0.2);
-    --fc-button-border-color: rgba(147, 51, 234, 0.3);
-    --fc-button-hover-bg-color: rgba(147, 51, 234, 0.3);
-    --fc-button-hover-border-color: rgba(147, 51, 234, 0.4);
-    --fc-button-active-bg-color: rgba(147, 51, 234, 0.4);
-    --fc-button-active-border-color: rgba(147, 51, 234, 0.5);
-    --fc-event-bg-color: rgba(147, 51, 234, 0.2);
-    --fc-event-border-color: rgba(147, 51, 234, 0.3);
-    --fc-event-text-color: #f3f4f6;
-    --fc-page-bg-color: transparent;
-  }
-
-  .fc {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1rem;
-    border-radius: 0.5rem;
-  }
-
-  .fc .fc-toolbar-title {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-button {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-timegrid-slot-label {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-timegrid-axis-cushion {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-list-day-cushion {
-    background-color: rgba(147, 51, 234, 0.2);
-  }
-
-  .fc .fc-list-event:hover td {
-    background-color: rgba(147, 51, 234, 0.2);
-  }
-
-  .fc .fc-list-event-time {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-list-event-title {
-    color: #e9d5ff;
-  }
-
-  .fc .fc-timegrid-event {
-    backdrop-filter: blur(8px);
-  }
-`}
-</style> 
+} 
