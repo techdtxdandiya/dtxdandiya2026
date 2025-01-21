@@ -29,10 +29,33 @@ const locations = [
 export default function Locations() {
   return (
     <div className="bg-black relative overflow-hidden py-16">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-black to-black">
+          <div className="absolute inset-0" 
+            style={{
+              background: `
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.08), transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(220, 38, 38, 0.08), transparent 70%)
+              `
+            }}
+          />
+        </div>
+      </div>
+
       {/* Title */}
-      <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-16 glow-text-white mx-auto">
-        Enchanted Venues
-      </h2>
+      <motion.div 
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text inline-block relative">
+          Enchanted Venues
+          <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-red-500/0 via-red-500/5 to-red-500/0 rounded-lg blur-lg -z-10"></div>
+        </h2>
+      </motion.div>
 
       {/* Grid Container */}
       <div className="container mx-auto px-4">
@@ -47,11 +70,11 @@ export default function Locations() {
               transition={{ duration: 0.5, delay: index * 0.2 }}
             >
               {/* Card */}
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20 h-full
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-red-500/20 h-full
                             transform transition-transform duration-500 hover:scale-[1.02]">
                 {/* Location Type Badge */}
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 bg-purple-900/60 rounded-full text-sm font-['Harry_Potter'] text-white/90">
+                  <span className="px-4 py-1 bg-red-900/60 rounded-full text-sm font-['Harry_Potter'] text-white/90">
                     {location.type}
                   </span>
                 </div>
@@ -62,12 +85,12 @@ export default function Locations() {
                     {location.name}
                   </h3>
                   
-                  <p className="text-purple-200/70 text-center font-['Harry_Potter'] text-sm">
+                  <p className="text-red-200/70 text-center font-['Harry_Potter'] text-sm">
                     {location.description}
                   </p>
 
                   <div className="flex items-center justify-center space-x-2 text-white/80">
-                    <FaMapMarkerAlt className="text-purple-400" />
+                    <FaMapMarkerAlt className="text-red-400" />
                     <span className="text-sm">{location.address}</span>
                   </div>
 
@@ -77,9 +100,9 @@ export default function Locations() {
                       href={location.mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 px-4 py-2 bg-purple-900/30 rounded-lg
-                               hover:bg-purple-900/50 transition-colors duration-300 text-white/90
-                               border border-purple-500/30 hover:border-purple-500/50"
+                      className="inline-flex items-center space-x-2 px-4 py-2 bg-red-900/30 rounded-lg
+                               hover:bg-red-900/50 transition-colors duration-300 text-white/90
+                               border border-red-500/30 hover:border-red-500/50"
                     >
                       <span className="font-['Harry_Potter']">View on Map</span>
                       <FaExternalLinkAlt className="text-sm" />
@@ -88,10 +111,10 @@ export default function Locations() {
                 </div>
 
                 {/* Decorative Corner Elements */}
-                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-purple-500/40 rounded-tl-lg"></div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-purple-500/40 rounded-tr-lg"></div>
-                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-purple-500/40 rounded-bl-lg"></div>
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-purple-500/40 rounded-br-lg"></div>
+                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-red-500/40 rounded-tl-lg"></div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-red-500/40 rounded-tr-lg"></div>
+                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-red-500/40 rounded-bl-lg"></div>
+                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-red-500/40 rounded-br-lg"></div>
               </div>
             </motion.div>
           ))}
@@ -100,7 +123,7 @@ export default function Locations() {
 
       {/* Ambient Light Effect */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(147,51,234,0.1)_0%,_transparent_60%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(220,38,38,0.1)_0%,_transparent_60%)]"></div>
       </div>
     </div>
   );
