@@ -65,12 +65,12 @@ export default function Dashboard() {
         <div className="space-y-3">
           {events.map((event, index) => (
             <div key={index} className="bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-colors">
-              <div className="flex flex-col sm:grid sm:grid-cols-[140px,1fr,180px] items-start sm:items-center">
+              <div className="flex flex-col sm:grid sm:grid-cols-[120px,1fr,auto] items-start sm:items-center">
                 <div className="w-full sm:w-auto px-4 py-3 sm:py-4 border-b sm:border-b-0 sm:border-r border-blue-500/20">
                   <div className="text-blue-300 font-medium font-sans">{event.time}</div>
                 </div>
                 <div className="px-4 py-3 sm:py-4 text-white font-sans">{event.event}</div>
-                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-blue-500/5 rounded-b-xl sm:rounded-none sm:rounded-r-xl text-blue-200/80 text-sm font-sans">
+                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-blue-500/5 rounded-b-xl sm:rounded-none sm:rounded-r-xl text-blue-200/80 text-sm font-sans min-w-[120px] text-right">
                   {event.location}
                 </div>
               </div>
@@ -162,7 +162,7 @@ export default function Dashboard() {
             onClick={handleLogout}
             className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
           >
-            Mischief Managed
+            Mischief Managed (Logout)
           </button>
         </div>
 
