@@ -172,7 +172,7 @@ export default function Dashboard() {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
-                className={`px-4 py-2 ${
+                className={`px-4 py-2 font-['Harry_Potter'] ${
                   activeTab === key
                     ? 'border-b-2 border-blue-500 text-white'
                     : 'text-blue-200/60 hover:text-white'
@@ -193,15 +193,15 @@ export default function Dashboard() {
                 {teamInfo.announcements?.length > 0 ? (
                   teamInfo.announcements.map((announcement) => (
                     <div key={announcement.id} className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                      <h3 className="text-xl text-white mb-2">{announcement.title}</h3>
-                      <p className="text-blue-200/80 whitespace-pre-wrap mb-4">{announcement.content}</p>
-                      <p className="text-sm text-blue-200/60">
+                      <h3 className="text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
+                      <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-4">{announcement.content}</p>
+                      <p className="text-sm text-blue-200/60 font-sans">
                         Posted: {new Date(announcement.timestamp).toLocaleString()}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-blue-200/60">No announcements at this time.</p>
+                  <p className="text-blue-200/60 font-sans">No announcements at this time.</p>
                 )}
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function Dashboard() {
           {activeTab === 'information' && (
             <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
+                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Liaisons Information</h3>
                 <div className="space-y-4">
                   {teamInfo.information?.liaisons?.map((liaison, index) => (
                     <div key={index} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-4 bg-blue-500/5 rounded-lg">
@@ -234,23 +234,23 @@ export default function Dashboard() {
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
+                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Tech Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
-                    <p className="text-white">42' x 28'</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Danceable Space</h4>
+                    <p className="text-white font-sans">42' x 28'</p>
                   </div>
                   <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
-                    <p className="text-white">4 ft</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Backdrop Space</h4>
+                    <p className="text-white font-sans">4 ft</p>
                   </div>
                   <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Apron Space</h4>
-                    <p className="text-white">4 ft</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Apron Space</h4>
+                    <p className="text-white font-sans">4 ft</p>
                   </div>
                   <div className="p-4 bg-blue-500/5 rounded-lg">
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
-                    <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Props Box</h4>
+                    <p className="text-white font-sans">7ft (length) x 5ft (depth) x 10ft (height)</p>
                   </div>
                   <div className="md:col-span-2">
                     <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
@@ -261,16 +261,16 @@ export default function Dashboard() {
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Venue Information</h3>
+                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Venue Information</h3>
                 <div className="space-y-6">
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
-                    <p className="text-white text-lg">Marshall Family Performing Arts Center</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg font-sans">Marshall Family Performing Arts Center</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Address</h4>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <p className="text-white">4141 Spring Valley Rd, Addison, TX 75001</p>
+                      <p className="text-white font-sans">4141 Spring Valley Rd, Addison, TX 75001</p>
                       <a
                         href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
                         target="_blank"
@@ -282,23 +282,23 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Seating Capacity</h4>
-                    <p className="text-white">600 seat auditorium</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Seating Capacity</h4>
+                    <p className="text-white font-sans">600 seat auditorium</p>
                   </div>
                 </div>
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
+                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Hotel Information</h3>
                 <div className="space-y-6">
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
-                    <p className="text-white text-lg">DoubleTree by Hilton Hotel Dallas</p>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Name</h4>
+                    <p className="text-white text-lg font-sans">DoubleTree by Hilton Hotel Dallas</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium mb-2">Address</h4>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
+                      <p className="text-white font-sans">4099 Valley View Ln, Dallas, TX 75244</p>
                       <a
                         href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
                         target="_blank"
@@ -326,7 +326,7 @@ export default function Dashboard() {
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
                   >
-                    <span className="text-white text-lg">Access Video</span>
+                    <span className="text-white text-lg font-sans">Access Video</span>
                     <svg 
                       className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" 
                       fill="none" 
@@ -344,7 +344,7 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <p className="text-blue-200/60">Tech time video will be available soon.</p>
+                  <p className="text-blue-200/60 font-sans">Tech time video will be available soon.</p>
                 </div>
               )}
             </div>
