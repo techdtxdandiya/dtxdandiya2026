@@ -399,17 +399,23 @@ const AdminDashboard: React.FC = () => {
 
   const handleAssignShowOrder = async (teamId: TeamId, showOrder: number) => {
     try {
+      console.log(`Assigning show order ${showOrder} to team ${teamId}`);
       const teamRef = ref(db, `teams/${teamId}/schedule`);
       const genericSchedule = GENERIC_SCHEDULES[`Team ${showOrder}`];
       
       if (!genericSchedule) {
+        console.error(`No schedule template found for Team ${showOrder}`);
         toast.error('Invalid show order');
         return;
       }
 
-      // Initialize with empty arrays if undefined
-      const schedule = {
-        isPublished: false,
+      // Get current schedule to preserve publish status
+      const snapshot = await get(teamRef);
+      const currentSchedule = snapshot.val() || {};
+      
+      // Initialize schedule with all required fields
+      const schedule: Schedule = {
+        isPublished: currentSchedule.isPublished || false,
         showOrder: showOrder,
         friday: genericSchedule.friday || [],
         saturdayTech: genericSchedule.saturdayTech || [],
@@ -421,6 +427,7 @@ const AdminDashboard: React.FC = () => {
         }
       };
 
+      console.log('Setting schedule:', schedule);
       await set(teamRef, schedule);
       toast.success('Show order assigned and schedule updated successfully!');
     } catch (error) {

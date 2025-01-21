@@ -507,107 +507,21 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
   }
 };
 
-export const INITIAL_SCHEDULES: Record<TeamId, Schedule> = {
-  tamu: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  texas: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  michigan: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  ucd: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  unc: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  iu: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  berkeley: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
-  },
-  msu: {
-    isPublished: false,
-    showOrder: null,
-    friday: [],
-    saturdayTech: [],
-    saturdayPreShow: [],
-    saturdayShow: [],
-    saturdayPostShow: {
-      nonPlacing: [],
-      placing: []
-    }
+export const INITIAL_SCHEDULE: Schedule = {
+  isPublished: false,
+  showOrder: null,
+  friday: [],
+  saturdayTech: [],
+  saturdayPreShow: [],
+  saturdayShow: [],
+  saturdayPostShow: {
+    placing: [],
+    nonPlacing: []
   }
 };
 
 export const updateSchedule = (existingSchedule: Partial<Schedule> | undefined): Schedule => {
-  const schedule = { ...INITIAL_SCHEDULES.tamu };
+  const schedule = { ...INITIAL_SCHEDULE };
   
   if (!existingSchedule) return schedule;
 
@@ -689,26 +603,25 @@ export const initializeTeamData = async () => {
       const snapshot = await get(teamRef);
       
       if (!snapshot.exists()) {
-        // Initialize new team data
-      await set(teamRef, {
-        displayName: TEAM_DISPLAY_NAMES[teamId],
+        await set(teamRef, {
+          displayName: TEAM_DISPLAY_NAMES[teamId],
           announcements: [],
           information: {
             liaisons: INITIAL_LIAISONS[teamId],
             tech: TECH_INFO,
             venue: VENUE_INFO,
             hotel: HOTEL_INFO
-        },
-        techVideo: {
-          title: '',
-          youtubeUrl: '',
+          },
+          techVideo: {
+            title: 'Tech Time Video',
+            youtubeUrl: '',
             driveUrl: '',
             description: '',
             isPublished: false
           },
-          schedule: INITIAL_SCHEDULES[teamId],
-        nearbyLocations: []
-      });
+          schedule: INITIAL_SCHEDULE,
+          nearbyLocations: []
+        });
         console.log(`Initialized data for team: ${TEAM_DISPLAY_NAMES[teamId]}`);
       }
     }

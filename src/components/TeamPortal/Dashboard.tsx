@@ -37,7 +37,15 @@ export default function Dashboard() {
   };
 
   const renderSchedule = () => {
-    if (!teamInfo?.schedule?.isPublished) {
+    if (!teamInfo?.schedule) {
+      return (
+        <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+          <p className="text-white text-center">Schedule will be available soon.</p>
+        </div>
+      );
+    }
+
+    if (!teamInfo.schedule.isPublished) {
       return (
         <div className="p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
           <p className="text-white text-center">Schedule will be available soon.</p>
@@ -53,21 +61,21 @@ export default function Dashboard() {
       );
     }
 
+    const schedule = teamInfo.schedule;
+
     return (
       <div className="space-y-8">
-        {teamInfo.schedule.showOrder && (
-          <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
-            <p className="text-xl text-white">Performance Order: Team {teamInfo.schedule.showOrder}</p>
-          </div>
-        )}
-        {renderScheduleSection("Friday", teamInfo.schedule.friday)}
-        {renderScheduleSection("Saturday Tech Time", teamInfo.schedule.saturdayTech)}
-        {renderScheduleSection("Saturday Pre-Show", teamInfo.schedule.saturdayPreShow)}
-        {renderScheduleSection("Saturday Show", teamInfo.schedule.saturdayShow)}
-        {teamInfo.schedule.saturdayPostShow && (
+        <div className="mb-8 p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
+          <p className="text-xl text-white">Performance Order: Team {schedule.showOrder}</p>
+        </div>
+        {renderScheduleSection("Friday", schedule.friday || [])}
+        {renderScheduleSection("Saturday Tech Time", schedule.saturdayTech || [])}
+        {renderScheduleSection("Saturday Pre-Show", schedule.saturdayPreShow || [])}
+        {renderScheduleSection("Saturday Show", schedule.saturdayShow || [])}
+        {schedule.saturdayPostShow && (
           <>
-            {renderScheduleSection("Saturday Post-Show (Non-Placing)", teamInfo.schedule.saturdayPostShow.nonPlacing)}
-            {renderScheduleSection("Saturday Post-Show (Placing)", teamInfo.schedule.saturdayPostShow.placing)}
+            {renderScheduleSection("Saturday Post-Show (Non-Placing)", schedule.saturdayPostShow.nonPlacing || [])}
+            {renderScheduleSection("Saturday Post-Show (Placing)", schedule.saturdayPostShow.placing || [])}
           </>
         )}
       </div>
