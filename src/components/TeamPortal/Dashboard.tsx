@@ -270,7 +270,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
             <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
             <div className="space-y-3">
@@ -324,7 +324,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="flex flex-col gap-8">
             <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
               <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Venue Information</h3>
               <div className="space-y-3">
@@ -374,154 +374,57 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-                <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Livestream</h3>
-                <div className="space-y-4">
-                  <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full"
-                      src="https://www.youtube.com/embed/"
-                      title="DTX Dandiya 2025 Livestream"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-                <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
-                      <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
-                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
-                      <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
-                      <a
-                        href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
-                      >
-                        View in Google Maps
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                          <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
 
-          {/* Nearby Places Section */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-            <h3 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
-            
-            {/* Food Options */}
-            <div className="mb-6">
-              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+              <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Livestream</h3>
               <div className="space-y-4">
-                <div className="flex items-start space-x-2">
-                  <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-white font-sans">Chick-fil-A</p>
-                    <a 
-                      href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
-                    >
-                      13347 Montfort Dr, Dallas, TX 75240
-                      <FaExternalLinkAlt className="text-xs" />
-                    </a>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-2">
-                  <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-white font-sans">In-N-Out Burger</p>
-                    <a 
-                      href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
-                    >
-                      7940 Belt Line Rd, Dallas, TX 75254
-                      <FaExternalLinkAlt className="text-xs" />
-                    </a>
-                  </div>
+                <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/"
+                    title="DTX Dandiya 2025 Livestream"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
             </div>
 
-            {/* Prop Repair Places */}
-            <div>
-              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-2">
-                  <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+              <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                  </div>
                   <div>
-                    <p className="text-white font-sans">At Home</p>
-                    <a 
-                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
-                    >
-                      13710 Dallas Pkwy, Dallas, TX 75240
-                      <FaExternalLinkAlt className="text-xs" />
-                    </a>
+                    <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
+                    <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
                   </div>
                 </div>
-
-                <div className="flex items-start space-x-2">
-                  <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-white font-sans">Hobby Lobby</p>
-                    <a 
-                      href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
-                    >
-                      14555 Dallas Pkwy, Dallas, TX 75254
-                      <FaExternalLinkAlt className="text-xs" />
-                    </a>
+                <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
+                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
                   </div>
-                </div>
-
-                <div className="flex items-start space-x-2">
-                  <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-white font-sans">Joann Fabrics and Crafts</p>
-                    <a 
-                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                  <div className="flex-1">
+                    <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
+                    <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                      className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
                     >
-                      13710 Dallas Pkwy, Dallas, TX 75240
-                      <FaExternalLinkAlt className="text-xs" />
+                      View in Google Maps
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -529,249 +432,109 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
-    );
-  };
 
-  const renderContent = () => {
-    if (userType === 'team' && !teamInfo) {
-      return null;
-    }
-
-    const renderAnnouncementsTab = () => {
-      if (userType !== 'team' || !teamInfo) return null;
-      return (
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Announcements</h2>
-          <div className="space-y-3 sm:space-y-4">
-            {teamInfo.announcements?.length > 0 ? (
-              teamInfo.announcements.map((announcement) => (
-                <div key={announcement.id} className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-lg sm:text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
-                  <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-3 sm:mb-4">{announcement.content}</p>
-                  <p className="text-xs sm:text-sm text-blue-200/60 font-sans">
-                    Posted: {new Date(announcement.timestamp).toLocaleString()}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-blue-200/60 font-sans text-center py-4">No announcements at this time.</p>
-            )}
-          </div>
-        </div>
-      );
-    };
-
-    const renderTechVideoTab = () => {
-      if (userType !== 'team' || !teamInfo) return null;
-      return (
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Tech Time Video</h2>
-          {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
-            <div className="p-4 sm:p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-              <div className="flex flex-col items-center justify-center gap-6">
-                <a
-                  href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto group flex items-center justify-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
-                  <span className="text-white text-lg font-sans">Access Video</span>
-                  <svg 
-                    className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M14 5l7 7m0 0l-7 7m7-7H3" 
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          ) : (
-            <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-              <p className="text-blue-200/60 font-sans text-center">Tech time video will be available soon.</p>
-            </div>
-          )}
-        </div>
-      );
-    };
-
-    const renderReportTab = () => {
-      if (userType !== 'team') return null;
-      return (
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Anonymous Report</h2>
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-            <div className="max-w-2xl mx-auto">
-              <div className="mb-6">
-                <p className="text-blue-200 font-sans mb-4">
-                  This form is for reporting any concerns, SA incidents, or feedback 100% anonymously. Your submission will be sent directly to the DTX Dandiya Directors for review.
-                </p>
-              </div>
-
-              <form onSubmit={handleReportSubmit} className="space-y-6">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20 mt-8">
+          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Nearby Places</h3>
+          
+          {/* Food Options */}
+          <div className="mb-6">
+            <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-2">
+                <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
                 <div>
-                  <label htmlFor="description" className="block text-white font-sans mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    value={reportForm.description}
-                    onChange={(e) => setReportForm({ description: e.target.value })}
-                    placeholder="Please provide details of your report..."
-                    className="w-full h-48 px-4 py-3 bg-black/40 border border-blue-500/30 rounded-lg text-white placeholder-blue-200/50 focus:outline-none focus:border-blue-500/60 transition-colors font-sans"
-                    required
-                  />
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-sans transition-all duration-300 flex items-center gap-2 ${
-                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                  <p className="text-white font-sans">Chick-fil-A</p>
+                  <a 
+                    href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        Submit Report
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                        </svg>
-                      </>
-                    )}
-                  </button>
+                    13347 Montfort Dr, Dallas, TX 75240
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
                 </div>
-              </form>
+              </div>
+              
+              <div className="flex items-start space-x-2">
+                <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-sans">In-N-Out Burger</p>
+                  <a 
+                    href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                  >
+                    7940 Belt Line Rd, Dallas, TX 75254
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Prop Repair Places */}
+          <div>
+            <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-2">
+                <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-sans">At Home</p>
+                  <a 
+                    href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                  >
+                    13710 Dallas Pkwy, Dallas, TX 75240
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-2">
+                <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-sans">Hobby Lobby</p>
+                  <a 
+                    href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                  >
+                    14555 Dallas Pkwy, Dallas, TX 75254
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-2">
+                <FaMapMarkerAlt className="text-white mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-white font-sans">Joann Fabrics and Crafts</p>
+                  <a 
+                    href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-sans flex items-center gap-1"
+                  >
+                    13710 Dallas Pkwy, Dallas, TX 75240
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      );
-    };
-
-    const getTabContent = () => {
-      switch (activeTab) {
-        case 'announcements':
-          return renderAnnouncementsTab();
-        case 'information':
-          return renderInformationTab();
-        case 'tech-time-video':
-          return renderTechVideoTab();
-        case 'schedule':
-          return (
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Schedule</h2>
-              {renderSchedule()}
-            </div>
-          );
-        case 'report':
-          return renderReportTab();
-        default:
-          return null;
-      }
-    };
-
-    return (
-      <div className="space-y-6 sm:space-y-8">
-        {getTabContent()}
       </div>
     );
   };
-
-  if (!teamId || (userType === 'team' && !teamInfo)) {
-    return null;
-  }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#1a1a1a',
-            color: '#fff',
-            border: '1px solid rgba(59, 130, 246, 0.2)',
-          },
-          success: {
-            iconTheme: {
-              primary: '#4ade80',
-              secondary: '#1a1a1a',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#1a1a1a',
-            },
-          },
-        }}
-      />
-      
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
-          <div className="absolute inset-0" 
-            style={{
-              background: `
-                radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 70%),
-                radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.15), transparent 70%)
-              `
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-3 sm:px-4 py-8 sm:py-12">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
-            {getHeaderTitle()}
-          </h1>
-          <button
-            onClick={handleLogout}
-            className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
-          >
-            Mischief Managed (Logout)
-          </button>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row border-b border-blue-500/30">
-            {getAvailableTabs().map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-4 py-3 sm:py-2 font-['Harry_Potter'] text-lg sm:text-base transition-all duration-300 ${
-                  activeTab === tab.key
-                    ? 'bg-blue-500/20 sm:bg-transparent border-b-2 border-blue-500 text-white'
-                    : 'text-blue-200/60 hover:text-white hover:bg-blue-500/10 sm:hover:bg-transparent'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Content */}
-        {renderContent()}
-      </div>
+    <div className="space-y-8">
+      {renderInformationTab()}
     </div>
   );
 } 
