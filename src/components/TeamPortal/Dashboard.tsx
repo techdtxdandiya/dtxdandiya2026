@@ -5,6 +5,7 @@ import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 import { FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -166,6 +167,30 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#1a1a1a',
+            color: '#fff',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#4ade80',
+              secondary: '#1a1a1a',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#1a1a1a',
+            },
+          },
+        }}
+      />
+      
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
@@ -605,10 +630,7 @@ export default function Dashboard() {
                 <div className="max-w-2xl mx-auto">
                   <div className="mb-6">
                     <p className="text-blue-200 font-sans mb-4">
-                      This form is for reporting any concerns, incidents, or feedback anonymously. Your submission will be sent directly to the DTX Dandiya administrators for review.
-                    </p>
-                    <p className="text-blue-200/80 font-sans text-sm">
-                      * While this form is anonymous, we store your team ID for administrative purposes. Your individual identity remains protected.
+                      This form is for reporting any concerns, SA incidents, or feedback 100% anonymously. Your submission will be sent directly to the DTX Dandiya Directors for review.
                     </p>
                   </div>
 
