@@ -5,6 +5,10 @@ import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link as ScrollLink, Element } from 'react-scroll';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -68,6 +72,119 @@ export default function Dashboard() {
     return () => unsubscribe();
   }, [navigate]);
 
+  // Add this new type for calendar events
+  type CalendarEvent = {
+    title: string;
+    start: string;
+    end?: string;
+    location?: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    textColor?: string;
+    classNames?: string[];
+  };
+
+  // Add new function to convert schedule data to calendar events
+  const convertScheduleToEvents = (): CalendarEvent[] => {
+    if (!scheduleData) return [];
+
+    const events: CalendarEvent[] = [];
+    const today = new Date();
+    const friday = new Date(today.getTime());
+    friday.setDate(today.getDate() - today.getDay() + 5); // Get to Friday
+
+    // Helper function to create date string
+    const createDateTimeString = (date: Date, timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(num => parseInt(num));
+      const newDate = new Date(date.getTime());
+      newDate.setHours(hours, minutes);
+      return newDate.toISOString();
+    };
+
+    // Add Friday events
+    scheduleData.friday?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(friday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(147, 51, 234, 0.2)',
+        borderColor: 'rgba(147, 51, 234, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    // Add Saturday events
+    const saturday = new Date(friday.getTime());
+    saturday.setDate(friday.getDate() + 1);
+
+    // Tech Time events
+    scheduleData.saturdayTech?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(saturday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        borderColor: 'rgba(59, 130, 246, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    // Pre-Show events
+    scheduleData.saturdayPreShow?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(saturday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(234, 179, 8, 0.2)',
+        borderColor: 'rgba(234, 179, 8, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    // Show events
+    scheduleData.saturdayShow?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(saturday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+        borderColor: 'rgba(239, 68, 68, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    // Post-Show events
+    scheduleData.saturdayPostShow?.nonPlacing?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(saturday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+        borderColor: 'rgba(16, 185, 129, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    scheduleData.saturdayPostShow?.placing?.forEach(event => {
+      events.push({
+        title: event.event,
+        start: createDateTimeString(saturday, event.time),
+        location: event.location,
+        backgroundColor: 'rgba(236, 72, 153, 0.2)',
+        borderColor: 'rgba(236, 72, 153, 0.3)',
+        textColor: '#f3f4f6',
+        classNames: ['backdrop-blur-sm']
+      });
+    });
+
+    return events;
+  };
+
   const renderScheduleGrid = (
     events: Array<{ time: string; event: string; location: string }> | undefined
   ) => {
@@ -101,6 +218,18 @@ export default function Dashboard() {
   const handleLogout = () => {
     sessionStorage.removeItem("team");
     navigate("/team-portal/login");
+  };
+
+  // Add this new function to render calendar events
+  const renderEventContent = (eventInfo: any) => {
+    return (
+      <div className="p-1">
+        <div className="font-medium">{eventInfo.event.title}</div>
+        {eventInfo.event.extendedProps.location && (
+          <div className="text-xs opacity-75">{eventInfo.event.extendedProps.location}</div>
+        )}
+      </div>
+    );
   };
 
   if (!teamInfo || !teamId) {
@@ -245,48 +374,84 @@ export default function Dashboard() {
             <h2 className="text-2xl font-['Harry_Potter'] text-purple-200 flex items-center gap-2">
               <span>📅</span> Schedule
             </h2>
+            
             {scheduleData?.showOrder && (
               <div className="bg-purple-500/10 backdrop-blur-lg rounded-lg px-4 py-3 inline-block">
                 <p className="text-purple-200 font-medium">Performance Order: {scheduleData.showOrder}</p>
               </div>
             )}
-            <div className="space-y-8">
-              {scheduleData?.friday && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-medium text-purple-200">Friday</h3>
-                  {renderScheduleGrid(scheduleData.friday)}
-                </div>
-              )}
-              {scheduleData?.saturdayTech && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-medium text-purple-200">Saturday Tech Time</h3>
-                  {renderScheduleGrid(scheduleData.saturdayTech)}
-                </div>
-              )}
-              {scheduleData?.saturdayPreShow && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-medium text-purple-200">Saturday Pre-Show</h3>
-                  {renderScheduleGrid(scheduleData.saturdayPreShow)}
-                </div>
-              )}
-              {scheduleData?.saturdayShow && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-medium text-purple-200">Saturday Show</h3>
-                  {renderScheduleGrid(scheduleData.saturdayShow)}
-                </div>
-              )}
-              {scheduleData?.saturdayPostShow && (
-                <>
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-purple-200">Saturday Post-Show (Non-Placing)</h3>
-                    {renderScheduleGrid(scheduleData.saturdayPostShow.nonPlacing)}
+
+            <div className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-purple-500/10">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* Calendar View */}
+                <div className="lg:col-span-3">
+                  <div className="fc-custom-theme">
+                    <FullCalendar
+                      plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
+                      initialView="timeGridTwoDay"
+                      views={{
+                        timeGridTwoDay: {
+                          type: 'timeGrid',
+                          duration: { days: 2 },
+                          buttonText: '2 day'
+                        }
+                      }}
+                      headerToolbar={{
+                        left: 'timeGridTwoDay,listTwoDay',
+                        center: 'title',
+                        right: 'prev,next'
+                      }}
+                      events={convertScheduleToEvents()}
+                      slotMinTime="08:00:00"
+                      slotMaxTime="24:00:00"
+                      allDaySlot={false}
+                      height="auto"
+                      eventContent={renderEventContent}
+                      slotLabelFormat={{
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        meridiem: 'short'
+                      }}
+                      eventTimeFormat={{
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        meridiem: 'short'
+                      }}
+                    />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-purple-200">Saturday Post-Show (Placing)</h3>
-                    {renderScheduleGrid(scheduleData.saturdayPostShow.placing)}
+                </div>
+
+                {/* Legend */}
+                <div className="lg:col-span-2 space-y-4">
+                  <h3 className="text-lg font-medium text-purple-200 mb-4">Event Types</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex items-center gap-3 p-2 bg-purple-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-purple-500/50" />
+                      <span className="text-purple-200">Friday Events</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-blue-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-blue-500/50" />
+                      <span className="text-purple-200">Tech Time</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-yellow-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-yellow-500/50" />
+                      <span className="text-purple-200">Pre-Show</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-red-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-red-500/50" />
+                      <span className="text-purple-200">Show</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-green-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-green-500/50" />
+                      <span className="text-purple-200">Post-Show (Non-Placing)</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-pink-500/20 rounded-lg">
+                      <div className="w-4 h-4 rounded-full bg-pink-500/50" />
+                      <span className="text-purple-200">Post-Show (Placing)</span>
+                    </div>
                   </div>
-                </>
-              )}
+                </div>
+              </div>
             </div>
           </section>
         </Element>
@@ -446,4 +611,65 @@ export default function Dashboard() {
       </main>
     </div>
   );
-} 
+}
+
+// Add these styles to your CSS/SCSS file or in a style tag in your HTML
+<style>
+{`
+  .fc-custom-theme {
+    --fc-border-color: rgba(147, 51, 234, 0.2);
+    --fc-button-bg-color: rgba(147, 51, 234, 0.2);
+    --fc-button-border-color: rgba(147, 51, 234, 0.3);
+    --fc-button-hover-bg-color: rgba(147, 51, 234, 0.3);
+    --fc-button-hover-border-color: rgba(147, 51, 234, 0.4);
+    --fc-button-active-bg-color: rgba(147, 51, 234, 0.4);
+    --fc-button-active-border-color: rgba(147, 51, 234, 0.5);
+    --fc-event-bg-color: rgba(147, 51, 234, 0.2);
+    --fc-event-border-color: rgba(147, 51, 234, 0.3);
+    --fc-event-text-color: #f3f4f6;
+    --fc-page-bg-color: transparent;
+  }
+
+  .fc {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .fc .fc-toolbar-title {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-button {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-timegrid-slot-label {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-timegrid-axis-cushion {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-list-day-cushion {
+    background-color: rgba(147, 51, 234, 0.2);
+  }
+
+  .fc .fc-list-event:hover td {
+    background-color: rgba(147, 51, 234, 0.2);
+  }
+
+  .fc .fc-list-event-time {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-list-event-title {
+    color: #e9d5ff;
+  }
+
+  .fc .fc-timegrid-event {
+    backdrop-filter: blur(8px);
+  }
+`}
+</style> 

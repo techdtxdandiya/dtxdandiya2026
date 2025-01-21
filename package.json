@@ -11,6 +11,11 @@
     "init-db": "node src/config/initializeDatabase.js"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@types/react-scroll": "^1.8.10",
     "firebase": "^10.7.2",
     "framer-motion": "^11.0.3",
