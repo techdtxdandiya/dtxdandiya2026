@@ -454,4 +454,224 @@ export default function Dashboard() {
       </div>
     );
   };
+
+  const renderContent = () => {
+    if (userType === 'team' && !teamInfo) {
+      return null;
+    }
+
+    const renderAnnouncementsTab = () => {
+      if (userType !== 'team' || !teamInfo) return null;
+      return (
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Announcements</h2>
+          <div className="space-y-3 sm:space-y-4">
+            {teamInfo.announcements?.length > 0 ? (
+              teamInfo.announcements.map((announcement) => (
+                <div key={announcement.id} className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+                  <h3 className="text-lg sm:text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
+                  <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-3 sm:mb-4">{announcement.content}</p>
+                  <p className="text-xs sm:text-sm text-blue-200/60 font-sans">
+                    Posted: {new Date(announcement.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-blue-200/60 font-sans text-center py-4">No announcements at this time.</p>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const renderTechVideoTab = () => {
+      if (userType !== 'team' || !teamInfo) return null;
+      return (
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Tech Time Video</h2>
+          {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
+            <div className="p-4 sm:p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+              <div className="flex flex-col items-center justify-center gap-6">
+                <a
+                  href={teamInfo.techVideo.driveUrl.startsWith('http') ? teamInfo.techVideo.driveUrl : `https://${teamInfo.techVideo.driveUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto group flex items-center justify-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="text-white text-lg font-sans">Access Video</span>
+                  <svg 
+                    className="w-6 h-6 text-white transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M14 5l7 7m0 0l-7 7m7-7H3" 
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
+              <p className="text-blue-200/60 font-sans text-center">Tech time video will be available soon.</p>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const renderReportTab = () => {
+      if (userType !== 'team') return null;
+      return (
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Anonymous Report</h2>
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+            <div className="max-w-2xl mx-auto">
+              <div className="mb-6">
+                <p className="text-blue-200 font-sans mb-4">
+                  This form is for reporting any concerns, SA incidents, or feedback 100% anonymously. Your submission will be sent directly to the DTX Dandiya Directors for review.
+                </p>
+              </div>
+
+              <form onSubmit={handleReportSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="description" className="block text-white font-sans mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    id="description"
+                    value={reportForm.description}
+                    onChange={(e) => setReportForm({ description: e.target.value })}
+                    placeholder="Please provide details of your report..."
+                    className="w-full h-48 px-4 py-3 bg-black/40 border border-blue-500/30 rounded-lg text-white placeholder-blue-200/50 focus:outline-none focus:border-blue-500/60 transition-colors font-sans"
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-sans transition-all duration-300 flex items-center gap-2 ${
+                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        Submit Report
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const getTabContent = () => {
+      switch (activeTab) {
+        case 'announcements':
+          return renderAnnouncementsTab();
+        case 'information':
+          return renderInformationTab();
+        case 'tech-time-video':
+          return renderTechVideoTab();
+        case 'schedule':
+          return (
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Schedule</h2>
+              {renderSchedule()}
+            </div>
+          );
+        case 'report':
+          return renderReportTab();
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <div className="space-y-6 sm:space-y-8">
+        {getTabContent()}
+      </div>
+    );
+  };
+
+  if (!teamId || (userType === 'team' && !teamInfo)) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      <Toaster position="top-right" />
+      
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
+          <div className="absolute inset-0" 
+            style={{
+              background: `
+                radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.15), transparent 70%)
+              `
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-3 sm:px-4 py-8 sm:py-12">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
+          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
+            {getHeaderTitle()}
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
+          >
+            Mischief Managed (Logout)
+          </button>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row border-b border-blue-500/30">
+            {getAvailableTabs().map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`px-4 py-3 sm:py-2 font-['Harry_Potter'] text-lg sm:text-base transition-all duration-300 ${
+                  activeTab === tab.key
+                    ? 'bg-blue-500/20 sm:bg-transparent border-b-2 border-blue-500 text-white'
+                    : 'text-blue-200/60 hover:text-white hover:bg-blue-500/10 sm:hover:bg-transparent'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        {renderContent()}
+      </div>
+    </div>
+  );
 } 
