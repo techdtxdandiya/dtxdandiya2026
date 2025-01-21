@@ -5,7 +5,7 @@ import { db } from '../../config';
 import type { TeamInfo, DashboardTeamId } from '../../types/team';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link as ScrollLink, Element } from 'react-scroll';
-import '../styles/magical-effects.css';
+import '../../styles/magical-effects.css';
 import { format } from 'date-fns';
 
 export default function Dashboard() {
