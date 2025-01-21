@@ -13,8 +13,8 @@ const TEAM_PASSWORDS: { [key: string]: string } = {
   "berkeley": "hogwarts",
   "msu": "potter",
   "admin": "dumbledore", // admin password
-  "judge": "owl", // judge password
-  "reps": "dobby" // reps password
+  "judge": "owl",
+  "reps": "dobby"
 };
 
 export default function Login() {
@@ -32,9 +32,11 @@ export default function Login() {
       // Store team info in sessionStorage
       sessionStorage.setItem('team', team[0]);
       
-      // Navigate based on whether it's admin or team
+      // Navigate based on team type
       if (team[0] === 'admin') {
         navigate('/team-portal/admin');
+      } else if (team[0] === 'judge' || team[0] === 'reps') {
+        navigate('/team-portal/dashboard');
       } else {
         navigate('/team-portal/dashboard');
       }
