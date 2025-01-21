@@ -77,6 +77,20 @@ export default function Dashboard() {
     return () => unsubscribe();
   }, [navigate]);
 
+  const formatTime = (timeString: string) => {
+    try {
+      // Ensure the timeString is in HH:mm format
+      const [hours, minutes] = timeString.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours, 10));
+      date.setMinutes(parseInt(minutes, 10));
+      return format(date, 'h:mm a');
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return timeString; // Return original string if formatting fails
+    }
+  };
+
   // Render timeline event
   const renderTimelineEvent = (
     event: { time: string; event: string; location: string },
@@ -96,7 +110,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-4 p-4">
           <div className="timeline-time">
             <div className="text-lg font-medium text-accent-primary">
-              {format(new Date(`2024-02-07T${event.time}`), 'h:mm a')}
+              {formatTime(event.time)}
             </div>
           </div>
           <div className="timeline-content flex-grow">
