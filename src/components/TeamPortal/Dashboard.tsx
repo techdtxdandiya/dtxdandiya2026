@@ -99,22 +99,66 @@ export default function Dashboard() {
     }
 
     return (
-      <div className="mb-8">
-        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4 px-1">{title}</h3>
-        <div className="space-y-3">
-          {events.map((event, index) => (
-            <div key={index} className="bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-colors">
-              <div className="flex flex-col sm:grid sm:grid-cols-[120px,1fr,auto] items-start sm:items-center">
-                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 border-b sm:border-b-0 sm:border-r border-blue-500/20">
-                  <div className="text-blue-300 font-medium font-sans">{event.time}</div>
+      <div className="mb-12">
+        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-8 px-1">{title}</h3>
+        <div className="relative">
+          {/* Timeline Line */}
+          <div className="absolute left-[15px] sm:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-500/50 via-purple-500/50 to-blue-500/50">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blue-500/30 backdrop-blur-sm border border-blue-500"></div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blue-500/30 backdrop-blur-sm border border-blue-500"></div>
+          </div>
+
+          <div className="space-y-8 relative">
+            {events.map((event, index) => (
+              <div 
+                key={index} 
+                className={`relative flex items-center gap-8 ${
+                  index % 2 === 0 ? 'sm:flex-row' : 'sm:flex-row-reverse'
+                }`}
+              >
+                {/* Timeline Dot */}
+                <div className="absolute left-[14px] sm:left-1/2 top-1/2 -translate-y-1/2 sm:-translate-x-1/2 w-4 h-4">
+                  <div className="absolute inset-0 rounded-full bg-blue-500 animate-pulse"></div>
+                  <div className="absolute inset-[2px] rounded-full bg-black"></div>
+                  <div className="absolute inset-[3px] rounded-full bg-blue-500"></div>
                 </div>
-                <div className="px-4 py-3 sm:py-4 text-white font-sans">{event.event}</div>
-                <div className="w-full sm:w-auto px-4 py-3 sm:py-4 bg-blue-500/5 rounded-b-xl sm:rounded-none sm:rounded-r-xl text-blue-200/80 text-sm font-sans min-w-[120px] text-right">
-                  {event.location}
+
+                {/* Time Badge */}
+                <div className={`hidden sm:flex w-32 ${
+                  index % 2 === 0 ? 'justify-end' : 'justify-start'
+                }`}>
+                  <div className="px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium">
+                    {event.time}
+                  </div>
+                </div>
+
+                {/* Event Card */}
+                <div className={`ml-8 sm:ml-0 flex-1 max-w-lg ${
+                  index % 2 === 0 ? 'sm:mr-[calc(50%+2rem)]' : 'sm:ml-[calc(50%+2rem)]'
+                }`}>
+                  <div className="group relative p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+                    {/* Mobile Time Badge */}
+                    <div className="sm:hidden mb-2 inline-block px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium">
+                      {event.time}
+                    </div>
+
+                    <div className="space-y-1">
+                      <h4 className="text-white font-['Harry_Potter'] text-lg group-hover:text-blue-300 transition-colors">
+                        {event.event}
+                      </h4>
+                      <p className="text-blue-200/80 text-sm font-sans">
+                        {event.location}
+                      </p>
+                    </div>
+
+                    {/* Decorative Corner */}
+                    <div className="absolute -top-px -right-px w-4 h-4 rounded-br-xl border-r border-t border-blue-500/30 group-hover:border-blue-500/60 transition-colors"></div>
+                    <div className="absolute -bottom-px -left-px w-4 h-4 rounded-tl-xl border-l border-b border-blue-500/30 group-hover:border-blue-500/60 transition-colors"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );
