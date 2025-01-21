@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { ref, onValue, update, get, set } from 'firebase/database';
-import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS, GENERIC_SCHEDULES } from '../../config/initializeDatabase';
+import { TEAM_DISPLAY_NAMES, INITIAL_LIAISONS, GENERIC_SCHEDULES, INITIAL_SCHEDULE } from '../../config/initializeDatabase';
 import type { TeamInfo, TeamId, DashboardTeamId, Schedule, ScheduleEvent } from '../../types/team';
 import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -134,24 +134,27 @@ const AdminDashboard: React.FC = () => {
     try {
       const teamRef = ref(db, `teams/${teamId}/schedule`);
       const snapshot = await get(teamRef);
-      const currentSchedule = snapshot.val() || {};
+      const currentSchedule = snapshot.val() || INITIAL_SCHEDULE;
       
       if (isPublished && !currentSchedule.showOrder) {
         toast.error('Please assign a show order before publishing');
         return;
       }
       
-      // Initialize empty schedule arrays when publishing
-      const updatedSchedule = {
+      // Get the generic schedule if show order exists
+      const genericSchedule = currentSchedule.showOrder ? GENERIC_SCHEDULES[`Team ${currentSchedule.showOrder}`] : null;
+      
+      // Initialize schedule with all required fields
+      const updatedSchedule: Schedule = {
         ...currentSchedule,
         isPublished,
-        friday: currentSchedule.friday || [],
-        saturdayTech: currentSchedule.saturdayTech || [],
-        saturdayPreShow: currentSchedule.saturdayPreShow || [],
-        saturdayShow: currentSchedule.saturdayShow || [],
-        saturdayPostShow: currentSchedule.saturdayPostShow || {
-          placing: [],
-          nonPlacing: []
+        friday: currentSchedule.friday || genericSchedule?.friday || [],
+        saturdayTech: currentSchedule.saturdayTech || genericSchedule?.saturdayTech || [],
+        saturdayPreShow: currentSchedule.saturdayPreShow || genericSchedule?.saturdayPreShow || [],
+        saturdayShow: currentSchedule.saturdayShow || genericSchedule?.saturdayShow || [],
+        saturdayPostShow: {
+          placing: currentSchedule.saturdayPostShow?.placing || genericSchedule?.saturdayPostShow?.placing || [],
+          nonPlacing: currentSchedule.saturdayPostShow?.nonPlacing || genericSchedule?.saturdayPostShow?.nonPlacing || []
         }
       };
       
@@ -411,7 +414,7 @@ const AdminDashboard: React.FC = () => {
 
       // Get current schedule to preserve publish status
       const snapshot = await get(teamRef);
-      const currentSchedule = snapshot.val() || {};
+      const currentSchedule = snapshot.val() || INITIAL_SCHEDULE;
       
       // Initialize schedule with all required fields
       const schedule: Schedule = {
