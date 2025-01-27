@@ -30,7 +30,7 @@ export default function Dashboard() {
   const staticScheduleData = {
     friday: [
       { event: "Registration", location: "Hotel Oak Room", time: "12:00 PM" },
-      { event: "Dinner", location: "Hotel Garden Terrace", time: "4:00 PM" },
+      { event: "Dinner", location: "Team Rooms", time: "4:00 PM" },
       { event: "Mixer", location: "Hotel Garden Terrace", time: "5:00 PM" },
       { event: "Captains Meeting", location: "Outside Event Rooms", time: "7:25 PM" },
       { event: "Practice", location: "Hotel Event Rooms", time: "7:30 PM" },

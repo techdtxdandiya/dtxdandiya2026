@@ -79,7 +79,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:25 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "7:55 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
@@ -133,7 +133,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:25 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "7:55 PM", event: "Post-Mixer Practice", location: "Teak Room" },
@@ -187,7 +187,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:25 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "8:30 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
@@ -241,7 +241,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:25 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "8:30 PM", event: "Post-Mixer Practice", location: "Teak Room" },
@@ -295,7 +295,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "9:05 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
@@ -349,7 +349,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "9:05 PM", event: "Post-Mixer Practice", location: "Teak Room" },
@@ -403,7 +403,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "9:40 PM", event: "Post-Mixer Practice", location: "Ebony Room" },
@@ -457,7 +457,7 @@ export const GENERIC_SCHEDULES: Record<string, Schedule> = {
     friday: [
       { time: "11:55 AM", event: "Registration", location: "Oak Room" },
       { time: "2:40 PM", event: "Check-In", location: "Oak Room" },
-      { time: "3:55 PM", event: "Dinner", location: "Garden Terrace" },
+      { time: "3:55 PM", event: "Dinner", location: "Team Rooms" },
       { time: "4:55 PM", event: "Mixer", location: "Garden Terrace" },
       { time: "7:55 PM", event: "Captains Meeting", location: "Near Room" },
       { time: "9:40 PM", event: "Post-Mixer Practice", location: "Teak Room" },
