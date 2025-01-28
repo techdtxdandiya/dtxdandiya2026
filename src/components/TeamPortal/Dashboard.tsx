@@ -303,39 +303,152 @@ export default function Dashboard() {
   };
 
   const renderInformationTab = () => {
-    return (
-      <div className="space-y-8">
-        {userType === 'team' && teamInfo?.information?.liaisons && (
+    if (userType === 'reps') {
+      return (
+        <div className="space-y-8">
+          {/* Reps Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {teamInfo.information.liaisons.map((liaison, index) => (
-                <div key={index} className="flex items-center gap-4 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-white font-medium font-sans truncate">{liaison.name}</p>
-                    {liaison.phone && (
-                      <a 
-                        href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
-                        className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2 text-sm font-sans"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                        </svg>
-                        {liaison.phone}
-                      </a>
-                    )}
-                  </div>
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Reps Information</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5 2a2 2 0 012-2h6a2 2 0 012 2v2h2a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2V2zm8 2H7V2h6v2zm1 2H6v12h8V6z" clipRule="evenodd" />
+                  </svg>
                 </div>
-              ))}
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Props Boxes</h4>
+                  <p className="text-white font-sans">Props Boxes are in permanent places</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.616a1 1 0 01.894-1.79l1.599.8L9 4.323V3a1 1 0 011-1z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Props Setup Measurement</h4>
+                  <p className="text-white font-sans">DTX Directors/Logs will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Extension Cables</h4>
+                  <p className="text-white font-sans">Extension cables for teams are provided</p>
+                </div>
+              </div>
             </div>
           </div>
-        )}
 
+          {/* Tech Information Section - Existing */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Danceable Space</h4>
+                  <p className="text-white font-sans">42' x 28'</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Backdrop Space</h4>
+                  <p className="text-white font-sans">4 ft</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Apron Space</h4>
+                  <p className="text-white font-sans">4 ft</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
+                  <p className="text-white font-sans">42" x 4"</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
+                  <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
+                </div>
+              </div>
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-200 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tech Time Flow Section */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Time Flow</h3>
+            <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
+              <img
+                src="/assets/reps/techtime_flow.jpeg"
+                alt="Tech Time Flow"
+                className="absolute top-0 left-0 w-full h-full object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Show Flow Section */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Show Flow</h3>
+            <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
+              <img
+                src="/assets/reps/show_flow.jpeg"
+                alt="Show Flow"
+                className="absolute top-0 left-0 w-full h-full object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Existing sections */}
+          {renderVenueInfoSection()}
+          {renderHotelInfoSection()}
+          {renderLivestreamSection()}
+          {renderNearbyPlacesSection()}
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-8">
+        {/* Original content for other user types */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
             <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
@@ -402,111 +515,9 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-              <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Venue Information</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 00-1-1H7a1 1 0 00-1 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm3 1h6v7H7V5z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
-                    <p className="text-white font-sans">Marshall Family Performing Arts Center</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
-                    <p className="text-white font-sans mb-2">4141 Spring Valley Rd, Addison, TX 75001</p>
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
-                    >
-                      View in Google Maps
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium">Seating Capacity</h4>
-                    <p className="text-white font-sans">600 seat auditorium</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-              <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Livestream</h3>
-              <div className="space-y-4">
-                <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full"
-                    src="https://www.youtube.com/embed/"
-                    title="DTX Dandiya 2025 Livestream"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-              <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
-                    <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
-                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
-                    <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
-                    >
-                      View in Google Maps
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {renderVenueInfoSection()}
+            {renderHotelInfoSection()}
+            {renderLivestreamSection()}
           </div>
         </div>
 
@@ -607,6 +618,216 @@ export default function Dashboard() {
       </div>
     );
   };
+
+  // Helper functions for rendering individual sections
+  const renderVenueInfoSection = () => (
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Venue Information</h3>
+      <div className="space-y-3">
+        <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 00-1-1H7a1 1 0 00-1 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm3 1h6v7H7V5z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
+            <p className="text-white font-sans">Marshall Family Performing Arts Center</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
+            <p className="text-white font-sans mb-2">4141 Spring Valley Rd, Addison, TX 75001</p>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
+            >
+              View in Google Maps
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+            </svg>
+          </div>
+          <div>
+            <h4 className="text-blue-300 text-sm font-sans font-medium">Seating Capacity</h4>
+            <p className="text-white font-sans">600 seat auditorium</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHotelInfoSection = () => (
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
+      <div className="space-y-3">
+        <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+          </div>
+          <div>
+            <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
+            <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
+            <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200 text-sm"
+            >
+              View in Google Maps
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderLivestreamSection = () => (
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Livestream</h3>
+      <div className="space-y-4">
+        <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src="https://www.youtube.com/embed/"
+            title="DTX Dandiya 2025 Livestream"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderNearbyPlacesSection = () => (
+    <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
+      <div className="space-y-6">
+        <div>
+          <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+          <div className="space-y-4">
+            <div className="flex items-start space-x-2">
+              <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+              <div>
+                <p className="text-white font-sans">Chick-fil-A</p>
+                <a 
+                  href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                >
+                  13347 Montfort Dr, Dallas, TX 75240
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-2">
+              <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+              <div>
+                <p className="text-white font-sans">In-N-Out Burger</p>
+                <a 
+                  href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                >
+                  7940 Belt Line Rd, Dallas, TX 75254
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+          <div className="space-y-4">
+            <div className="flex items-start space-x-2">
+              <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+              <div>
+                <p className="text-white font-sans">At Home</p>
+                <a 
+                  href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                >
+                  13710 Dallas Pkwy, Dallas, TX 75240
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+              <div>
+                <p className="text-white font-sans">Hobby Lobby</p>
+                <a 
+                  href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                >
+                  14555 Dallas Pkwy, Dallas, TX 75254
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-2">
+              <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+              <div>
+                <p className="text-white font-sans">Joann Fabrics and Crafts</p>
+                <a 
+                  href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                >
+                  13710 Dallas Pkwy, Dallas, TX 75240
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderContent = () => {
     if (userType === 'team' && !teamInfo) {
