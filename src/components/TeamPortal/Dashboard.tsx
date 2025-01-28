@@ -31,37 +31,38 @@ export default function Dashboard() {
     if (userType === 'judge') {
       return {
         friday: [
-          { time: "10:00 AM - 4:00 PM", event: "Check-in/Registration", location: "Oak Room" },
-          { time: "4:00 PM - 5:00 PM", event: "Dinner", location: "Judges Hotel Room" },
-          { time: "6:00 PM - 2:00 AM", event: "Go Out", location: "Downtown!!!" }
+          { time: "10:00 AM", event: "Check-in/Registration", location: "Oak Room" },
+          { time: "4:00 PM", event: "Dinner", location: "Judges Hotel Room" },
+          { time: "6:00 PM", event: "Go Out", location: "Downtown" }
         ],
         saturday: [
           { time: "7:00 AM", event: "Breakfast", location: "Delivered to Judges Hotel Room" },
-          { time: "11:00 AM - 2:00 PM", event: "Mock Deliberations", location: "Oak Room" },
-          { time: "3:45 PM - 4:00 PM", event: "Rep/Judges Photos", location: "Venue" },
-          { time: "5:30 PM - 10:00 PM", event: "Show", location: "Venue" },
-          { time: "10:00 PM - 10:30 PM", event: "Dinner", location: "Judges Hotel Room" },
-          { time: "11:00 PM - 2:00 AM", event: "After Party (AP)", location: "Vybe Lounge" }
+          { time: "11:00 AM", event: "Mock Deliberations", location: "Oak Room" },
+          { time: "2:00 PM", event: "Lunch", location: "During/After Mock Deliberations" },
+          { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
+          { time: "5:30 PM", event: "Show", location: "Venue" },
+          { time: "10:00 PM", event: "Dinner", location: "Judges Hotel Room" },
+          { time: "11:00 PM", event: "After Party", location: "VYB Lounge" }
         ]
       };
     } else if (userType === 'reps') {
       return {
         friday: [
-          { time: "10:00 AM - 4:00 PM", event: "Check-in/Registration", location: "Oak Room" },
-          { time: "4:00 PM - 5:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
-          { time: "5:00 PM - 7:30 PM", event: "Mixer", location: "Garden Terrace Ballroom" },
-          { time: "8:00 PM - 2:00 AM", event: "Go Out", location: "" }
+          { time: "10:00 AM", event: "Check-in/Registration", location: "Oak Room" },
+          { time: "4:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
+          { time: "5:00 PM", event: "Mixer", location: "Garden Terrace Ballroom" },
+          { time: "8:00 PM", event: "Go Out", location: "Downtown" }
         ],
         saturday: [
-          { time: "7:00 AM - 7:30 AM", event: "Breakfast", location: "RAS Rep Hotel Room" },
+          { time: "7:00 AM", event: "Breakfast", location: "RAS Rep Hotel Room" },
           { time: "6:00 AM - 8:00 AM", event: "Props Setup", location: "Venue" },
-          { time: "8:00 AM - 8:30 AM", event: "Props Cleanup", location: "Venue" },
-          { time: "8:40 AM - 12:30 PM", event: "Tech Time", location: "Venue" },
-          { time: "11:00 AM - 2:00 PM", event: "Mock Deliberations", location: "Oak Room" },
-          { time: "3:45 PM - 4:00 PM", event: "Rep/Judges Photos", location: "Venue" },
-          { time: "5:30 PM - 10:00 PM", event: "Show", location: "Venue" },
-          { time: "10:00 PM - 10:30 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
-          { time: "11:00 PM - 2:00 AM", event: "After Party (AP)", location: "Vybe Lounge" }
+          { time: "8:00 AM", event: "Props Cleanup", location: "Venue" },
+          { time: "8:40 AM", event: "Tech Time", location: "Venue" },
+          { time: "11:00 AM", event: "Mock Deliberations", location: "Oak Room" },
+          { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
+          { time: "5:30 PM", event: "Show", location: "Venue" },
+          { time: "10:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
+          { time: "11:00 PM - 2:00 AM", event: "After Party", location: "VYB Lounge" }
         ]
       };
     }
@@ -309,26 +310,54 @@ export default function Dashboard() {
     if (userType !== 'reps') return null;
 
     return (
-      <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Important Information for Reps</h3>
-        <div className="space-y-4">
-          <div className="p-4 bg-blue-500/5 rounded-lg">
-            <p className="text-white font-sans">• Props Boxes are in permanent places</p>
-          </div>
-          <div className="p-4 bg-blue-500/5 rounded-lg">
-            <p className="text-white font-sans">• For props setup, the team will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
-          </div>
-          <div className="p-4 bg-blue-500/5 rounded-lg">
-            <p className="text-white font-sans">• Extension cables for teams are provided</p>
+      <>
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Important Information for Reps</h3>
+          <div className="space-y-4">
+            <div className="p-4 bg-blue-500/5 rounded-lg">
+              <p className="text-white font-sans">• Props Boxes are in permanent places</p>
+            </div>
+            <div className="p-4 bg-blue-500/5 rounded-lg">
+              <p className="text-white font-sans">• For props setup, the team will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
+            </div>
+            <div className="p-4 bg-blue-500/5 rounded-lg">
+              <p className="text-white font-sans">• Extension cables for teams are provided</p>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Tech Time Flow</h3>
+          <div className="rounded-lg overflow-hidden border border-blue-500/20">
+            <img 
+              src="/assets/reps/techtime_flow.jpeg" 
+              alt="Tech Time Flow" 
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Show Flow</h3>
+          <div className="rounded-lg overflow-hidden border border-blue-500/20">
+            <img 
+              src="/assets/reps/show_flow.jpeg" 
+              alt="Show Flow" 
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </>
     );
   };
 
   const renderInformationTab = () => {
     return (
       <div className="space-y-8">
+        {/* Render Reps FAQ section first for reps */}
+        {renderRepsFAQSection()}
+
+        {/* Only show liaisons for teams */}
         {userType === 'team' && teamInfo?.information?.liaisons && (
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
             <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
@@ -533,9 +562,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
-        {/* Add Reps FAQ section */}
-        {renderRepsFAQSection()}
       </div>
     );
   };
