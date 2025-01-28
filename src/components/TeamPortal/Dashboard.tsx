@@ -62,6 +62,7 @@ export default function Dashboard() {
           { time: "11:00 AM", event: "Mock Deliberations", location: "Oak Room" },
           { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
           { time: "5:30 PM", event: "Show", location: "Venue" },
+          { time: "8:00 PM", event: "Show Deliberations", location: "Viewing Room" },
           { time: "10:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
           { time: "11:00 PM - 2:00 AM", event: "After Party", location: "VYB Lounge" }
         ]
@@ -319,10 +320,43 @@ export default function Dashboard() {
               <p className="text-white font-sans">• Props Boxes are in permanent places</p>
             </div>
             <div className="p-4 bg-blue-500/5 rounded-lg">
-              <p className="text-white font-sans">• For props setup, the team will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
+              <p className="text-white font-sans">• For props setup, DTX Directors/Logs will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
             </div>
             <div className="p-4 bg-blue-500/5 rounded-lg">
               <p className="text-white font-sans">• Extension cables for teams are provided</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
+                  <p className="text-white font-sans">42" x 4"</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
+                  <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
+                </div>
+              </div>
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-200 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
+              </div>
             </div>
           </div>
         </div>
