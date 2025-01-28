@@ -41,6 +41,7 @@ export default function Dashboard() {
           { time: "2:00 PM", event: "Lunch", location: "During/After Mock Deliberations" },
           { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
           { time: "5:30 PM", event: "Show", location: "Venue" },
+          { time: "8:00 PM", event: "Show Deliberations", location: "Viewing Room" },
           { time: "10:00 PM", event: "Dinner", location: "Judges Hotel Room" },
           { time: "11:00 PM", event: "After Party", location: "VYB Lounge" }
         ]
@@ -433,7 +434,7 @@ export default function Dashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Props Dimensions</h4>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
                   <p className="text-white font-sans">42" x 4"</p>
                 </div>
               </div>
