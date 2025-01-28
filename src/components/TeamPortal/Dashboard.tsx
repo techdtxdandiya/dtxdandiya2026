@@ -27,48 +27,23 @@ export default function Dashboard() {
   const [userType, setUserType] = useState<UserType>('team');
 
   // Static schedule data for judges and reps
-  const getStaticScheduleData = (userType: UserType) => {
-    if (userType === 'judge') {
-      return {
-        friday: [
-          { time: "10:00 AM", event: "Check-in/Registration", location: "Oak Room" },
-          { time: "4:00 PM", event: "Dinner", location: "Judges Hotel Room" },
-          { time: "6:00 PM", event: "Go Out", location: "Downtown" }
-        ],
-        saturday: [
-          { time: "7:00 AM", event: "Breakfast", location: "Delivered to Judges Hotel Room" },
-          { time: "11:00 AM", event: "Mock Deliberations", location: "Oak Room" },
-          { time: "2:00 PM", event: "Lunch", location: "During/After Mock Deliberations" },
-          { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
-          { time: "5:30 PM", event: "Show", location: "Venue" },
-          { time: "8:00 PM", event: "Show Deliberations", location: "Viewing Room" },
-          { time: "10:00 PM", event: "Dinner", location: "Judges Hotel Room" },
-          { time: "11:00 PM", event: "After Party", location: "VYB Lounge" }
-        ]
-      };
-    } else if (userType === 'reps') {
-      return {
-        friday: [
-          { time: "10:00 AM", event: "Check-in/Registration", location: "Oak Room" },
-          { time: "4:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
-          { time: "5:00 PM", event: "Mixer", location: "Garden Terrace Ballroom" },
-          { time: "8:00 PM", event: "Go Out", location: "Downtown" }
-        ],
-        saturday: [
-          { time: "7:00 AM", event: "Breakfast", location: "RAS Rep Hotel Room" },
-          { time: "6:00 AM - 8:00 AM", event: "Props Setup", location: "Venue" },
-          { time: "8:00 AM", event: "Props Cleanup", location: "Venue" },
-          { time: "8:40 AM", event: "Tech Time", location: "Venue" },
-          { time: "11:00 AM", event: "Mock Deliberations", location: "Oak Room" },
-          { time: "3:45 PM", event: "Rep/Judges Photos", location: "Venue" },
-          { time: "5:30 PM", event: "Show", location: "Venue" },
-          { time: "8:00 PM", event: "Show Deliberations", location: "Viewing Room" },
-          { time: "10:00 PM", event: "Dinner", location: "RAS Rep Hotel Room" },
-          { time: "11:00 PM - 2:00 AM", event: "After Party", location: "VYB Lounge" }
-        ]
-      };
-    }
-    return null;
+  const staticScheduleData = {
+    friday: [
+      { event: "Registration", location: "Hotel Oak Room", time: "12:00 PM" },
+      { event: "Dinner", location: "Team Rooms", time: "4:00 PM" },
+      { event: "Mixer", location: "Hotel Garden Terrace", time: "5:00 PM" },
+      { event: "Captains Meeting", location: "Outside Event Rooms", time: "7:25 PM" },
+      { event: "Practice", location: "Hotel Event Rooms", time: "7:30 PM" },
+    ],
+    saturday: [
+      { event: "Props", location: "Marshall Center", time: "5:30 AM" },
+      { event: "Tech Time", location: "Marshall Center", time: "8:35 AM" },
+      { event: "Photoshoot", location: "Marshall Center", time: "3:50 PM" },
+      { event: "Doors Open", location: "Marshall Center", time: "5:00 PM" },
+      { event: "Showtime", location: "Marshall Center", time: "5:30 PM" },
+      { event: "Awards", location: "Marshall Center", time: "9:00 PM" },
+      { event: "Afterparty", location: "VYB Lounge", time: "10:00 PM" },
+    ]
   };
 
   useEffect(() => {
@@ -237,13 +212,10 @@ export default function Dashboard() {
       );
     } else {
       // Render static schedule for judges and reps
-      const staticData = getStaticScheduleData(userType);
-      if (!staticData) return null;
-
       return (
         <div className="space-y-8">
-          {renderScheduleSection("Friday", staticData.friday)}
-          {renderScheduleSection("Saturday", staticData.saturday)}
+          {renderScheduleSection("Friday", staticScheduleData.friday)}
+          {renderScheduleSection("Saturday", staticScheduleData.saturday)}
         </div>
       );
     }
@@ -308,91 +280,9 @@ export default function Dashboard() {
     return '';
   };
 
-  const renderRepsFAQSection = () => {
-    if (userType !== 'reps') return null;
-
-    return (
-      <>
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Important Information for Reps</h3>
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-500/5 rounded-lg">
-              <p className="text-white font-sans">• Props Boxes are in permanent places</p>
-            </div>
-            <div className="p-4 bg-blue-500/5 rounded-lg">
-              <p className="text-white font-sans">• For props setup, DTX Directors/Logs will provide tech reps with a measuring tape at the venue during props setup to check prop box dimensions</p>
-            </div>
-            <div className="p-4 bg-blue-500/5 rounded-lg">
-              <p className="text-white font-sans">• Extension cables for teams are provided</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
-                  <p className="text-white font-sans">42" x 4"</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
-                  <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
-                </div>
-              </div>
-              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                <p className="text-red-200 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Tech Time Flow</h3>
-          <div className="rounded-lg overflow-hidden border border-blue-500/20">
-            <img 
-              src="/assets/reps/techtime_flow.jpeg" 
-              alt="Tech Time Flow" 
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Show Flow</h3>
-          <div className="rounded-lg overflow-hidden border border-blue-500/20">
-            <img 
-              src="/assets/reps/show_flow.jpeg" 
-              alt="Show Flow" 
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </>
-    );
-  };
-
   const renderInformationTab = () => {
     return (
       <div className="space-y-8">
-        {/* Render Reps FAQ section first for reps */}
-        {renderRepsFAQSection()}
-
-        {/* Only show liaisons for teams */}
         {userType === 'team' && teamInfo?.information?.liaisons && (
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
             <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
@@ -468,7 +358,7 @@ export default function Dashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Props Dimensions</h4>
                   <p className="text-white font-sans">42" x 4"</p>
                 </div>
               </div>
@@ -590,6 +480,101 @@ export default function Dashboard() {
                         <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                         <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
                       </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Chick-fil-A</p>
+                    <a 
+                      href="https://maps.google.com/?q=13347+Montfort+Dr,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13347 Montfort Dr, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">In-N-Out Burger</p>
+                    <a 
+                      href="https://maps.google.com/?q=7940+Belt+Line+Rd,+Dallas,+TX+75254"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      7940 Belt Line Rd, Dallas, TX 75254
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">At Home</p>
+                    <a 
+                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13710 Dallas Pkwy, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Hobby Lobby</p>
+                    <a 
+                      href="https://maps.google.com/?q=14555+Dallas+Pkwy,+Dallas,+TX+75254"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      14555 Dallas Pkwy, Dallas, TX 75254
+                      <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-sans">Joann Fabrics and Crafts</p>
+                    <a 
+                      href="https://maps.google.com/?q=13710+Dallas+Pkwy,+Dallas,+TX+75240"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-300 hover:text-blue-200 text-sm font-sans flex items-center gap-1"
+                    >
+                      13710 Dallas Pkwy, Dallas, TX 75240
+                      <FaExternalLinkAlt className="text-xs" />
                     </a>
                   </div>
                 </div>
