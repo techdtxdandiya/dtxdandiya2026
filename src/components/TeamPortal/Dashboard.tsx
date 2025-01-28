@@ -27,22 +27,43 @@ export default function Dashboard() {
   const [userType, setUserType] = useState<UserType>('team');
 
   // Static schedule data for judges and reps
-  const staticScheduleData = {
+  const repsScheduleData = {
     friday: [
-      { event: "Registration", location: "Hotel Oak Room", time: "12:00 PM" },
-      { event: "Dinner", location: "Team Rooms", time: "4:00 PM" },
-      { event: "Mixer", location: "Hotel Garden Terrace", time: "5:00 PM" },
-      { event: "Captains Meeting", location: "Outside Event Rooms", time: "7:25 PM" },
-      { event: "Practice", location: "Hotel Event Rooms", time: "7:30 PM" },
+      { event: "Check-in/Registration", location: "Oak Room", time: "10:00 AM - 4:00 PM" },
+      { event: "Dinner", location: "RAS Rep Hotel Room", time: "4:00 PM" },
+      { event: "Mixer", location: "Garden Terrace Ballroom", time: "5:00 PM" },
+      { event: "Go Out", location: "Downtown", time: "8:00 PM" },
     ],
     saturday: [
-      { event: "Props", location: "Marshall Center", time: "5:30 AM" },
-      { event: "Tech Time", location: "Marshall Center", time: "8:35 AM" },
-      { event: "Photoshoot", location: "Marshall Center", time: "3:50 PM" },
-      { event: "Doors Open", location: "Marshall Center", time: "5:00 PM" },
-      { event: "Showtime", location: "Marshall Center", time: "5:30 PM" },
-      { event: "Awards", location: "Marshall Center", time: "9:00 PM" },
-      { event: "Afterparty", location: "VYB Lounge", time: "10:00 PM" },
+      { event: "Breakfast", location: "RAS Rep Hotel Room", time: "7:00 AM" },
+      { event: "Props Setup", location: "Venue", time: "6:00 AM - 8:00 AM" },
+      { event: "Props Cleanup", location: "Venue", time: "8:00 AM" },
+      { event: "Tech Time", location: "Venue", time: "8:40 AM" },
+      { event: "Mock Deliberations", location: "Oak Room", time: "11:00 AM" },
+      { event: "Lunch", location: "During/After Deliberations", time: "2:00 PM" },
+      { event: "Rep/Judges Photos", location: "Venue", time: "3:45 PM - 4:00 PM" },
+      { event: "Show", location: "Venue", time: "5:30 PM - 10:00 PM" },
+      { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
+      { event: "Dinner", location: "RAS Rep Hotel Room", time: "10:00 PM - 10:30 PM" },
+      { event: "After Party", location: "VYB Lounge", time: "11:00 PM" }
+    ]
+  };
+
+  const judgesScheduleData = {
+    friday: [
+      { event: "Check-in/Registration", location: "Oak Room", time: "10:00 AM - 4:00 PM" },
+      { event: "Dinner", location: "Judges Hotel Room", time: "4:00 PM" },
+      { event: "Go Out", location: "Downtown", time: "6:00 PM" }
+    ],
+    saturday: [
+      { event: "Breakfast", location: "Delivered to Judges Hotel Room", time: "7:00 AM" },
+      { event: "Mock Deliberations", location: "Oak Room", time: "11:00 AM" },
+      { event: "Lunch", location: "During/After Deliberations", time: "2:00 PM" },
+      { event: "Rep/Judges Photos", location: "Venue", time: "3:45 PM" },
+      { event: "Show", location: "Venue", time: "5:30 PM" },
+      { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
+      { event: "Dinner", location: "Judges Hotel Room", time: "10:00 PM" },
+      { event: "After Party", location: "VYB Lounge", time: "11:00 PM - 2:00 AM" }
     ]
   };
 
@@ -212,10 +233,11 @@ export default function Dashboard() {
       );
     } else {
       // Render static schedule for judges and reps
+      const scheduleToUse = userType === 'reps' ? repsScheduleData : judgesScheduleData;
       return (
         <div className="space-y-8">
-          {renderScheduleSection("Friday", staticScheduleData.friday)}
-          {renderScheduleSection("Saturday", staticScheduleData.saturday)}
+          {renderScheduleSection("Friday", scheduleToUse.friday)}
+          {renderScheduleSection("Saturday", scheduleToUse.saturday)}
         </div>
       );
     }
