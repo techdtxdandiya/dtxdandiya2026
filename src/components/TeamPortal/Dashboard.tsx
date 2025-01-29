@@ -448,6 +448,38 @@ export default function Dashboard() {
 
     return (
       <div className="space-y-8">
+        {/* Liaison Information Section for Teams */}
+        {userType === 'team' && teamInfo?.information?.liaisons && (
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {teamInfo.information.liaisons.map((liaison, index) => (
+                <div key={index} className="flex items-center gap-4 p-3 bg-blue-500/5 rounded-lg">
+                  <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-white font-medium font-sans truncate">{liaison.name}</p>
+                    {liaison.phone && (
+                      <a 
+                        href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
+                        className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2 text-sm font-sans"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                        </svg>
+                        {liaison.phone}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Original content for other user types */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
