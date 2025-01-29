@@ -19,6 +19,11 @@ const SPONSORS = [
     url: "https://www.dunkindonuts.com"
   },
   {
+    name: "Family",
+    logo: "/assets/sponsors/family.png",
+    url: "https://www.afamilyinneed.org/"
+  },
+  {
     name: "Gopal",
     logo: "/assets/sponsors/gopal.png",
     url: "https://www.newgopal.com/"
