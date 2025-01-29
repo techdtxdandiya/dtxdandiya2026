@@ -19,7 +19,7 @@ const SPONSORS = [
     url: "https://www.dunkindonuts.com"
   },
   {
-    name: "Family",
+    name: "A Family In Need",
     logo: "/assets/sponsors/family.png",
     url: "https://www.afamilyinneed.org/"
   },
