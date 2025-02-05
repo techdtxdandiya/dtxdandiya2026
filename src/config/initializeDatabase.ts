@@ -8,7 +8,7 @@ export type DashboardTeamId = TeamId | 'admin';
 
 export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   tamu: 'TAMU Wreckin\' Raas',
-  texas: 'Texas Raas',
+  texas: 'Dirty South Dandiya',
   michigan: 'Michigan Wolveraas',
   ucd: 'UCD Raasleela',
   unc: 'UNC Tar Heel Raas',

@@ -313,7 +313,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5 2a2 2 0 012-2h6a2 2 0 012 2v2h2a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2V2zm8 2H7V2h6v2zm1 2H6v12h8V6z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="M5 2a1 1 0 012-2h6a2 2 0 012 2v2h2a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2V2zm8 2H7V2h6v2zm1 2H6v12h8V6z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div>
@@ -388,107 +388,44 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Tech Information Section - Existing */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Danceable Space</h4>
-                  <p className="text-white font-sans">42' x 28'</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Backdrop Space</h4>
-                  <p className="text-white font-sans">4 ft</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Apron Space</h4>
-                  <p className="text-white font-sans">4 ft</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Stage Props Dimensions</h4>
-                  <p className="text-white font-sans">42" x 4"</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
-                  <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
-                </div>
-              </div>
-              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                <p className="text-red-200 text-sm">*There will be NO RIGGING this year at Marshall Arts Center*</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Tech Time Flow Section */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Time Flow</h3>
-            <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
-              <img
-                src="/assets/reps/techtime_flow.jpeg"
-                alt="Tech Time Flow"
-                className="absolute top-0 left-0 w-full h-full object-contain"
-              />
-            </div>
-          </div>
-
-          {/* Show Flow Section */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Show Flow</h3>
-            <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
-              <img
-                src="/assets/reps/show_flow.jpeg"
-                alt="Show Flow"
-                className="absolute top-0 left-0 w-full h-full object-contain"
-              />
-            </div>
-          </div>
-
-          {/* Existing sections */}
-          {renderVenueInfoSection()}
-          {renderHotelInfoSection()}
-          {renderLivestreamSection()}
-          {renderNearbyPlacesSection()}
         </div>
       );
     }
 
     return (
       <div className="space-y-8">
+        {/* Liaison Information Section for Teams */}
+        {userType === 'team' && teamInfo?.information?.liaisons && (
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {teamInfo.information.liaisons.map((liaison, index) => (
+                <div key={index} className="flex items-center gap-4 p-3 bg-blue-500/5 rounded-lg">
+                  <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-white font-medium font-sans truncate">{liaison.name}</p>
+                    {liaison.phone && (
+                      <a 
+                        href={`tel:${liaison.phone.replace(/[^0-9]/g, '')}`}
+                        className="text-blue-300 hover:text-blue-200 transition-colors flex items-center gap-2 text-sm font-sans"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                        </svg>
+                        {liaison.phone}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Original content for other user types */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">

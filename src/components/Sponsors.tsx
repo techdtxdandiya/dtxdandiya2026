@@ -4,6 +4,11 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 // Sponsors in alphabetical order
 const SPONSORS = [
   {
+    name: "A Family In Need",
+    logo: "/assets/sponsors/family.png",
+    url: "https://www.afamilyinneed.org/"
+  },
+  {
     name: "City of Richardson",
     logo: "/assets/sponsors/richardson.png",
     url: "https://www.cor.net/home"
@@ -15,13 +20,8 @@ const SPONSORS = [
   },
   {
     name: "Dunkin'",
-    logo: "/assets/sponsors/dunkin.png",
-    url: "https://www.dunkindonuts.com"
-  },
-  {
-    name: "A Family In Need",
-    logo: "/assets/sponsors/family.png",
-    url: "https://www.afamilyinneed.org/"
+    logo: "/assets/sponsors/krispy_kreme.png",
+    url: "https://www.krispykreme.com/"
   },
   {
     name: "Gopal",
@@ -32,6 +32,11 @@ const SPONSORS = [
     name: "Raising Cane's",
     logo: "/assets/sponsors/canes.png",
     url: "https://www.raisingcanes.com/home/"
+  },
+  {
+    name: "Smoothie King",
+    logo: "/assets/sponsors/smoothieking.png",
+    url: "https://locations.smoothieking.com/ll/us/tx/farmers-branch/13901-midway-rd/"
   }
 ];
 
