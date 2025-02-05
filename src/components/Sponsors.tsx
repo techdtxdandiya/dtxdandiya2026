@@ -42,68 +42,59 @@ const SPONSORS = [
 
 export default function Sponsors() {
   return (
-    <div className="relative py-16 overflow-hidden bg-black">
-      {/* Magical Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
-          {/* Ambient Light Effect */}
-          <div className="absolute inset-0 opacity-40"
-            style={{
-              background: `
-                radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 70%),
-                radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.15), transparent 70%)
-              `
-            }}
-          />
+    <section className="py-16 sm:py-20">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-12 sm:mb-16">
+          Our Magical Patrons
+        </h2>
+        
+        {/* Updated grid layout for 7 sponsors */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12 max-w-6xl mx-auto">
+          {/* First row - 5 sponsors */}
+          <div className="col-span-1">
+            <SponsorLogo name="BAPS" logo="/assets/sponsors/baps.png" url="#" />
+          </div>
+          <div className="col-span-1">
+            <SponsorLogo name="Precision" logo="/assets/sponsors/precision.png" url="#" />
+          </div>
+          <div className="col-span-1">
+            <SponsorLogo name="Costco" logo="/assets/sponsors/costco.png" url="#" />
+          </div>
+          <div className="col-span-1">
+            <SponsorLogo name="Krispy Kreme" logo="/assets/sponsors/krispy_kreme.png" url="#" />
+          </div>
+          <div className="col-span-1">
+            <SponsorLogo name="Gopal" logo="/assets/sponsors/gopal.png" url="#" />
+          </div>
+
+          {/* Second row - 2 sponsors centered */}
+          <div className="col-span-1 md:col-start-2 lg:col-start-2 lg:col-span-1">
+            <SponsorLogo name="Raising Cane's" logo="/assets/sponsors/raising_canes.png" url="#" />
+          </div>
+          <div className="col-span-1">
+            <SponsorLogo name="Smoothie King" logo="/assets/sponsors/smoothie_king.png" url="#" />
+          </div>
         </div>
       </div>
-
-      <div className="relative z-10 container mx-auto px-4 max-w-6xl">
-        {/* Title */}
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl md:text-6xl font-['Harry_Potter'] text-white glow-text-intense inline-block relative">
-            Our Magical Patrons
-            <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 rounded-lg blur-lg -z-10"></div>
-          </h2>
-        </motion.div>
-
-        {/* Sponsors Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12">
-          {SPONSORS.map((sponsor, index) => (
-            <motion.div
-              key={sponsor.name}
-              className="relative group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <div className="absolute -inset-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/20 to-blue-500/0 rounded-lg opacity-0 group-hover:opacity-100 blur-lg transition-all duration-700"></div>
-              <a
-                href={sponsor.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative bg-black/20 backdrop-blur-sm rounded-lg p-4 transition-all duration-500 group-hover:bg-black/30"
-              >
-                <div className="relative aspect-square flex items-center justify-center p-3">
-                  <img
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    className="max-w-full max-h-full object-contain opacity-90 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105"
-                  />
-                  <FaExternalLinkAlt className="absolute top-2 right-2 text-blue-400/0 group-hover:text-blue-400/70 transition-all duration-500" />
-                </div>
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
+
+const SponsorLogo = ({ name, logo, url }: { name: string; logo: string; url: string }) => {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block transition-transform duration-300 hover:scale-110"
+    >
+      <div className="aspect-[3/2] relative">
+        <img
+          src={logo}
+          alt={`${name} logo`}
+          className="absolute inset-0 w-full h-full object-contain"
+        />
+      </div>
+    </a>
+  );
+};
