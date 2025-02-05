@@ -587,7 +587,8 @@ export const INITIAL_LIAISONS = {
   ],
   tamu: [
     { name: 'Adrian Gaspar', phone: '732.668.1820' },
-    { name: 'Rupali Venkatesa', phone: '901.468.9016' }
+    { name: 'Rupali Venkatesa', phone: '901.468.9016' },
+    { name: 'Maanas Varma', phone: '469.816.0016' }
   ],
   ucd: [
     { name: 'Pranav B', phone: '469.400.3883' },
