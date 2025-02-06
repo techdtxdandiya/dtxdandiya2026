@@ -8,6 +8,7 @@ import { FiEdit2, FiTrash2, FiSend, FiAlertCircle, FiCheck, FiX, FiEye } from 'r
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 interface AnnouncementFormData {
   id?: string;
@@ -957,6 +958,18 @@ const AdminDashboard: React.FC = () => {
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                 <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
+                  <a 
+                    href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
+                  >
+                    View Document
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
+                  </div>
                   <div>
                     <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
                     <p className="text-white">42' x 28'</p>

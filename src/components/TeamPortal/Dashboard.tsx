@@ -391,7 +391,7 @@ export default function Dashboard() {
 
           {/* Tech Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">General Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -446,6 +446,25 @@ export default function Dashboard() {
                 <div>
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
                   <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 00-1-1H7a1 1 0 00-1 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm3 1h6v7H7V5z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
+                  <a 
+                    href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
+                  >
+                    View Document
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
                 </div>
               </div>
               <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
@@ -524,7 +543,7 @@ export default function Dashboard() {
         {/* Original content for other user types */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Information</h3>
+            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">General Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -579,6 +598,25 @@ export default function Dashboard() {
                 <div>
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
                   <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 00-1-1H7a1 1 0 00-1 1v2a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm3 1h6v7H7V5z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
+                  <a 
+                    href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
+                  >
+                    View Document
+                    <FaExternalLinkAlt className="text-xs" />
+                  </a>
                 </div>
               </div>
               <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
