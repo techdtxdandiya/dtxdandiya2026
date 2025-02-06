@@ -78,7 +78,7 @@ export default function Sponsors() {
           {SPONSORS.map((sponsor, index) => (
             <motion.div
               key={sponsor.name}
-              className={`relative group ${index === SPONSORS.length - 1 ? 'lg:col-start-2 lg:col-span-2' : ''}`}
+              className="relative group"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -95,7 +95,7 @@ export default function Sponsors() {
                   <img
                     src={sponsor.logo}
                     alt={sponsor.name}
-                    className="max-w-full max-h-full object-contain opacity-90 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105"
+                    className="max-w-[80%] max-h-[80%] w-auto h-auto object-contain opacity-90 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105"
                   />
                   <FaExternalLinkAlt className="absolute top-2 right-2 text-blue-400/0 group-hover:text-blue-400/70 transition-all duration-500" />
                 </div>
