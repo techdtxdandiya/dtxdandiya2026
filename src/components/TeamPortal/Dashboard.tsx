@@ -595,17 +595,6 @@ export default function Dashboard() {
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Apron Space</h4>
-                  <p className="text-white font-sans">4 ft</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
                   </svg>
                 </div>
@@ -1150,6 +1139,11 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
           <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
             {getHeaderTitle()}
+            {userType === 'team' && hogwartsHouse && (
+              <div className={`ml-4 p-2 rounded-full ${houseColorClass} bg-opacity-80`}>
+                <span className="text-white font-bold">House: {hogwartsHouse}</span>
+              </div>
+            )}
           </h1>
           <button
             onClick={handleLogout}
@@ -1159,12 +1153,6 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {userType === 'team' && hogwartsHouse && (
-          <div className={`relative p-6 mb-8 rounded-xl shadow-2xl ${houseColorClass} bg-opacity-80`}>
-            <h2 className="text-center text-3xl font-['Harry_Potter'] text-white">Your House Assignment</h2>
-            <p className="mt-2 text-center text-xl text-white">By the magic of Hogwarts, you belong to <span className="font-bold">{hogwartsHouse}</span>!</p>
-          </div>
-        )}
         {/* Navigation Tabs */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row border-b border-blue-500/30">
