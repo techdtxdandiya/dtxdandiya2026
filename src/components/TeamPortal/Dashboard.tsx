@@ -1137,14 +1137,16 @@ export default function Dashboard() {
       <div className="relative z-10 container mx-auto px-3 sm:px-4 py-8 sm:py-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
-            {getHeaderTitle()}
+          <div className="flex flex-col items-center sm:items-start gap-2">
+            <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
+              {getHeaderTitle()}
+            </h1>
             {userType === 'team' && hogwartsHouse && (
-              <div className={`ml-4 p-2 rounded-full ${houseColorClass} bg-opacity-80`}>
-                <span className="text-white font-bold">House: {hogwartsHouse}</span>
+              <div className={`${houseColorClass} bg-opacity-40 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-white/20 shadow-lg transform hover:scale-105 transition-all duration-300`}>
+                <span className="text-xl font-['Harry_Potter'] text-white">House: {hogwartsHouse}</span>
               </div>
             )}
-          </h1>
+          </div>
           <button
             onClick={handleLogout}
             className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
