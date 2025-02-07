@@ -26,6 +26,31 @@ export default function Dashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userType, setUserType] = useState<UserType>('team');
 
+  // Hogwarts House Assignment mapping for team portals
+  const hogwartsAssignments: { [key: string]: string } = {
+    tamu: 'Ravenclaw',
+    texas: 'Slytherin',
+    michigan: 'Ravenclaw',
+    ucd: 'Slytherin',
+    unc: 'Hufflepuff',
+    iu: 'Hufflepuff',
+    berkeley: 'Gryffindor',
+    msu: 'Gryffindor'
+  };
+
+  const hogwartsHouse = teamId && hogwartsAssignments[teamId];
+
+  let houseColorClass = '';
+  if (hogwartsHouse === 'Ravenclaw') {
+    houseColorClass = 'bg-blue-600';
+  } else if (hogwartsHouse === 'Slytherin') {
+    houseColorClass = 'bg-green-600';
+  } else if (hogwartsHouse === 'Hufflepuff') {
+    houseColorClass = 'bg-yellow-600';
+  } else if (hogwartsHouse === 'Gryffindor') {
+    houseColorClass = 'bg-red-600';
+  }
+
   // Static schedule data for judges and reps
   const repsScheduleData = {
     friday: [
@@ -1134,6 +1159,12 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {userType === 'team' && hogwartsHouse && (
+          <div className={`relative p-6 mb-8 rounded-xl shadow-2xl ${houseColorClass} bg-opacity-80`}>
+            <h2 className="text-center text-3xl font-['Harry_Potter'] text-white">Your House Assignment</h2>
+            <p className="mt-2 text-center text-xl text-white">By the magic of Hogwarts, you belong to <span className="font-bold">{hogwartsHouse}</span>!</p>
+          </div>
+        )}
         {/* Navigation Tabs */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row border-b border-blue-500/30">
