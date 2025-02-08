@@ -1005,7 +1005,7 @@ export default function Dashboard() {
         <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src="https://www.youtube.com/embed/"
+            src="https://www.youtube.com/live/6LcIdXpR7xM"
             title="DTX Dandiya 2025 Livestream"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
