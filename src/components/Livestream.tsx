@@ -47,7 +47,7 @@ export default function Livestream() {
               <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-white/20">
                 <iframe
                   className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube.com/embed/0hLdHx_i1W0?si=5N3aZrvRKdkx94vZ"
+                  src="https://www.youtube.com/embed/0hLdHx_i1W0?si=d8mO241CDsOpoGuT"
                   title="DTX Dandiya 2025 Livestream"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
