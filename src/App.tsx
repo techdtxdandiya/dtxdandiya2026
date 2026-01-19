@@ -20,7 +20,7 @@ function HomePage() {
       {/* Hero Section */}
       <div 
         className="min-h-screen flex flex-col items-center bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/backgrounds/home_page.jpg')" }}
+        style={{ backgroundImage: "url('/assets/backgrounds/home_page.png')" }}
       >
         <div className="text-center flex flex-col items-center mt-[65vh]">
           <div className="mb-16">
@@ -71,7 +71,8 @@ function HomePage() {
 
       {/* Schedule Section */}
       <section className="py-20 bg-black">
-        <h2 className="text-5xl text-center mb-16 font-['Harry_Potter'] text-white glow-text">
+        <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
            Competition Schedule
         </h2>
         <Schedule />

@@ -62,7 +62,7 @@ export default function MagicalCursor() {
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: `translate(-50%, -50%) rotate(45deg)`
+        transform: `translate(-35%, -30%) rotate(0deg)`
       }}
     />
   );

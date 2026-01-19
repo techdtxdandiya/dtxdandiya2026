@@ -869,7 +869,7 @@ const AdminDashboard: React.FC = () => {
       />
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-['Harry_Potter'] text-white">Admin Dashboard</h1>
+          <h1 className="text-4xl font-edwardian text-white">Admin Dashboard</h1>
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
@@ -896,7 +896,7 @@ const AdminDashboard: React.FC = () => {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
-                className={`px-6 py-2 rounded-lg font-['Harry_Potter'] transition-all duration-300 ${
+                className={`px-6 py-2 rounded-lg font-edwardian transition-all duration-300 ${
                   activeTab === key
                     ? 'bg-blue-500 text-white'
                     : 'bg-blue-500/10 text-blue-200/60 hover:bg-blue-500/20 hover:text-white'
@@ -1101,12 +1101,12 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'schedule' && (
             <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-['Harry_Potter'] text-white mb-6">Show Order Assignment</h3>
+                <h3 className="text-2xl font-edwardian text-white mb-6">Show Order Assignment</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.keys(teamData).map(teamId => (
                     <div key={teamId} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h4 className="text-lg text-white font-['Harry_Potter']">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
+                        <h4 className="text-lg text-white font-edwardian">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
                         <div className="flex items-center gap-4 w-full sm:w-auto">
                           <select
                             value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
@@ -1147,7 +1147,7 @@ const AdminDashboard: React.FC = () => {
                 return (
                   <div key={teamId} className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-2xl font-['Harry_Potter'] text-white">
+                      <h3 className="text-2xl font-edwardian text-white">
                         {TEAM_DISPLAY_NAMES[teamId as TeamId]} - Team {teamData[teamId as TeamId]?.schedule?.showOrder}
                       </h3>
                     </div>
@@ -1164,7 +1164,10 @@ const AdminDashboard: React.FC = () => {
                 )}
           {activeTab === 'reports' && (
             <div>
-              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-6">Anonymous Reports</h2>
+              <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-6"
+              style={{ wordSpacing: '0.1em' }}>
+                Anonymous Reports
+              </h2>
               <div className="space-y-6">
                 {reports.length > 0 ? (
                   reports.map((report) => (

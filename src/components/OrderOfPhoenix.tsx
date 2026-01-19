@@ -7,16 +7,16 @@ interface Committee {
 }
 
 const committees: Committee[] = [
-  { name: "Directors", image: "/assets/team/Directors.jpeg", title: "The Grand Wizards" },
-  { name: "Logistics", image: "/assets/team/Logistics.jpeg", title: "Masters of Movement" },
-  { name: "Registration", image: "/assets/team/Registration.jpeg", title: "Keepers of Records" },
-  { name: "Head Liaison", image: "/assets/team/HeadLiasions.jpeg", title: "The Diplomats" },
-  { name: "Tech/External", image: "/assets/team/Tech.JPG", title: "The Alchemists" },
-  { name: "Fundraising", image: "/assets/team/Fundraising.jpeg", title: "Treasure Hunters" },
-  { name: "Hospitality", image: "/assets/team/Hospitality.JPG", title: "Comfort Charmers" },
-  { name: "Mixer/Social", image: "/assets/team/Mixer.JPG", title: "Social Enchanters" },
-  { name: "Marketing", image: "/assets/team/Marketing.jpeg", title: "Message Mages" },
-  { name: "Afterparty", image: "/assets/team/Afterparty.jpeg", title: "Night Mystics" },
+  { name: "Directors", image: "/assets/team/Directors.jpg", title: "Steering the Course" },
+  { name: "Logistics", image: "/assets/team/Logistics.jpeg", title: "Play, Perfectly Timed" },
+  { name: "Registration", image: "/assets/team/Registration.jpg", title: "Check In, Tee Off" },
+  { name: "Head Liaison", image: "/assets/team/HeadLiaisons.jpg", title: "Keeping Everyone in Bounds" },
+  { name: "Tech/External", image: "/assets/team/Tech.jpg", title: "Running the Backcourt" },
+  { name: "Fundraising", image: "/assets/team/Fundraising.jpeg", title: "Powering the Play" },
+  { name: "Hospitality", image: "/assets/team/Hospitality.jpeg", title: "Comfort, Courtside" },
+  { name: "Mixer/Social", image: "/assets/team/Mixer.jpeg", title: "Network Between Matches" },
+  { name: "Advisors", image: "/assets/team/Advisors.jpg", title: "Coaching from the Sidelines" },
+  { name: "Afterparty", image: "/assets/team/Afterparty.jpeg", title: "The Club, After Hours" },
 ];
 
 export default function OrderOfPhoenix() {
@@ -49,8 +49,9 @@ export default function OrderOfPhoenix() {
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[30%] h-[2px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[30%] h-[2px] bg-gradient-to-l from-transparent via-orange-500/50 to-transparent"></div>
           </div>
-          <h2 className="text-5xl md:text-7xl font-['Harry_Potter'] text-white glow-text relative">
-            Order of the Phoenix
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
+          Order of the Phoenix
           </h2>
         </div>
 
@@ -81,10 +82,10 @@ export default function OrderOfPhoenix() {
                 {/* Committee Info */}
                 <div className="relative w-full md:w-1/3 p-6 md:p-8 flex flex-col justify-center order-2 md:order-1 bg-gradient-to-r from-black/60 via-black/40 to-transparent">
                   <div className={`transform transition-all duration-500 ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
-                    <h3 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense mb-4">
+                    <h3 className="text-4xl md:text-5xl font-edwardian text-white glow-text-intense mb-4">
                       {committees[activeIndex].name}
                     </h3>
-                    <p className="text-2xl md:text-3xl text-orange-300/90 font-['Harry_Potter']">
+                    <p className="text-2xl md:text-3xl text-orange-300/90 font-edwardian">
                       {committees[activeIndex].title}
                     </p>
                   </div>

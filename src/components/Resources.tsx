@@ -10,21 +10,21 @@ interface Contact {
 
 const contacts: Contact[] = [
   // Directors (alphabetical by first name)
-  { position: "Director", name: "Aryan Patel", phone: "(845) 502-0766" },
-  { position: "Director", name: "Chinmayi Mohite", phone: "(469) 987-3581" },
-  { position: "Director", name: "Naishada Kotte", phone: "(412) 689-3539" },
-  
-  // Head Liasons (alphabetical by first name)
-  { position: "Head Liason", name: "Devanshi Patel", phone: "(469) 525-8760" },
-  { position: "Head Liason", name: "Paneri Patel", phone: "(682) 347-9582" },
+  { position: "Director", name: "Aaryaa Kabira", phone: "(972) 510-7918" },
+  { position: "Director", name: "Isha Patel", phone: "(203) 565-8211" },
+  { position: "Director", name: "Rishil Uppaluru", phone: "(512) 521-9355" },
   
   // Logistics (alphabetical by first name)
-  { position: "Logistics", name: "Anisha Thakkar", phone: "(214) 843-2977" },
-  { position: "Logistics", name: "Rishil Uppaluru", phone: "(512) 521-9355" },
+  { position: "Logistics", name: "Ahimsa Yukta", phone: "(832) 323-3820" },
+  { position: "Logistics", name: "Siya Patel", phone: "(580) 374-2404" },
   
+  // Head Liasons (alphabetical by first name)
+  { position: "Head Liason", name: "Adrian Gaspar", phone: "(732) 668-1820" },
+  { position: "Head Liason", name: "Hima Patel", phone: "(214) 995-4423" },
+
   // Tech (alphabetical by first name)
-  { position: "Tech", name: "Dev Patel", phone: "(972) 258-4904" },
-  { position: "Tech", name: "Shashank Kumar", phone: "(469) 386-2373" },
+  { position: "Tech", name: "Manav Gandhi", phone: "(832) 829-5730" },
+  { position: "Tech", name: "Samarth Bikki", phone: "(512) 917-8857" },
 ];
 
 export default function Resources() {
@@ -38,8 +38,9 @@ export default function Resources() {
       {/* Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4">
         {/* Title */}
-        <h2 className="text-5xl text-center mb-16 font-['Harry_Potter'] text-white glow-text">
-          The Owl Post
+        <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
+        The Owl Post
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -52,7 +53,7 @@ export default function Resources() {
           >
             <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20">
               {/* Section Title */}
-              <h3 className="text-4xl font-['Harry_Potter'] text-emerald-400 mb-8 text-center">
+              <h3 className="text-4xl font-edwardian text-emerald-400 mb-8 text-center">
                 Quick Contact
               </h3>
 
@@ -67,19 +68,19 @@ export default function Resources() {
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="flex-1 min-w-[120px]">
-                      <span className="text-emerald-400/80 font-['Harry_Potter'] text-lg">
+                      <span className="text-emerald-400/80 font-edwardian text-lg">
                         {contact.position}
                       </span>
                     </div>
                     <div className="flex-1 text-center">
-                      <span className="text-white/90 font-['Harry_Potter']">
+                      <span className="text-white/90 font-edwardian">
                         {contact.name}
                       </span>
                     </div>
                     <div className="flex-1 text-right">
                       <a 
                         href={`tel:${contact.phone.replace(/[^0-9]/g, '')}`}
-                        className="text-white/70 font-['Harry_Potter'] group-hover:text-emerald-400 transition-colors duration-300"
+                        className="text-white/70 font-edwardian group-hover:text-emerald-400 transition-colors duration-300"
                       >
                         {contact.phone}
                       </a>
@@ -98,7 +99,7 @@ export default function Resources() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20">
-              <h3 className="text-4xl font-['Harry_Potter'] text-emerald-400 mb-8 text-center">
+              <h3 className="text-4xl font-edwardian text-emerald-400 mb-8 text-center">
                 Afterparty Details
               </h3>
 
@@ -110,8 +111,8 @@ export default function Resources() {
                 >
                   <FaMapMarkerAlt className="text-emerald-400 text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-['Harry_Potter'] text-xl mb-2">Location</h4>
-                    <p className="text-white/80 font-['Harry_Potter']">
+                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Location</h4>
+                    <p className="text-white/80 font-edwardian">
                       VYB Lounge
                       <br />
                       104 W McKinney St, Denton, TX 76201
@@ -126,8 +127,8 @@ export default function Resources() {
                 >
                   <FaTicketAlt className="text-emerald-400 text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-['Harry_Potter'] text-xl mb-2">Required to Bring</h4>
-                    <p className="text-white/80 font-['Harry_Potter']">
+                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Required to Bring</h4>
+                    <p className="text-white/80 font-edwardian">
                       NFC Bands (Admission)
                       <br />
                       IDs to drink
@@ -142,8 +143,8 @@ export default function Resources() {
                 >
                   <FaMusic className="text-emerald-400 text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-['Harry_Potter'] text-xl mb-2">Don't Forget</h4>
-                    <p className="text-white/80 font-['Harry_Potter']">
+                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Don't Forget</h4>
+                    <p className="text-white/80 font-edwardian">
                       Your best dance moves 💃🕺
                     </p>
                   </div>

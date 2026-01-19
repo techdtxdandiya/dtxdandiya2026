@@ -146,7 +146,7 @@ export default function Dashboard() {
 
     return (
       <div className="mb-12">
-        <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-8 px-1">{title}</h3>
+        <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-8 px-1">{title}</h3>
         <div className="relative">
           {/* Timeline Line */}
           <div className="absolute left-[15px] sm:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-500/50 via-purple-500/50 to-blue-500/50">
@@ -189,7 +189,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-1">
-                      <h4 className="text-white font-['Harry_Potter'] text-lg group-hover:text-blue-300 transition-colors">
+                      <h4 className="text-white font-edwardian text-lg group-hover:text-blue-300 transition-colors">
                         {event.event}
                       </h4>
                       <p className="text-blue-200/80 text-sm font-sans">
@@ -240,7 +240,7 @@ export default function Dashboard() {
       return (
         <div className="space-y-8">
           <div className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
-            <p className="text-2xl sm:text-3xl text-white font-['Harry_Potter'] text-center">
+            <p className="text-2xl sm:text-3xl text-white font-edwardian text-center">
               Performance Order: {scheduleData.showOrder}
             </p>
           </div>
@@ -333,7 +333,7 @@ export default function Dashboard() {
         <div className="space-y-8">
           {/* Reps Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Reps Information</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Reps Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -416,7 +416,7 @@ export default function Dashboard() {
 
           {/* Tech Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">General Information</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">General Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -500,7 +500,7 @@ export default function Dashboard() {
 
           {/* Tech Time Flow Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Tech Time Flow</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Tech Time Flow</h3>
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
               <img
                 src="/assets/reps/techtime_flow.jpeg"
@@ -512,7 +512,7 @@ export default function Dashboard() {
 
           {/* Show Flow Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Show Flow</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Show Flow</h3>
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
               <img
                 src="/assets/reps/show_flow.jpeg"
@@ -536,7 +536,7 @@ export default function Dashboard() {
         {/* Liaison Information Section for Teams */}
         {userType === 'team' && teamInfo?.information?.liaisons && (
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Liaisons Information</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Liaisons Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {teamInfo.information.liaisons.map((liaison, index) => (
                 <div key={index} className="flex items-center gap-4 p-3 bg-blue-500/5 rounded-lg">
@@ -568,7 +568,7 @@ export default function Dashboard() {
         {/* Original content for other user types */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">General Information</h3>
+            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">General Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -647,10 +647,10 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-          <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
+          <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-6">Nearby Places</h3>
           <div className="space-y-6">
             <div>
-              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+              <h4 className="text-xl font-edwardian text-white mb-4">Food Options</h4>
               <div className="space-y-4">
                 <div className="flex items-start space-x-2">
                   <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
@@ -687,7 +687,7 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+              <h4 className="text-xl font-edwardian text-white mb-4">Prop Repair Places</h4>
               <div className="space-y-4">
                 <div className="flex items-start space-x-2">
                   <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
@@ -753,12 +753,12 @@ export default function Dashboard() {
       if (userType !== 'team' || !teamInfo) return null;
       return (
         <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Announcements</h2>
+          <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-4 sm:mb-6">Announcements</h2>
           <div className="space-y-3 sm:space-y-4">
             {teamInfo.announcements?.length > 0 ? (
               teamInfo.announcements.map((announcement) => (
                 <div key={announcement.id} className="p-4 sm:p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
-                  <h3 className="text-lg sm:text-xl font-['Harry_Potter'] text-white mb-2">{announcement.title}</h3>
+                  <h3 className="text-lg sm:text-xl font-edwardian text-white mb-2">{announcement.title}</h3>
                   <p className="text-blue-200/80 whitespace-pre-wrap font-sans mb-3 sm:mb-4">{announcement.content}</p>
                   <p className="text-xs sm:text-sm text-blue-200/60 font-sans">
                     Posted: {new Date(announcement.timestamp).toLocaleString()}
@@ -777,7 +777,10 @@ export default function Dashboard() {
       if (userType !== 'team' || !teamInfo) return null;
       return (
         <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Tech Time Video</h2>
+          <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-4 sm:mb-6"
+          style={{ wordSpacing: '0.1em' }}>
+            Tech Time Video
+          </h2>
           {teamInfo.techVideo?.isPublished && teamInfo.techVideo.driveUrl ? (
             <div className="p-4 sm:p-8 bg-black/40 backdrop-blur-sm rounded-xl border border-blue-500/20">
               <div className="flex flex-col items-center justify-center gap-6">
@@ -817,7 +820,10 @@ export default function Dashboard() {
       if (userType !== 'team') return null;
       return (
         <div>
-          <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Anonymous Report</h2>
+          <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-4 sm:mb-6"
+          style={{ wordSpacing: '0.1em' }}>
+            Anonymous Report
+          </h2>
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
             <div className="max-w-2xl mx-auto">
               <div className="mb-6">
@@ -885,7 +891,10 @@ export default function Dashboard() {
         case 'schedule':
           return (
             <div>
-              <h2 className="text-2xl sm:text-3xl font-['Harry_Potter'] text-white mb-4 sm:mb-6">Schedule</h2>
+              <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-4 sm:mb-6"
+              style={{ wordSpacing: '0.1em' }}>
+                Schedule
+              </h2>
               {renderSchedule()}
             </div>
           );
@@ -905,7 +914,7 @@ export default function Dashboard() {
 
   const renderVenueInfoSection = () => (
     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Venue Information</h3>
+      <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Venue Information</h3>
       <div className="space-y-3">
         <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
           <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -958,7 +967,7 @@ export default function Dashboard() {
 
   const renderHotelInfoSection = () => (
     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Hotel Information</h3>
+      <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Hotel Information</h3>
       <div className="space-y-3">
         <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
           <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -1000,7 +1009,7 @@ export default function Dashboard() {
 
   const renderLivestreamSection = () => (
     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-4">Livestream</h3>
+      <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Livestream</h3>
       <div className="space-y-4">
         <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
           <iframe
@@ -1017,10 +1026,10 @@ export default function Dashboard() {
 
   const renderNearbyPlacesSection = () => (
     <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-      <h3 className="text-xl sm:text-2xl font-['Harry_Potter'] text-white mb-6">Nearby Places</h3>
+      <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-6">Nearby Places</h3>
       <div className="space-y-6">
         <div>
-          <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Food Options</h4>
+          <h4 className="text-xl font-edwardian text-white mb-4">Food Options</h4>
           <div className="space-y-4">
             <div className="flex items-start space-x-2">
               <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
@@ -1057,7 +1066,7 @@ export default function Dashboard() {
         </div>
 
         <div>
-          <h4 className="text-xl font-['Harry_Potter'] text-white mb-4">Prop Repair Places</h4>
+          <h4 className="text-xl font-edwardian text-white mb-4">Prop Repair Places</h4>
           <div className="space-y-4">
             <div className="flex items-start space-x-2">
               <FaMapMarkerAlt className="text-blue-300 mt-1 flex-shrink-0" />
@@ -1138,18 +1147,18 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 sm:mb-12">
           <div className="flex flex-col items-center sm:items-start gap-2">
-            <h1 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense text-center sm:text-left">
+            <h1 className="text-4xl md:text-5xl font-edwardian text-white glow-text-intense text-center sm:text-left">
               {getHeaderTitle()}
             </h1>
             {userType === 'team' && hogwartsHouse && (
               <div className={`${houseColorClass} bg-opacity-40 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-white/20 shadow-lg transform hover:scale-105 transition-all duration-300`}>
-                <span className="text-xl font-['Harry_Potter'] text-white">House: {hogwartsHouse}</span>
+                <span className="text-xl font-edwardian text-white">House: {hogwartsHouse}</span>
               </div>
             )}
           </div>
           <button
             onClick={handleLogout}
-            className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-['Harry_Potter'] hover:bg-blue-500/20 transition-all duration-300"
+            className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-white font-edwardian hover:bg-blue-500/20 transition-all duration-300"
           >
             Mischief Managed (Logout)
           </button>
@@ -1162,7 +1171,7 @@ export default function Dashboard() {
             <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`px-4 py-3 sm:py-2 font-['Harry_Potter'] text-lg sm:text-base transition-all duration-300 ${
+                className={`px-4 py-3 sm:py-2 font-edwardian text-lg sm:text-base transition-all duration-300 ${
                   activeTab === tab.key
                     ? 'bg-blue-500/20 sm:bg-transparent border-b-2 border-blue-500 text-white'
                     : 'text-blue-200/60 hover:text-white hover:bg-blue-500/10 sm:hover:bg-transparent'

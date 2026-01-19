@@ -4,7 +4,8 @@ export default function AboutUs() {
   return (
     <section className="py-20 bg-black relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-5xl text-center mb-16 font-['Harry_Potter'] text-white glow-text">
+        <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>          
           About Us
         </h2>
         

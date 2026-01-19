@@ -57,7 +57,7 @@ export default function Login() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="mb-6 px-4 py-2 text-white/80 font-['Harry_Potter'] text-lg
+          className="mb-6 px-4 py-2 text-white/80 font-edwardian text-lg
                    hover:text-white transition-colors duration-300 flex items-center
                    group"
         >
@@ -68,14 +68,15 @@ export default function Login() {
 
         <div className="bg-black/60 backdrop-blur-lg p-8 rounded-lg border border-white/10">
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-8 glow-text">
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-8 glow-text"
+          style={{ wordSpacing: '0.1em' }}>
             Team Portal
           </h2>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-white font-['Harry_Potter'] text-xl mb-2">
+              <label className="block text-white font-edwardian text-xl mb-2">
                 Enter Your Team Password
               </label>
               <input
@@ -90,14 +91,14 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="text-red-400 text-center font-['Harry_Potter'] text-lg">
+              <div className="text-red-400 text-center font-edwardian text-lg">
                 {error}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full py-3 px-6 text-xl text-white font-['Harry_Potter'] 
+              className="w-full py-3 px-6 text-xl text-white font-edwardian 
                        bg-black/40 border border-white/20 rounded-lg
                        hover:bg-white/10 transition-colors duration-300
                        magical-border"
@@ -108,7 +109,7 @@ export default function Login() {
 
           {/* Decorative Elements */}
           <div className="mt-8 text-center">
-            <div className="text-white/40 font-['Harry_Potter'] text-sm">
+            <div className="text-white/40 font-edwardian text-sm">
               "I solemnly swear that I am up to no good"
             </div>
           </div>

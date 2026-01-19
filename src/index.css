@@ -48,9 +48,33 @@
 }
 
 @font-face {
-  font-family: 'Harry Potter';
-  src: url('https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.woff2') format('woff2');
+    font-family: "ITC Edwardian Script W04 Reg";
+    src: url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.eot");
+    src: url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/0db512de6cc55ce96eb449022d2bc7c9.svg#ITC Edwardian Script W04 Reg")format("svg");
 }
+
+
+@font-face {
+  font-family: 'Roca One';
+  src: url('/fonts/RocaOne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*@font-face {
+    font-family: "Harry Potter";
+    src: url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.eot");
+    src: url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/0421d4186d6efbfc5331fe180895e780.svg#Harry Potter")format("svg");
+}*/
 
 body {
   margin: 0;
@@ -72,7 +96,7 @@ body {
   cursor: none !important;
 }
 
-.cursor-dot {
+/*.cursor-dot {
   width: 32px;
   height: 32px;
   position: fixed;
@@ -84,6 +108,21 @@ body {
   transition: transform 0.15s ease, opacity 0.15s ease;
   mix-blend-mode: difference;
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+  opacity: 1;
+}*/
+
+.cursor-dot {
+  width: 64px;
+  height: 64px;
+  position: fixed;
+  background-image: url("./components/assets/random/Racket.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  mix-blend-mode: difference; 
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); 
   opacity: 1;
 }
 

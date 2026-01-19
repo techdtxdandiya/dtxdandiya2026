@@ -16,7 +16,7 @@ export default function NotFound() {
         {/* Back Button */}
         <button
           onClick={() => navigate('/')}
-          className="mb-8 px-4 py-2 text-white/80 font-['Harry_Potter'] text-lg
+          className="mb-8 px-4 py-2 text-white/80 font-edwardian text-lg
                    hover:text-white transition-colors duration-300 flex items-center
                    group mx-auto"
         >
@@ -26,15 +26,16 @@ export default function NotFound() {
         </button>
 
         <div className="bg-black/40 backdrop-blur-lg p-8 rounded-lg border border-white/10">
-          <h1 className="text-6xl md:text-7xl font-['Harry_Potter'] text-white mb-6 glow-text">
+          <h1 className="text-6xl md:text-7xl font-edwardian text-white mb-6 glow-text">
             404
           </h1>
           
-          <h2 className="text-3xl md:text-4xl font-['Harry_Potter'] text-white mb-8">
-            Page Not Found
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
+          Page Not Found
           </h2>
 
-          <p className="text-white/60 font-['Harry_Potter'] text-lg mb-8">
+          <p className="text-white/60 font-edwardian text-lg mb-8">
             This page has vanished. Even the Marauder's Map couldn't locate it!
             <br />
             
@@ -42,7 +43,7 @@ export default function NotFound() {
 
           <button
             onClick={() => navigate('/')}
-            className="px-8 py-3 text-xl text-white font-['Harry_Potter'] 
+            className="px-8 py-3 text-xl text-white font-edwardian 
                      bg-black/40 border border-white/20 rounded-lg
                      hover:bg-white/10 transition-colors duration-300
                      magical-border"

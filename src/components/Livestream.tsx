@@ -27,8 +27,9 @@ export default function Livestream() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-white glow-text-intense inline-block relative">
-            Live Stream
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>            
+          Live Stream
             <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-white/0 via-white/5 to-white/0 rounded-lg blur-lg -z-10"></div>
           </h2>
         </motion.div>

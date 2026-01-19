@@ -8,21 +8,21 @@ interface ScheduleItem {
 }
 
 const fridaySchedule: ScheduleItem[] = [
-  { what: "Registration", where: "Hotel Oak Room", when: "12:00 PM" },
-  { what: "Dinner", where: "Team Rooms", when: "4:00 PM" },
-  { what: "Mixer", where: "Hotel Garden Terrace", when: "5:00 PM" },
-  { what: "Captains Meeting", where: "Outside Event Rooms", when: "7:25 PM" },
+  { what: "Registration", where: "Hotel Lobby", when: "12:00 PM" },
+  { what: "Dinner", where: "Team Rooms", when: "4:30 PM" },
+  { what: "Mixer", where: "Hotel Ballroom", when: "5:15 PM" },
+  { what: "Captains Meeting", where: "Boardroom", when: "7:00 PM" },
   { what: "Practice", where: "Hotel Event Rooms", when: "7:30 PM" },
 ];
 
 const saturdaySchedule: ScheduleItem[] = [
-  { what: "Props", where: "Marshall Center", when: "5:30 AM" },
+  { what: "Props", where: "Marshall Center", when: "5:00 AM" },
   { what: "Tech Time", where: "Marshall Center", when: "8:35 AM" },
   { what: "Photoshoot", where: "Marshall Center", when: "3:50 PM" },
   { what: "Doors Open", where: "Marshall Center", when: "5:00 PM" },
   { what: "Showtime", where: "Marshall Center", when: "5:30 PM" },
   { what: "Awards", where: "Marshall Center", when: "9:00 PM" },
-  { what: "Afterparty", where: "VYB Lounge", when: "10:00 PM" },
+  { what: "Afterparty", where: "Thrive Nightclub", when: "10:00 PM" },
 ];
 
 // Magical floating element
@@ -70,7 +70,7 @@ export default function Schedule() {
               key={day}
               onClick={() => setActiveDay(day as 'friday' | 'saturday')}
               className={`
-                relative px-6 py-1 text-2xl font-['Harry_Potter'] tracking-wider
+                relative px-6 py-1 text-3xl font-cormorant tracking-wider
                 transition-all duration-500
                 ${activeDay === day 
                   ? 'text-[#C5A572] glow-text scale-110' 
@@ -92,7 +92,7 @@ export default function Schedule() {
               <tr className="border-spacing-0">
                 <th className="text-center pb-4 w-1/3">
                   <motion.span 
-                    className="font-['Harry_Potter'] text-xl text-[#C5A572] tracking-wider"
+                    className="font-cormorant text-2xl text-[#C5A572] tracking-wider"
                     whileHover={{ scale: 1.1 }}
                   >
                     WHAT
@@ -100,7 +100,7 @@ export default function Schedule() {
                 </th>
                 <th className="text-center pb-4 w-1/3">
                   <motion.span 
-                    className="font-['Harry_Potter'] text-xl text-[#C5A572] tracking-wider"
+                    className="font-cormorant text-2xl text-[#C5A572] tracking-wider"
                     whileHover={{ scale: 1.1 }}
                   >
                     WHERE
@@ -108,7 +108,7 @@ export default function Schedule() {
                 </th>
                 <th className="text-center pb-4 w-1/3">
                   <motion.span 
-                    className="font-['Harry_Potter'] text-xl text-[#C5A572] tracking-wider"
+                    className="font-cormorant text-2xl text-[#C5A572] tracking-wider"
                     whileHover={{ scale: 1.1 }}
                   >
                     WHEN
@@ -126,17 +126,17 @@ export default function Schedule() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <td className="py-[2px] text-center w-1/3">
-                    <span className="font-['Harry_Potter'] text-xl text-white group-hover:glow-text transition-all duration-300">
+                    <span className="font-cormorant text-xl text-white group-hover:glow-text transition-all duration-300">
                       {item.what}
                     </span>
                   </td>
                   <td className="py-[2px] text-center w-1/3">
-                    <span className="font-['Harry_Potter'] text-lg text-white group-hover:glow-text transition-all duration-300">
+                    <span className="font-cormorant text-lg text-white group-hover:glow-text transition-all duration-300">
                       {item.where}
                     </span>
                   </td>
                   <td className="py-[2px] text-center w-1/3">
-                    <span className="font-['Harry_Potter'] text-lg text-white group-hover:glow-text transition-all duration-300">
+                    <span className="font-cormorant text-lg text-white group-hover:glow-text transition-all duration-300">
                       {item.when}
                     </span>
                   </td>

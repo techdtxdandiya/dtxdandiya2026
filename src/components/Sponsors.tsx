@@ -67,7 +67,8 @@ export default function Sponsors() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-4xl md:text-6xl font-['Harry_Potter'] text-white glow-text-intense inline-block relative">
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
             Our Magical Patrons
             <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 rounded-lg blur-lg -z-10"></div>
           </h2>

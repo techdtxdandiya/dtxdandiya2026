@@ -18,10 +18,10 @@ const locations = [
     type: "Main Event"
   },
   {
-    name: "VYB Lounge",
+    name: "Thrive Nightclub",
     description: "Where victors and participants unite in revelry",
-    address: "104 W McKinney St, Denton, TX 76201",
-    mapsUrl: "https://maps.google.com/?q=104+W+McKinney+St,+Denton,+TX+76201",
+    address: "1015 Elm St, Dallas, TX 75202",
+    mapsUrl: "https://maps.app.goo.gl/oNGLgi9eaosfXtUq9",
     type: "Afterparty"
   }
 ];
@@ -30,8 +30,9 @@ export default function Locations() {
   return (
     <div className="bg-black relative overflow-hidden py-16">
       {/* Title */}
-      <h2 className="text-4xl md:text-5xl font-['Harry_Potter'] text-center text-white mb-16 glow-text-intense mx-auto">
-        Enchanted Venues
+      <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>        
+          Enchanted Venues
       </h2>
 
       {/* Grid Container */}

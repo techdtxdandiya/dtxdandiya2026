@@ -4,52 +4,52 @@ import { useState, useEffect } from 'react';
 const committees = [
   {
     name: 'Directors',
-    image: new URL('./assets/team/Directors.jpeg', import.meta.url).href,
+    image: "/assets/team/Directors.jpg",
     description: 'Leading the magic'
   },
   {
     name: 'Logistics',
-    image: new URL('./assets/team/Logistics.jpeg', import.meta.url).href,
+    image: "/assets/team/Logistics.jpeg",
     description: 'Making it happen'
   },
   {
     name: 'Registration',
-    image: new URL('./assets/team/Registration.jpeg', import.meta.url).href,
+    image: "/assets/team/Registration.jpg",
     description: 'Managing participants'
   },
   {
     name: 'Head Liaisons',
-    image: new URL('./assets/team/HeadLiasions.jpeg', import.meta.url).href,
+    image: "/assets/team/HeadLiaisons.jpg",
     description: 'Team coordination'
   },
   {
     name: 'Tech/External',
-    image: new URL('./assets/team/Tech.JPG', import.meta.url).href,
+    image: "./assets/team/Tech.jpg",
     description: 'Technical support'
   },
   {
     name: 'Fundraising',
-    image: new URL('./assets/team/Fundraising.jpeg', import.meta.url).href,
+    image: "/assets/team/Fundraising.jpeg",
     description: 'Resource gathering'
   },
   {
     name: 'Afterparty',
-    image: new URL('./assets/team/Afterparty.jpeg', import.meta.url).href,
+    image: "/assets/team/Afterparty.jpeg",
     description: 'Celebration planning'
   },
   {
     name: 'Hospitality',
-    image: new URL('./assets/team/Hospitality.JPG', import.meta.url).href,
+    image: "/assets/team/Hospitality.jpeg",
     description: 'Guest experience'
   },
   {
     name: 'Mixer/Social',
-    image: new URL('./assets/team/Mixer.JPG', import.meta.url).href,
+    image: "/assets/team/Mixer.jpeg",
     description: 'Event socializing'
   },
   {
-    name: 'Marketing',
-    image: new URL('./assets/team/Marketing.jpeg', import.meta.url).href,
+    name: 'Advisors',
+    image: "/assets/team/Advisors.jpg",
     description: 'Brand outreach'
   }
 ];
