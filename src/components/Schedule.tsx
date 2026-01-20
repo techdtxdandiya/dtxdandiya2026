@@ -9,10 +9,10 @@ interface ScheduleItem {
 
 const fridaySchedule: ScheduleItem[] = [
   { what: "Registration", where: "Hotel Lobby", when: "12:00 PM" },
-  { what: "Dinner", where: "Team Rooms", when: "4:30 PM" },
+  { what: "Dinner", where: "Hotel Lobby", when: "4:30 PM" },
   { what: "Mixer", where: "Hotel Ballroom", when: "5:15 PM" },
-  { what: "Captains Meeting", where: "Boardroom", when: "7:00 PM" },
-  { what: "Practice", where: "Hotel Event Rooms", when: "7:30 PM" },
+  { what: "Captains Meeting", where: "Boardroom", when: "6:45 PM" },
+  { what: "Practice", where: "Hotel Ballroom", when: "7:30 PM" },
 ];
 
 const saturdaySchedule: ScheduleItem[] = [
@@ -22,7 +22,7 @@ const saturdaySchedule: ScheduleItem[] = [
   { what: "Doors Open", where: "Marshall Center", when: "5:00 PM" },
   { what: "Showtime", where: "Marshall Center", when: "5:30 PM" },
   { what: "Awards", where: "Marshall Center", when: "9:00 PM" },
-  { what: "Afterparty", where: "Thrive Nightclub", when: "10:00 PM" },
+  { what: "Afterparty", where: "The Reserve", when: "10:00 PM" },
 ];
 
 // Magical floating element
@@ -42,7 +42,7 @@ const FloatingElement = ({ className = "", delay = 0 }: { className?: string, de
       ease: "easeInOut"
     }}
   >
-    <div className="text-[#C5A572]/60 text-3xl">✨</div>
+    <div className="text-[#C5A572]/60 text-3xl">🏆</div>
   </motion.div>
 );
 
@@ -60,6 +60,8 @@ export default function Schedule() {
         <FloatingElement className="top-1/2 right-1/4" delay={1} />
         <FloatingElement className="bottom-20 right-20" delay={3} />
       </div>
+
+      
 
       {/* Content */}
       <div className="relative z-20">

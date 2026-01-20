@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function AboutUs() {
   return (
-    <section className="py-20 bg-black relative overflow-hidden">
+    <section className="py-20 bg-[#183331] relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
           style={{ wordSpacing: '0.1em' }}>          
@@ -20,10 +20,10 @@ export default function AboutUs() {
             {/* Magical Frame */}
             <div className="absolute -inset-1">
               {/* Corner Decorations */}
-              <div className="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-[#C5A572] rounded-tl-lg"></div>
-              <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#C5A572] rounded-tr-lg"></div>
-              <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#C5A572] rounded-bl-lg"></div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-[#C5A572] rounded-br-lg"></div>
+              <div className="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-[#ffb1ba] rounded-tl-lg"></div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#ffb1ba] rounded-tr-lg"></div>
+              <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#ffb1ba] rounded-bl-lg"></div>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-[#ffb1ba] rounded-br-lg"></div>
             </div>
           </div>
 
@@ -31,8 +31,8 @@ export default function AboutUs() {
           <div className="max-w-3xl mx-auto text-center">
             {/* Text Content */}
             <div className="relative px-8 py-6">
-              <p className="text-lg leading-relaxed text-white/90 font-['Crimson_Text'] tracking-wide">
-                We welcome you to <span className="font-['Harry_Potter'] text-[#C5A572] text-2xl">DTX Dandiya</span>. 
+              <p className="text-lg leading-relaxed text-white/90 font-cormorant tracking-wide">
+                We welcome you to <span className="font-['Harry_Potter'] text-[#ffb1ba] text-2xl">DTX Dandiya</span>. 
                 We are Dallas's premier Raas Garba competition, bringing together some of the very best collegiate Raas teams 
                 from around the country. With every graceful twirl and resonating drumbeat, we aim to create an immersive 
                 experience that not only honors our heritage but also fosters a sense of togetherness. Join us in embracing 

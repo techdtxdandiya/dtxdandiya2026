@@ -16,7 +16,7 @@ import AdminDashboard from './components/TeamPortal/AdminDashboard';
 
 function HomePage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#183331]">
       {/* Hero Section */}
       <div 
         className="min-h-screen flex flex-col items-center bg-cover bg-center bg-no-repeat"
@@ -29,7 +29,7 @@ function HomePage() {
           
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
             <a 
-              href="https://ticketscandy.com/e/dtx-dandiya-2025-raasgarba-dance-competition-6505" 
+              href="https://doorlist.app/e/xl892gr?s=yY0Md9POzG" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="
@@ -42,7 +42,7 @@ function HomePage() {
                 before:transition-colors after:transition-colors
                 glow-text hover:glow-text-intense
                 magical-border transform hover:scale-105 transition-transform
-                bg-black/10 backdrop-blur-sm
+                bg-[#183331]/10 backdrop-blur-sm
               "
             >
               Buy Tickets
@@ -60,7 +60,7 @@ function HomePage() {
                 before:transition-colors after:transition-colors
                 glow-text hover:glow-text-intense
                 magical-border transform hover:scale-105 transition-transform
-                bg-black/10 backdrop-blur-sm
+                bg-[#183331]/10 backdrop-blur-sm
               "
             >
               Team Portal
@@ -70,7 +70,7 @@ function HomePage() {
       </div>
 
       {/* Schedule Section */}
-      <section className="py-20 bg-black">
+      <section className="py-20 bg-[#183331]">
         <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
           style={{ wordSpacing: '0.1em' }}>
            Competition Schedule

@@ -8,15 +8,15 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Left Side - Made with Magic */}
           <motion.div 
-            className="text-white/80 font-edwardian tracking-wider"
+            className="text-white/80 font-cormorant tracking-wider"
             whileHover={{ scale: 1.05 }}
           >
-            Made with 🪄 by DTX Dandiya
+            Made with ✨ by A
           </motion.div>
 
           {/* Middle - Copyright */}
-          <div className="text-white/60 font-edwardian tracking-wide text-sm">
-            Copyright © 2025 DTX Dandiya
+          <div className="text-white/60 font-cormorant tracking-wide text-sm">
+            Copyright © 2026 DTX Dandiya
           </div>
 
           {/* Right Side - Social Links */}

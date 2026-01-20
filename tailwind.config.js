@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      backgroundImage: {
+        'radial-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+      },
       fontFamily: {
         edwardian: ['ITC Edwardian Script W04 Reg', 'cursive'], //header
         cormorantSC: ['Cormorant SC', 'serif'], //subheader all caps (literally cormorant with only caps)

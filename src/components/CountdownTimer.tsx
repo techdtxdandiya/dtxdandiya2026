@@ -33,7 +33,7 @@ export default function CountdownTimer() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex gap-8 text-white text-center mb-1">
+      <div className="flex gap-7 text-white text-center mb-1">
         <div className="text-5xl font-light glow-text tracking-wider">
           {timeLeft.days.toString().padStart(2, '0')}
         </div>
@@ -47,8 +47,8 @@ export default function CountdownTimer() {
           {timeLeft.seconds.toString().padStart(2, '0')}
         </div>
       </div>
-      <div className="text-xs tracking-[0.5em] text-white uppercase glow-text">
-        days hours minutes seconds
+      <div className="text-2x1 tracking-[0.5em] text-white uppercase glow-text font-roca">
+        days  hrs  mins  secs
       </div>
     </div>
   );

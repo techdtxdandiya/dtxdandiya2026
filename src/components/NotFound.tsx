@@ -6,11 +6,11 @@ export default function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center bg-cover bg-center relative overflow-hidden"
+    <div className="min-h-screen bg-[#183331] flex items-center justify-center bg-cover bg-center relative overflow-hidden"
          style={{ backgroundImage: "url('/assets/backgrounds/home_page.jpg')" }}>
       
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-[#183331]/70 backdrop-blur-sm"></div>
 
       <div className="relative z-10 max-w-2xl mx-4 text-center">
         {/* Back Button */}
@@ -25,7 +25,7 @@ export default function NotFound() {
           Return to Platform 9¾
         </button>
 
-        <div className="bg-black/40 backdrop-blur-lg p-8 rounded-lg border border-white/10">
+        <div className="bg-[#183331]/40 backdrop-blur-lg p-8 rounded-lg border border-white/10">
           <h1 className="text-6xl md:text-7xl font-edwardian text-white mb-6 glow-text">
             404
           </h1>
@@ -44,7 +44,7 @@ export default function NotFound() {
           <button
             onClick={() => navigate('/')}
             className="px-8 py-3 text-xl text-white font-edwardian 
-                     bg-black/40 border border-white/20 rounded-lg
+                     bg-[#183331]/40 border border-white/20 rounded-lg
                      hover:bg-white/10 transition-colors duration-300
                      magical-border"
           >

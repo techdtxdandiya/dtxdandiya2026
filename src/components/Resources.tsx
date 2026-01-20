@@ -29,10 +29,10 @@ const contacts: Contact[] = [
 
 export default function Resources() {
   return (
-    <div className="relative py-20 overflow-hidden bg-black">
+    <div className="relative py-20 overflow-hidden bg-[#ffb1ba]">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-black to-black"></div>
+        <div className="absolute inset-0 bg-[#183331] [radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-black to-black"></div>
       </div>
 
       {/* Content Container */}
@@ -40,7 +40,7 @@ export default function Resources() {
         {/* Title */}
         <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
           style={{ wordSpacing: '0.1em' }}>
-        The Owl Post
+        Concierge Desk
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -51,9 +51,9 @@ export default function Resources() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20">
+            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-[#ffb1ba]-500/20">
               {/* Section Title */}
-              <h3 className="text-4xl font-edwardian text-emerald-400 mb-8 text-center">
+              <h3 className="text-5xl font-edwardian text-[#ffb1ba] mb-8 text-center">
                 Quick Contact
               </h3>
 
@@ -62,25 +62,25 @@ export default function Resources() {
                 {contacts.map((contact, index) => (
                   <motion.div
                     key={index}
-                    className="group relative flex items-center justify-between py-2 px-4 rounded-lg hover:bg-emerald-900/10 transition-all duration-300"
+                    className="group relative flex items-center justify-between py-2 px-4 rounded-lg hover:bg-[#ffb1ba]-900/10 transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="flex-1 min-w-[120px]">
-                      <span className="text-emerald-400/80 font-edwardian text-lg">
+                      <span className="text-[#ffb1ba]/80 font-cormorant text-lg">
                         {contact.position}
                       </span>
                     </div>
                     <div className="flex-1 text-center">
-                      <span className="text-white/90 font-edwardian">
+                      <span className="text-[#ffb1ba]/90 font-cormorant text-lg">
                         {contact.name}
                       </span>
                     </div>
                     <div className="flex-1 text-right">
                       <a 
                         href={`tel:${contact.phone.replace(/[^0-9]/g, '')}`}
-                        className="text-white/70 font-edwardian group-hover:text-emerald-400 transition-colors duration-300"
+                        className="text-[#ffb1ba]/70 font-cormorant group-hover:text-[#ffb1ba]-400 transition-colors duration-300 text-lg"
                       >
                         {contact.phone}
                       </a>
@@ -98,37 +98,37 @@ export default function Resources() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-emerald-500/20">
-              <h3 className="text-4xl font-edwardian text-emerald-400 mb-8 text-center">
+            <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-[#ffb1ba]-500/20">
+              <h3 className="text-5xl font-edwardian text-[#ffb1ba] mb-8 text-center">
                 Afterparty Details
               </h3>
 
               <div className="space-y-8">
                 {/* Location */}
                 <motion.div 
-                  className="flex items-start space-x-4 p-4 rounded-lg bg-emerald-900/5"
+                  className="flex items-start space-x-4 p-4 rounded-lg bg-[#ffb1ba]-900/5"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <FaMapMarkerAlt className="text-emerald-400 text-2xl mt-1" />
+                  <FaMapMarkerAlt className="text-[#ffb1ba] text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Location</h4>
-                    <p className="text-white/80 font-edwardian">
-                      VYB Lounge
+                    <h4 className="text-[#ffb1ba] font-cormorant text-xl mb-2">Location</h4>
+                    <p className="text-[#ffb1ba]/80 font-cormorant">
+                      The Reserve
                       <br />
-                      104 W McKinney St, Denton, TX 76201
+                      1310 Chisholm Trail #100, Euless, TX 76039
                     </p>
                   </div>
                 </motion.div>
 
                 {/* Required Items */}
                 <motion.div 
-                  className="flex items-start space-x-4 p-4 rounded-lg bg-emerald-900/5"
+                  className="flex items-start space-x-4 p-4 rounded-lg bg-[#ffb1ba]-900/5"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <FaTicketAlt className="text-emerald-400 text-2xl mt-1" />
+                  <FaTicketAlt className="text-[#ffb1ba] text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Required to Bring</h4>
-                    <p className="text-white/80 font-edwardian">
+                    <h4 className="text-[#ffb1ba] font-cormorant text-xl mb-2">Required to Bring</h4>
+                    <p className="text-[#ffb1ba]/80 font-cormorant">
                       NFC Bands (Admission)
                       <br />
                       IDs to drink
@@ -138,13 +138,13 @@ export default function Resources() {
 
                 {/* Dance Moves */}
                 <motion.div 
-                  className="flex items-start space-x-4 p-4 rounded-lg bg-emerald-900/5"
+                  className="flex items-start space-x-4 p-4 rounded-lg bg-[#ffb1ba]-900/5"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <FaMusic className="text-emerald-400 text-2xl mt-1" />
+                  <FaMusic className="text-[#ffb1ba] text-2xl mt-1" />
                   <div>
-                    <h4 className="text-emerald-400 font-edwardian text-xl mb-2">Don't Forget</h4>
-                    <p className="text-white/80 font-edwardian">
+                    <h4 className="text-[#ffb1ba] font-cormorant text-xl mb-2">Don't Forget</h4>
+                    <p className="text-[#ffb1ba]/80 font-cormorant">
                       Your best dance moves 💃🕺
                     </p>
                   </div>
@@ -160,7 +160,7 @@ export default function Resources() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(16,185,129,0.1)_0%,_transparent_60%)]"></div>
       </div>
 
-      {/* Decorative Owl */}
+      {/* Decorative Owl 
       <motion.div 
         className="absolute -bottom-4 right-[15%] pointer-events-none z-20 hidden lg:block"
         initial={{ opacity: 0, scale: 0.5 }}
@@ -180,7 +180,7 @@ export default function Resources() {
         >
           <GiOwl className="text-emerald-400/60 w-32 h-32 filter drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
         </motion.div>
-      </motion.div>
+      </motion.div>*/}
     </div>
   );
 } 

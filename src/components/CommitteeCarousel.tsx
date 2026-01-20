@@ -81,7 +81,7 @@ export default function CommitteeCarousel() {
                 alt={committee.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 bg-orange/50 flex flex-col items-center justify-center">
                 <h3 className="text-2xl font-bold text-amber-500 mb-2">{committee.name}</h3>
                 <p className="text-gray-300">{committee.description}</p>
               </div>

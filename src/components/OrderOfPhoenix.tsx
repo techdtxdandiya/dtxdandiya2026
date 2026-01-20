@@ -36,12 +36,12 @@ export default function OrderOfPhoenix() {
   }, []);
 
   return (
-    <div className="relative py-20 overflow-hidden bg-black">
+    <div className="relative py-20 overflow-hidden bg-[#183331]">
       {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-900/20 via-black to-black"></div>
-      </div>
-
+      {/*<div className="absolute inset-0">
+        <div className="absolute inset-0 bg-radial-glow from-orange-500/20 via-orange-700/10 to transparent"></div>
+      </div>*/}
+      
       <div className="relative z-10">
         {/* Title with Phoenix Wings */}
         <div className="text-center mb-12 md:mb-20 relative px-4">
@@ -51,7 +51,7 @@ export default function OrderOfPhoenix() {
           </div>
           <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
           style={{ wordSpacing: '0.1em' }}>
-          Order of the Phoenix
+          The Council
           </h2>
         </div>
 
@@ -59,7 +59,7 @@ export default function OrderOfPhoenix() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="relative">
             {/* Content Container */}
-            <div className="relative bg-black/40 backdrop-blur-sm rounded-xl overflow-hidden">
+            <div className="relative bg-black/50 rounded-xl overflow-hidden">
               <div className="flex flex-col md:flex-row">
                 {/* Image Display */}
                 <div className="relative w-full md:w-2/3 order-1 md:order-2">
@@ -82,10 +82,10 @@ export default function OrderOfPhoenix() {
                 {/* Committee Info */}
                 <div className="relative w-full md:w-1/3 p-6 md:p-8 flex flex-col justify-center order-2 md:order-1 bg-gradient-to-r from-black/60 via-black/40 to-transparent">
                   <div className={`transform transition-all duration-500 ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
-                    <h3 className="text-4xl md:text-5xl font-edwardian text-white glow-text-intense mb-4">
+                    <h3 className="text-5xl md:text-6xl font-edwardian text-white glow-text-intense mb-4">
                       {committees[activeIndex].name}
                     </h3>
-                    <p className="text-2xl md:text-3xl text-orange-300/90 font-edwardian">
+                    <p className="text-1xl md:text-2xl text-orange-300/90 font-cormorant">
                       {committees[activeIndex].title}
                     </p>
                   </div>
@@ -108,10 +108,10 @@ export default function OrderOfPhoenix() {
         </div>
       </div>
 
-      {/* Ambient Light Effect */}
+      {/* Ambient Light Effect 
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,_rgba(251,146,60,0.15)_0%,_transparent_60%)]"></div>
-      </div>
+      </div>*/}
     </div>
   );
 } 

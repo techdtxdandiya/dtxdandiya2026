@@ -4,57 +4,52 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 // Sponsors in alphabetical order
 const SPONSORS = [
   {
-    name: "A Family In Need",
-    logo: "/assets/sponsors/family.png",
-    url: "https://www.afamilyinneed.org/"
+    name: "Best Western",
+    logo: "/assets/sponsors/best_western.png",
+    url: "https://www.bestwestern.com/en_US.html"
   },
   {
-    name: "City of Richardson",
-    logo: "/assets/sponsors/richardson.png",
-    url: "https://www.cor.net/home"
+    name: "India Bazaar",
+    logo: "/assets/sponsors/india_bazaar.png",
+    url: "https://www.indiabazaardfw.com/"
   },
   {
-    name: "Costco Wholesale",
-    logo: "/assets/sponsors/costco.png",
-    url: "https://www.costco.com/"
+    name: "Kayura",
+    logo: "/assets/sponsors/kayura.png",
+    url: "https://kayuraeffect.com/"
   },
   {
-    name: "Dunkin'",
-    logo: "/assets/sponsors/krispy_kreme.png",
-    url: "https://www.krispykreme.com/"
+    name: "LMNT",
+    logo: "/assets/sponsors/LMNT.png",
+    url: "https://drinklmnt.com/"
   },
   {
-    name: "Gopal",
-    logo: "/assets/sponsors/gopal.png",
-    url: "https://www.newgopal.com/"
+    name: "Milaana Dance",
+    logo: "/assets/sponsors/milaana.png",
+    url: "https://milaanadance.com/"
   },
   {
-    name: "Raising Cane's",
-    logo: "/assets/sponsors/canes.png",
-    url: "https://www.raisingcanes.com/home/"
+    name: "Red Bull",
+    logo: "/assets/sponsors/red_bull.png",
+    url: "https://www.redbull.com/us-en"
   },
-  {
-    name: "Smoothie King",
-    logo: "/assets/sponsors/smoothieking.png",
-    url: "https://locations.smoothieking.com/ll/us/tx/farmers-branch/13901-midway-rd/"
-  }
 ];
 
 export default function Sponsors() {
   return (
-    <div className="relative py-16 overflow-hidden bg-black">
+    <div className="relative py-16 overflow-hidden bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black]">
       {/* Magical Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black">
+        <div className="absolute inset-0 bg-[#183331]">
           {/* Ambient Light Effect */}
-          <div className="absolute inset-0 opacity-40"
+          {/*<div className="absolute inset-0 opacity-40"
             style={{
               background: `
                 radial-gradient(circle at 20% 30%, rgba(29, 78, 216, 0.15), transparent 70%),
                 radial-gradient(circle at 80% 70%, rgba(29, 78, 216, 0.15), transparent 70%)
               `
             }}
-          />
+          />*/}
         </div>
       </div>
 
@@ -69,8 +64,9 @@ export default function Sponsors() {
         >
           <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
           style={{ wordSpacing: '0.1em' }}>
-            Our Magical Patrons
-            <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 rounded-lg blur-lg -z-10"></div>
+            Supporting Partners
+            <div className="absolute -inset-x-8 -inset-y-4 bg-[gradient-to-r from-[#ffb1ba]-500/0 via-[#ffb1ba]-500/10 to-[#ffb1ba]-500/0 rounded-lg blur-lg -z-10]"></div>
+            {/*gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 rounded-lg blur-lg -z-10*/}
           </h2>
         </motion.div>
 
@@ -85,7 +81,7 @@ export default function Sponsors() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <div className="absolute -inset-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/20 to-blue-500/0 rounded-lg opacity-0 group-hover:opacity-100 blur-lg transition-all duration-700"></div>
+              <div className="absolute -inset-[2px] bg-gradient-to-r from-[#ffb1ba]/0 via-[#ffb1ba]/20 to-[#ffb1ba]/0 rounded-lg opacity-0 group-hover:opacity-100 blur-lg transition-all duration-700"></div>
               <a
                 href={sponsor.url}
                 target="_blank"
@@ -98,7 +94,7 @@ export default function Sponsors() {
                     alt={sponsor.name}
                     className="max-w-[80%] max-h-[80%] w-auto h-auto object-contain opacity-90 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105"
                   />
-                  <FaExternalLinkAlt className="absolute top-2 right-2 text-blue-400/0 group-hover:text-blue-400/70 transition-all duration-500" />
+                  <FaExternalLinkAlt className="absolute top-2 right-2 text-blue-400/0 group-hover:text-[#ffb1ba]/70 transition-all duration-500" />
                 </div>
               </a>
             </motion.div>
