@@ -20,8 +20,15 @@ function HomePage() {
       {/* Hero Section */}
       <div 
         className="min-h-screen flex flex-col items-center bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/backgrounds/home_page.png')" }}
-      >
+        style={{
+          backgroundImage: `url("${
+            isMobile
+              ? "/assets/backgrounds/home_page_phone.png"
+              : "/assets/backgrounds/home_page.png"
+          }")`,
+          backgroundPosition: isMobile ? "50% 35%" : "center",
+        }}
+        >
         <div className="text-center flex flex-col items-center mt-[65vh]">
           <div className="mb-16">
             <CountdownTimer />
