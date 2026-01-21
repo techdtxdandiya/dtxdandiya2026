@@ -13,8 +13,20 @@ import Locations from './components/Locations';
 import Livestream from './components/Livestream';
 import NotFound from './components/NotFound';
 import AdminDashboard from './components/TeamPortal/AdminDashboard';
+import { useEffect, useState } from "react";
 
 function HomePage() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+
+    const handleChange = () => setIsMobile(mq.matches);
+    handleChange(); // run once on load
+
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
+  }, []);
   return (
     <div className="min-h-screen bg-[#183331]">
       {/* Hero Section */}
