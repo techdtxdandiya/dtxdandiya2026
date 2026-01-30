@@ -31,11 +31,11 @@ export default function Dashboard() {
     tamu: 'Ravenclaw',
     texas: 'Slytherin',
     michigan: 'Ravenclaw',
-    ucd: 'Slytherin',
-    unc: 'Hufflepuff',
-    iu: 'Hufflepuff',
-    berkeley: 'Gryffindor',
-    msu: 'Gryffindor'
+    uf: 'Slytherin',
+    uiuc: 'Hufflepuff',
+    uw: 'Hufflepuff',
+    washu: 'Gryffindor',
+    ucsd: 'Gryffindor'
   };
 
   const hogwartsHouse = teamId && hogwartsAssignments[teamId];
@@ -54,41 +54,41 @@ export default function Dashboard() {
   // Static schedule data for judges and reps
   const repsScheduleData = {
     friday: [
-      { event: "Check-in/Registration", location: "Oak Room", time: "10:00 AM - 4:00 PM" },
-      { event: "Dinner", location: "RAS Rep Hotel Room", time: "4:00 PM" },
-      { event: "Mixer", location: "Garden Terrace Ballroom", time: "5:00 PM" },
+      { event: "Check-in/Registration", location: "Lobby", time: "12:00 PM - 3:00 PM" },
+      { event: "Dinner", location: "Lobby", time: "4:00 PM" },
+      { event: "Mixer", location: "Ballroom", time: "5:15 PM" },
       { event: "Go Out", location: "Downtown", time: "8:00 PM" },
     ],
     saturday: [
-      { event: "Breakfast", location: "RAS Rep Hotel Room", time: "7:00 AM" },
-      { event: "Props Setup", location: "Venue", time: "6:00 AM - 8:00 AM" },
+      { event: "Breakfast", location: "Lobby", time: "7:00 AM" },
+      { event: "Props Setup", location: "Venue", time: "5:30 AM - 8:00 AM" },
       { event: "Props Cleanup", location: "Venue", time: "8:00 AM" },
       { event: "Tech Time", location: "Venue", time: "8:40 AM" },
-      { event: "Mock Deliberations", location: "Oak Room", time: "11:00 AM" },
+      { event: "Mock Deliberations", location: "Boardroom", time: "11:00 AM" },
       { event: "Lunch", location: "During/After Deliberations", time: "2:00 PM" },
-      { event: "Rep/Judges Photos", location: "Venue", time: "3:45 PM" },
+      { event: "Rep/Judges Photos", location: "Venue", time: "3:40 PM" },
       { event: "Show", location: "Venue", time: "5:30 PM" },
       { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
-      { event: "Dinner", location: "RAS Rep Hotel Room", time: "10:00 PM - 10:30 PM" },
-      { event: "After Party", location: "VYB Lounge", time: "11:00 PM" }
+      { event: "Dinner", location: "RAS Rep Hotel Room", time: "10:00 PM" },
+      { event: "After Party", location: "The Reserve", time: "11:00 PM" }
     ]
   };
 
   const judgesScheduleData = {
     friday: [
-      { event: "Check-in/Registration", location: "Oak Room", time: "10:00 AM - 4:00 PM" },
-      { event: "Dinner", location: "Judges Hotel Room", time: "4:00 PM" },
-      { event: "Go Out", location: "Downtown", time: "6:00 PM" }
+      { event: "Check-in/Registration", location: "Oak Room", time: "12:00 AM - 3:00 PM" },
+      { event: "Dinner", location: "Lobby", time: "4:00 PM" },
+      { event: "Go Out", location: "Downtown", time: "6:00 PM" },
     ],
     saturday: [
-      { event: "Breakfast", location: "Delivered to Judges Hotel Room", time: "7:00 AM" },
-      { event: "Mock Deliberations", location: "Oak Room", time: "11:00 AM" },
+      { event: "Breakfast", location: "Lobby", time: "7:00 AM" },
+      { event: "Mock Deliberations", location: "Boardroom", time: "11:00 AM" },
       { event: "Lunch", location: "During/After Deliberations", time: "2:00 PM" },
-      { event: "Rep/Judges Photos", location: "Venue", time: "3:45 PM" },
+      { event: "Rep/Judges Photos", location: "Venue", time: "3:40 PM" },
       { event: "Show", location: "Venue", time: "5:30 PM" },
       { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
       { event: "Dinner", location: "Judges Hotel Room", time: "10:00 PM" },
-      { event: "After Party", location: "VYB Lounge", time: "11:00 PM" }
+      { event: "After Party", location: "The Reserve", time: "11:00 PM" }
     ]
   };
 
@@ -146,7 +146,7 @@ export default function Dashboard() {
 
     return (
       <div className="mb-12">
-        <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-8 px-1">{title}</h3>
+        <h3 className="text-xl sm:text-2xl font-cormorant text-white mb-8 px-1">{title}</h3>
         <div className="relative">
           {/* Timeline Line */}
           <div className="absolute left-[15px] sm:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-500/50 via-purple-500/50 to-blue-500/50">
@@ -173,7 +173,7 @@ export default function Dashboard() {
                 <div className={`hidden sm:flex w-32 ${
                   index % 2 === 0 ? 'justify-end' : 'justify-start'
                 }`}>
-                  <div className="px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-sans">
+                  <div className="px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-cormorant">
                     {event.time}
                   </div>
                 </div>
@@ -184,15 +184,15 @@ export default function Dashboard() {
                 }`}>
                   <div className="group relative p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 backdrop-blur-sm rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
                     {/* Mobile Time Badge */}
-                    <div className="sm:hidden mb-2 inline-block px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-sans">
+                    <div className="sm:hidden mb-2 inline-block px-3 py-1 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 text-blue-300 font-medium font-cormorant">
                       {event.time}
                     </div>
 
                     <div className="space-y-1">
-                      <h4 className="text-white font-edwardian text-lg group-hover:text-blue-300 transition-colors">
+                      <h4 className="text-white font-cormorant text-lg group-hover:text-blue-300 transition-colors">
                         {event.event}
                       </h4>
-                      <p className="text-blue-200/80 text-sm font-sans">
+                      <p className="text-blue-200/80 text-2x1 font-cormorant">
                         {event.location}
                       </p>
                     </div>
@@ -216,7 +216,7 @@ export default function Dashboard() {
       if (!scheduleData) {
         return (
           <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
-            <p className="text-blue-200/80 text-center font-sans">Schedule will be available soon.</p>
+            <p className="text-blue-200/80 text-center font-cormorant">Schedule will be available soon.</p>
           </div>
         );
       }
@@ -224,7 +224,7 @@ export default function Dashboard() {
       if (!scheduleData.isPublished) {
         return (
           <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
-            <p className="text-blue-200/80 text-center font-sans">Schedule will be available soon.</p>
+            <p className="text-blue-200/80 text-center font-cormorant">Schedule will be available soon.</p>
           </div>
         );
       }
@@ -232,7 +232,7 @@ export default function Dashboard() {
       if (!scheduleData.showOrder) {
         return (
           <div className="p-6 bg-blue-900/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
-            <p className="text-blue-200/80 text-center font-sans">Schedule has not been assigned yet.</p>
+            <p className="text-blue-200/80 text-center font-cormorant">Schedule has not been assigned yet.</p>
           </div>
         );
       }
@@ -240,7 +240,7 @@ export default function Dashboard() {
       return (
         <div className="space-y-8">
           <div className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl border border-blue-500/20">
-            <p className="text-2xl sm:text-3xl text-white font-edwardian text-center">
+            <p className="text-2xl sm:text-3xl text-white font-cormorant text-center">
               Performance Order: {scheduleData.showOrder}
             </p>
           </div>
@@ -333,7 +333,7 @@ export default function Dashboard() {
         <div className="space-y-8">
           {/* Reps Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Reps Information</h3>
+            <h3 className="text-xl sm:text-2xl font-cormorant text-white mb-4">Reps Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -416,7 +416,7 @@ export default function Dashboard() {
 
           {/* Tech Information Section */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-blue-500/20">
-            <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">General Information</h3>
+            <h3 className="text-xl sm:text-2xl font-cormorant text-white mb-4">General Information</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">

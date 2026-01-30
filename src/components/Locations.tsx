@@ -4,7 +4,7 @@ import { FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
 
 const locations = [
   {
-    name: "DoubleTree by Hilton",
+    name: "Holiday Inn Express & Suites North Dallas at Preston by IHG",
     description: "The home base for teams as the weekend unfolds",
     address: "6055 Lyndon B Johnson Fwy, Dallas, TX 75240",
     mapsUrl: "https://maps.app.goo.gl/C4Rw2hLF91FLFSSK6",

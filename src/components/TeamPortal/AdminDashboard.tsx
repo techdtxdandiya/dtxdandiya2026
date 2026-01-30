@@ -869,7 +869,9 @@ const AdminDashboard: React.FC = () => {
       />
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-edwardian text-white">Admin Dashboard</h1>
+          <h1 className="text-6xl font-edwardian text-white" style={{ wordSpacing: "0.35em" }}>
+            Admin Dashboard
+            </h1>
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
@@ -896,7 +898,7 @@ const AdminDashboard: React.FC = () => {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as typeof activeTab)}
-                className={`px-6 py-2 rounded-lg font-edwardian transition-all duration-300 ${
+                className={`px-6 py-2 rounded-lg font-cormorant transition-all duration-300 ${
                   activeTab === key
                     ? 'bg-blue-500 text-white'
                     : 'bg-blue-500/10 text-blue-200/60 hover:bg-blue-500/20 hover:text-white'

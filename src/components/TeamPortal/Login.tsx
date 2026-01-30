@@ -4,17 +4,17 @@ import { IoArrowBack } from "react-icons/io5";
 
 // Team passwords with Harry Potter theme
 const TEAM_PASSWORDS: { [key: string]: string } = {
-  "tamu": "witch",
-  "texas": "magic",
-  "michigan": "spell",
-  "ucd": "wand",
-  "unc": "lumos",
-  "iu": "hagrid",
-  "berkeley": "hogwarts",
-  "msu": "potter",
-  "admin": "dumbledore", // admin password
-  "judge": "owl",
-  "reps": "dobby"
+  "tamu": "tennis",
+  "texas": "golf",
+  "michigan": "court",
+  "uf": "pickleball",
+  "uiuc": "squash",
+  "uw": "swimming",
+  "washu": "badminton",
+  "ucsd": "croquet",
+  "admin": "chess", // admin password
+  "judge": "yoga",
+  "reps": "cycling"
 };
 
 export default function Login() {
@@ -57,27 +57,27 @@ export default function Login() {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="mb-6 px-4 py-2 text-white/80 font-edwardian text-lg
+          className="mb-6 px-4 py-2 text-white/80 font-cormorant text-lg
                    hover:text-white transition-colors duration-300 flex items-center
                    group"
         >
           <IoArrowBack className="mr-2 text-xl transition-transform duration-300 
                                 group-hover:-translate-x-1" />
-          Back to the Muggle World
+          Return to the Grounds
         </button>
 
         <div className="bg-black/60 backdrop-blur-lg p-8 rounded-lg border border-white/10">
           {/* Title */}
           <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-8 glow-text"
           style={{ wordSpacing: '0.1em' }}>
-            Team Portal
+            Team Member Access
           </h2>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-white font-edwardian text-xl mb-2">
-                Enter Your Team Password
+              <label className="block text-white font-cormorant text-xl mb-2">
+                Enter Access Code
               </label>
               <input
                 type="password"
@@ -91,26 +91,26 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="text-red-400 text-center font-edwardian text-lg">
+              <div className="text-red-400 text-center font-cormorant text-lg">
                 {error}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full py-3 px-6 text-xl text-white font-edwardian 
+              className="w-full py-3 px-6 text-xl text-white font-cormorant 
                        bg-black/40 border border-white/20 rounded-lg
                        hover:bg-white/10 transition-colors duration-300
                        magical-border"
             >
-              Alohomora
+              Enter
             </button>
           </form>
 
           {/* Decorative Elements */}
           <div className="mt-8 text-center">
-            <div className="text-white/40 font-edwardian text-sm">
-              "I solemnly swear that I am up to no good"
+            <div className="text-white/40 font-cormorant text-sm">
+              "Admission by invitation only."
             </div>
           </div>
         </div>
