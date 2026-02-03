@@ -611,7 +611,7 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Prop Box Size</h4>
-                  <p className="text-white font-sans">7ft (Length) x 5ft (Width) x 10+ft (Height)</p>
+                  <p className="text-white font-sans">10ft (Length) x 10ft (Width) x 10ft (Height)</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-lg">
