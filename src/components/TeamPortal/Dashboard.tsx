@@ -988,7 +988,7 @@ export default function Dashboard() {
           </div>
           <div className="flex-1">
             <h4 className="text-blue-300 text-sm font-sans font-medium">Address</h4>
-            <p className="text-white font-sans mb-2">4099 Valley View Ln, Dallas, TX 75244</p>
+            <p className="text-white font-sans mb-2">6055 Lyndon B Johnson Fwy, Dallas, TX 75240</p>
             <a
               href="https://www.google.com/maps/search/?api=1&query=4099+Valley+View+Ln+Dallas+TX+75244"
               target="_blank"
