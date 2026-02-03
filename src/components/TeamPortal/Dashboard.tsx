@@ -482,7 +482,7 @@ export default function Dashboard() {
                 <div>
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
                   <a 
-                    href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
+                    href="https://docs.google.com/document/d/1GQUVDQqxsWHZwS1oQtvnx7dhFsoDwt-S-NU2hYmMzVo/edit?usp=drive_link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
@@ -623,7 +623,7 @@ export default function Dashboard() {
                 <div>
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
                   <a 
-                    href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
+                    href="https://docs.google.com/document/d/1GQUVDQqxsWHZwS1oQtvnx7dhFsoDwt-S-NU2hYmMzVo/edit?usp=drive_link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
@@ -977,7 +977,7 @@ export default function Dashboard() {
           </div>
           <div>
             <h4 className="text-blue-300 text-sm font-sans font-medium">Name</h4>
-            <p className="text-white font-sans">DoubleTree by Hilton Hotel Dallas</p>
+            <p className="text-white font-sans">Holiday Inn Express & Suites North Dallas at Preston by IHG</p>
           </div>
         </div>
         <div className="flex items-start gap-3 p-3 bg-blue-500/5 rounded-lg">
