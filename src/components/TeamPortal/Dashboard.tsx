@@ -69,7 +69,7 @@ export default function Dashboard() {
       { event: "Rep/Judges Photos", location: "Venue", time: "3:40 PM" },
       { event: "Show", location: "Venue", time: "5:30 PM" },
       { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
-      { event: "Dinner", location: "RAS Rep Hotel Room", time: "10:00 PM" },
+      { event: "Judges Meeting/Dinner", location: "RAS Rep Hotel Room", time: "10:00 PM" },
       { event: "After Party", location: "The Reserve", time: "11:00 PM" }
     ]
   };
@@ -382,7 +382,7 @@ export default function Dashboard() {
                   <h4 className="text-blue-300 text-sm font-sans font-medium">Schedule Links</h4>
                   <div className="space-y-1">
                     <a 
-                      href="https://docs.google.com/spreadsheets/d/1KfuXm3ssbFsC-hpclEz11NpA49j8Z570gbqYwttBUF4/edit?usp=drive_link"
+                      href="https://docs.google.com/spreadsheets/d/11ytMeEyOhhEabiAevLSC23Do-ef0figqto6gh3UKp-8/edit?usp=sharing"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-white hover:text-blue-300 font-sans text-sm transition-colors flex items-center gap-1"
@@ -391,7 +391,7 @@ export default function Dashboard() {
                       <FaExternalLinkAlt className="text-xs" />
                     </a>
                     <a 
-                      href="https://docs.google.com/spreadsheets/d/1Q3MeB3ljCWTGrGrz8pUAOH5pvmdGBGa3Y5UKpiJOJYk/edit?usp=drive_link"
+                      href="https://docs.google.com/spreadsheets/d/1O9vJkks8azyS_EtfZdqhKAp3xnrw-GwZRijVF3U14qE/edit?usp=drivesdk"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-white hover:text-blue-300 font-sans text-sm transition-colors flex items-center gap-1"
@@ -400,7 +400,7 @@ export default function Dashboard() {
                       <FaExternalLinkAlt className="text-xs" />
                     </a>
                     <a 
-                      href="https://docs.google.com/spreadsheets/d/1WoZc6X9HfN3vUDeT_3f5c_ugxk7mfWM4KA5ZVVj1e3w/edit?gid=209341081#gid=209341081"
+                      href="https://docs.google.com/spreadsheets/d/1tiEEU1NxE6ESQepGqpQJiKClk4wmeuZmCeCdvFwNrwQ/edit?usp=drivesdk"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-white hover:text-blue-300 font-sans text-sm transition-colors flex items-center gap-1"
@@ -503,7 +503,7 @@ export default function Dashboard() {
             <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Tech Time Flow</h3>
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
               <img
-                src="/assets/reps/techtime_flow.jpeg"
+                src="/assets/reps/techtime_flow.pdf"
                 alt="Tech Time Flow"
                 className="absolute top-0 left-0 w-full h-full object-contain"
               />
@@ -515,7 +515,7 @@ export default function Dashboard() {
             <h3 className="text-xl sm:text-2xl font-edwardian text-white mb-4">Show Flow</h3>
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
               <img
-                src="/assets/reps/show_flow.jpeg"
+                src="/assets/reps/show_flow.pdf"
                 alt="Show Flow"
                 className="absolute top-0 left-0 w-full h-full object-contain"
               />
@@ -1014,8 +1014,8 @@ export default function Dashboard() {
         <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border border-blue-500/20">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
-            src="https://www.youtube.com/embed/0hLdHx_i1W0?si=d8mO241CDsOpoGuT"
-            title="DTX Dandiya 2025 Livestream"
+            src="https://www.youtube.com/live/o6XB5a7va8Q?feature=shared"
+            title="DTX Dandiya 2026 Livestream"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
