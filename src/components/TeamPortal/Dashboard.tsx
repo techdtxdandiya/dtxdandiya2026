@@ -87,7 +87,7 @@ export default function Dashboard() {
       { event: "Rep/Judges Photos", location: "Venue", time: "3:40 PM" },
       { event: "Show", location: "Venue", time: "5:30 PM" },
       { event: "Show Deliberations", location: "Venue Viewing Room", time: "8:00 PM" },
-      { event: "Dinner", location: "Judges Hotel Room", time: "10:00 PM" },
+      { event: "Judges Meeting/Dinner", location: "Judges Hotel Room", time: "10:00 PM" },
       { event: "After Party", location: "The Reserve", time: "11:00 PM" }
     ]
   };
