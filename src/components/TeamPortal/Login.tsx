@@ -68,7 +68,7 @@ export default function Login() {
 
         <div className="bg-black/60 backdrop-blur-lg p-8 rounded-lg border border-white/10">
           {/* Title */}
-          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-8 glow-text"
+          <h2 className="text-6xl md:text-7xl font-cormorant text-center text-white mb-8 glow-text"
           style={{ wordSpacing: '0.1em' }}>
             Team Member Access
           </h2>
