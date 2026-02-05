@@ -9,6 +9,16 @@ const SPONSORS = [
     url: "https://www.bestwestern.com/en_US.html"
   },
   {
+    name: "Canes",
+    logo: "/assets/sponsors/canes.png",
+    url: "https://www.raisingcanes.com/"
+  },
+  {
+    name: "Good Molecules",
+    logo: "/assets/sponsors/good_molecules.png",
+    url: "https://www.goodmolecules.com/"
+  },
+  {
     name: "India Bazaar",
     logo: "/assets/sponsors/india_bazaar.png",
     url: "https://www.indiabazaardfw.com/"
