@@ -1,7 +1,7 @@
 import { ref, set, get } from 'firebase/database';
 import { db } from './firebase';
 
-export const TEAM_IDS = ['tamu', 'texas', 'michigan', 'ucd', 'unc', 'iu', 'berkeley', 'msu'] as const;
+export const TEAM_IDS = ['tamu', 'texas', 'ucsd', 'uiuc', 'uw', 'washu', 'uf', 'umich'] as const;
 
 export type TeamId = typeof TEAM_IDS[number];
 export type DashboardTeamId = TeamId | 'admin';
@@ -9,12 +9,12 @@ export type DashboardTeamId = TeamId | 'admin';
 export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Dirty South Dandiya',
-  michigan: 'Michigan Wolveraas',
-  ucd: 'UCD Raasleela',
-  unc: 'UNC Tar Heel Raas',
-  iu: 'IU HoosierRaas',
-  berkeley: 'UC Berkeley Raas Ramzat',
-  msu: 'MSU RaaSparty'
+  umich: 'Michigan Wolveraas',
+  uiuc: 'UIUC Illini Raas',
+  uw: 'UW Raas',
+  washu: 'WashU Raas',
+  uf: 'UF Gatoraas',
+  ucsd: 'UCSD Raas Ruckus'
 };
 
 export interface ScheduleEvent {
@@ -556,44 +556,45 @@ export const TECH_INFO = {
 
 export const INITIAL_LIAISONS = {
   texas: [
+    { name: 'Dev Patel', phone: '972.258.4904' },
+    { name: 'Srinidhi Vijayaraghavan', phone: '469.748.6923' },
+    { name: 'Shreya Ravi', phone: '214.437.4286' }
+  ],
+  ucsd: [
+    { name: 'Aanshi Shah', phone: '469.525.3956' },
+    { name: 'Tisha Chhatbar', phone: '469.468.7617' },
+    { name: 'Sahya Punati', phone: '925.819.8231' }
+  ],
+  uf: [
     { name: 'Svayam Sharma', phone: '972.510.7638' },
-    { name: 'Prajith Sugatan', phone: '214.732.1833' },
-    { name: 'Aayushi Madalia', phone: '512.773.0779' }
+    { name: 'Omisha Cherala', phone: '805.657.4013' },
+    { name: 'Rhea Sayani', phone: '214.972.7365' },
+    { name: 'Lahek Patel', phone: '346.888.9482'}
   ],
-  berkeley: [
-    { name: 'Subhash Madiraju', phone: '857.499.4545' },
-    { name: 'Aryaa Shah', phone: '469.514.1422' },
-    { name: 'Satya Rallabandi', phone: '214.897.1156' }
+  washu: [
+    { name: 'Prajna Premnath', phone: '469.486.2118' },
+    { name: 'Hemangi Swaroop', phone: '484.223.5587' },
+    { name: 'Nishtha Gajera', phone: '469.714.5161' }
   ],
-  msu: [
-    { name: 'Subhash E', phone: '901.232.6813' },
-    { name: 'Jerin Vandannoor', phone: '972.804.0459' },
-    { name: 'Disha', phone: '254.421.7696' }
+  uw: [
+    { name: 'Misha Patel', phone: '469.834.7200' },
+    { name: 'Paramveer Grewal', phone: '713.742.3877' },
+    { name: 'Dhwani Patel', phone: '512.784.1690' }
   ],
-  iu: [
-    { name: 'Shivan Golechha', phone: '972.903.2550' },
-    { name: 'Ishani Gupta', phone: '737.217.7600' },
-    { name: 'Divya Patel', phone: '936.232.8316' }
-  ],
-  unc: [
-    { name: 'Shivani Kumar', phone: '469.64.2710' },
-    { name: 'Suhas Nalla', phone: '214.973.1625' },
-    { name: 'Samarth Bikki', phone: '512.917.8857' }
-  ],
-  michigan: [
-    { name: 'Ahimsa Yukta', phone: '832.323.3820' },
-    { name: 'Vijval Atyam', phone: '214.298.0080' },
-    { name: 'Punjan Patel', phone: '469.810.3614' }
+  umich: [
+    { name: 'Satya Rallabandi', phone: '214.897.1156' },
+    { name: 'Marvel Patel', phone: '469.720.5458' },
+    { name: 'Sherley Sawant', phone: '682.472.2366' }
   ],
   tamu: [
-    { name: 'Adrian Gaspar', phone: '732.668.1820' },
-    { name: 'Rupali Venkatesa', phone: '901.468.9016' },
-    { name: 'Maanas Varma', phone: '469.816.0016' }
+    { name: 'Divya Patel', phone: '936.232.8316' },
+    { name: 'Shreejha Sureshkumar', phone: '801.865.1989' },
+    { name: 'Rithika Shenoy', phone: '512.810.4858' }
   ],
-  ucd: [
-    { name: 'Pranav B', phone: '469.400.3883' },
-    { name: 'Prakrit Sinha', phone: '512.669.6980' },
-    { name: 'Sarayu Varanasi', phone: '847.970.0653' }
+  uiuc: [
+    { name: 'Fagun ShahB', phone: '281.714.1028' },
+    { name: 'Krisha Nashte', phone: '469.618.4225' },
+    { name: 'Anika Kallam', phone: '469.900.7728' }
   ]
 } as const;
 
