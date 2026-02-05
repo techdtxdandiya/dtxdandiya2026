@@ -869,7 +869,7 @@ const AdminDashboard: React.FC = () => {
       />
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-6xl font-edwardian text-white" style={{ wordSpacing: "0.35em" }}>
+          <h1 className="text-6xl font-cormorant text-white" style={{ wordSpacing: "0.35em" }}>
             Admin Dashboard
             </h1>
           <button
@@ -915,7 +915,7 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'information' && (
             <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Liaisons Information</h3>
+                <h3 className="text-2xl font-semibold font-cormorant text-white mb-6">Liaisons Information</h3>
                 <div className="grid grid-cols-1 gap-8">
                   {Object.keys(teamData).map(teamId => (
                     <div key={teamId} className="space-y-4">
@@ -958,38 +958,38 @@ const AdminDashboard: React.FC = () => {
                         </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Tech Information</h3>
+                <h3 className="text-2xl font-semibold font-cormorant text-white mb-6">Tech Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-blue-300 text-sm font-sans font-medium">Info Packet</h4>
+                  <h4 className="text-blue-300 text-sm font-sans font-cormorant font-medium">Info Packet</h4>
                   <a 
                     href="https://docs.google.com/document/d/1P68N1dQVvHo5vtKcbFzOjVPJHFAVX7uE2NDq7p-ZfvU/edit?tab=t.0"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white hover:text-blue-300 font-sans transition-colors flex items-center gap-1"
+                    className="text-white hover:text-blue-300 font-cormorant transition-colors flex items-center gap-1"
                   >
                     View Document
                     <FaExternalLinkAlt className="text-xs" />
                   </a>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Danceable Space</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Danceable Space</h4>
                     <p className="text-white">42' x 28'</p>
                       </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Backdrop Space</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Backdrop Space</h4>
                     <p className="text-white">4 ft</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Apron Space</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Apron Space</h4>
                     <p className="text-white">4 ft</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Box</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Props Box</h4>
                     <p className="text-white">7ft (length) x 5ft (depth) x 10ft (height)</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Props Dimensions</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Props Dimensions</h4>
                     <p className="text-white">42" x 4"</p>
                   </div>
                   <div className="md:col-span-2">
@@ -1001,21 +1001,21 @@ const AdminDashboard: React.FC = () => {
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Venue Information</h3>
+                <h3 className="text-2xl font-semibold font-cormorant text-white mb-6">Venue Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Name</h4>
                     <p className="text-white">Marshall Family Performing Arts Center</p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <h4 className="text-blue-300 text-sm font-cormorant font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
                       <p className="text-white">4141 Spring Valley Rd, Addison, TX 75001</p>
                       <a
                         href="https://www.google.com/maps/search/?api=1&query=4141+Spring+Valley+Rd+Addison+TX+75001"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors text-blue-200"
+                        className="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors font-cormorant text-blue-200"
                       >
                         View in Google Maps
                       </a>
@@ -1029,14 +1029,14 @@ const AdminDashboard: React.FC = () => {
               </div>
 
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-semibold text-white mb-6">Hotel Information</h3>
+                <h3 className="text-2xl font-semibold font-cormorant text-white mb-6">Hotel Information</h3>
                         <div className="space-y-4">
                                 <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Name</h4>
-                    <p className="text-white">DoubleTree by Hilton Hotel Dallas</p>
+                    <h4 className="text-blue-300 text-sm font-medium font-cormorant mb-2">Name</h4>
+                    <p className="text-white font-cormorant ">DoubleTree by Hilton Hotel Dallas</p>
                                 </div>
                                 <div>
-                    <h4 className="text-blue-300 text-sm font-medium mb-2">Address</h4>
+                    <h4 className="text-blue-300 text-smfont-cormorant font-medium mb-2">Address</h4>
                     <div className="flex items-center gap-4">
                       <p className="text-white">4099 Valley View Ln, Dallas, TX 75244</p>
                       <a
@@ -1058,16 +1058,16 @@ const AdminDashboard: React.FC = () => {
               {Object.keys(teamData).map(teamId => (
                 <div key={teamId} className="mb-8 bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-semibold text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h3>
+                    <h3 className="text-xl font-semibold font-cormorant text-white">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h3>
                     <div className="flex items-center gap-2">
                       {teamData[teamId as TeamId]?.techVideo?.isPublished ? (
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-green-400 bg-green-400/10 px-3 py-1 rounded-lg">
+                          <span className="text-sm font-cormorant text-green-400 bg-green-400/10 px-3 py-1 rounded-lg">
                             Published
                           </span>
                           <button
                             onClick={() => handleRemoveTechVideo(teamId as TeamId)}
-                            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors"
+                            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg font-cormorant transition-colors"
                           >
                             Remove
                           </button>
@@ -1075,7 +1075,7 @@ const AdminDashboard: React.FC = () => {
                       ) : (
                         <button
                           onClick={() => handlePublishTechVideo(teamId as TeamId)}
-                          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 font-cormorant text-white rounded-lg transition-colors"
                         >
                           Publish
                         </button>
@@ -1084,7 +1084,7 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="space-y-4">
                                 <div>
-                      <label className="block text-sm font-medium text-blue-300 mb-1">Video Link</label>
+                      <label className="block text-sm font-cormorant font-medium text-blue-300 mb-1">Video Link</label>
                                   <input
                                     type="text"
                         value={teamData[teamId as TeamId]?.techVideo?.driveUrl || ''}
@@ -1103,12 +1103,12 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'schedule' && (
             <div className="space-y-8">
               <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
-                <h3 className="text-2xl font-edwardian text-white mb-6">Show Order Assignment</h3>
+                <h3 className="text-2xl font-cormorant text-white mb-6">Show Order Assignment</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.keys(teamData).map(teamId => (
                     <div key={teamId} className="p-4 bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h4 className="text-lg text-white font-edwardian">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
+                        <h4 className="text-lg text-white font-cormorant">{TEAM_DISPLAY_NAMES[teamId as TeamId]}</h4>
                         <div className="flex items-center gap-4 w-full sm:w-auto">
                           <select
                             value={teamData[teamId as TeamId]?.schedule?.showOrder ?? ''}
@@ -1149,7 +1149,7 @@ const AdminDashboard: React.FC = () => {
                 return (
                   <div key={teamId} className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-2xl font-edwardian text-white">
+                      <h3 className="text-2xl font-cormorant text-white">
                         {TEAM_DISPLAY_NAMES[teamId as TeamId]} - Team {teamData[teamId as TeamId]?.schedule?.showOrder}
                       </h3>
                     </div>
@@ -1166,7 +1166,7 @@ const AdminDashboard: React.FC = () => {
                 )}
           {activeTab === 'reports' && (
             <div>
-              <h2 className="text-3xl sm:text-4xl font-edwardian text-white mb-6"
+              <h2 className="text-3xl sm:text-4xl font-cormorant text-white mb-6"
               style={{ wordSpacing: '0.1em' }}>
                 Anonymous Reports
               </h2>
