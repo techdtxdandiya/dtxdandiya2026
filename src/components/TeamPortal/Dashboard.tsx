@@ -28,14 +28,14 @@ export default function Dashboard() {
 
   // Hogwarts House Assignment mapping for team portals
   const hogwartsAssignments: { [key: string]: string } = {
-    tamu: 'Ravenclaw',
-    texas: 'Slytherin',
-    michigan: 'Ravenclaw',
-    uf: 'Slytherin',
-    uiuc: 'Hufflepuff',
-    uw: 'Hufflepuff',
-    washu: 'Gryffindor',
-    ucsd: 'Gryffindor'
+    tamu: 'Tennis',
+    texas: 'Golf',
+    michigan: 'Court',
+    uf: 'Pickleball',
+    uiuc: 'Squash',
+    uw: 'Swimming',
+    washu: 'Badminton',
+    ucsd: 'Croquet'
   };
 
   const hogwartsHouse = teamId && hogwartsAssignments[teamId];
@@ -1152,7 +1152,7 @@ export default function Dashboard() {
             </h1>
             {userType === 'team' && hogwartsHouse && (
               <div className={`${houseColorClass} bg-opacity-40 backdrop-blur-sm px-4 py-2 rounded-lg border-2 border-white/20 shadow-lg transform hover:scale-105 transition-all duration-300`}>
-                <span className="text-xl font-edwardian text-white">House: {hogwartsHouse}</span>
+                <span className="text-xl font-edwardian text-white">Country Club: {hogwartsHouse}</span>
               </div>
             )}
           </div>
