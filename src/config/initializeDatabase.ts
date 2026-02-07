@@ -1,7 +1,7 @@
 import { ref, set, get } from 'firebase/database';
 import { db } from './firebase';
 
-export const TEAM_IDS = ['tamu', 'texas', 'ucsd', 'uiuc', 'uw', 'washu', 'uf', 'umich'] as const;
+export const TEAM_IDS = ['tamu', 'texas', 'ucsd', 'uiuc', 'uw', 'washu', 'uf', 'michigan'] as const;
 
 export type TeamId = typeof TEAM_IDS[number];
 export type DashboardTeamId = TeamId | 'admin';
@@ -9,7 +9,7 @@ export type DashboardTeamId = TeamId | 'admin';
 export const TEAM_DISPLAY_NAMES: Record<TeamId, string> = {
   tamu: 'TAMU Wreckin\' Raas',
   texas: 'Dirty South Dandiya',
-  umich: 'Michigan Wolveraas',
+  michigan: 'Michigan Wolveraas',
   uiuc: 'UIUC Illini Raas',
   uw: 'UW Raas',
   washu: 'WashU Raas',
@@ -581,7 +581,7 @@ export const INITIAL_LIAISONS = {
     { name: 'Paramveer Grewal', phone: '713.742.3877' },
     { name: 'Dhwani Patel', phone: '512.784.1690' }
   ],
-  umich: [
+  michigan: [
     { name: 'Satya Rallabandi', phone: '214.897.1156' },
     { name: 'Marvel Patel', phone: '469.720.5458' },
     { name: 'Sherley Sawant', phone: '682.472.2366' }
