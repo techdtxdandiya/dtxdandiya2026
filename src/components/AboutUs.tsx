@@ -12,7 +12,7 @@ export default function AboutUs() {
             <img
               src="/assets/team/board-2027.jpg"
               alt="DTX Dandiya full board"
-              className="aspect-[3/2] w-full rounded-sm object-cover"
+              className="h-auto w-full rounded-sm"
             />
             <span className="absolute -bottom-3 -right-3 h-20 w-20 border-b border-r border-red-500/60" aria-hidden="true" />
           </div>
