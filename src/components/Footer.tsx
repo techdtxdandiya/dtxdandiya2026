@@ -6,17 +6,17 @@ export default function Footer() {
     <footer className="w-full bg-black/40 backdrop-blur-sm border-t border-[#C5A572]/20">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Left Side - Creator credit */}
+          {/* Left Side - Made with Magic */}
           <motion.div 
             className="text-white/80 font-cormorant tracking-wider"
             whileHover={{ scale: 1.05 }}
           >
-            Made with strange signals by R
+            Made with ✨ by A
           </motion.div>
 
           {/* Middle - Copyright */}
           <div className="text-white/60 font-cormorant tracking-wide text-sm">
-            Copyright © 2027 DTX Dandiya
+            Copyright © 2026 DTX Dandiya
           </div>
 
           {/* Right Side - Social Links */}

@@ -7,15 +7,16 @@ interface Committee {
 }
 
 const committees: Committee[] = [
-  { name: "Directors", image: "/assets/team/Directors-2027.jpeg", title: "Commanding the Mission" },
-  { name: "Logistics", image: "/assets/team/Logistics-2027.jpg", title: "Keeping the Gate Contained" },
-  { name: "Registration", image: "/assets/team/Registration-2027.jpeg", title: "Clearance to Enter" },
-  { name: "Head Liaison", image: "/assets/team/Head-Liaison-2027.jpeg", title: "Keeping the Party Connected" },
-  { name: "Events Operations", image: "/assets/team/Tech-2027.jpg", title: "Tuning the Signal" },
-  { name: "Finance", image: "/assets/team/Finance-2027.jpg", title: "Powering the Operation" },
-  { name: "Hospitality", image: "/assets/team/Hospitality-2027.jpeg", title: "Safe Haven from the Upside Down" },
-  { name: "Mixer", image: "/assets/team/Mixer-2027.jpeg", title: "Gathering the Party" },
-  { name: "Advisors", image: "/assets/team/Advisors-2027.jpeg", title: "Guidance from the Other Side" },
+  { name: "Directors", image: "/assets/team/Directors.jpg", title: "Steering the Course" },
+  { name: "Logistics", image: "/assets/team/Logistics.jpeg", title: "Play, Perfectly Timed" },
+  { name: "Registration", image: "/assets/team/Registration.jpg", title: "Check In, Tee Off" },
+  { name: "Head Liaison", image: "/assets/team/HeadLiaisons.jpg", title: "Keeping Everyone in Bounds" },
+  { name: "Tech/External", image: "/assets/team/Tech.jpg", title: "Running the Backcourt" },
+  { name: "Fundraising", image: "/assets/team/Fundraising.jpeg", title: "Powering the Play" },
+  { name: "Hospitality", image: "/assets/team/Hospitality.jpeg", title: "Comfort, Courtside" },
+  { name: "Mixer/Social", image: "/assets/team/Mixer.jpeg", title: "Network Between Matches" },
+  { name: "Advisors", image: "/assets/team/Advisors.jpg", title: "Coaching from the Sidelines" },
+  { name: "Afterparty", image: "/assets/team/Afterparty.jpeg", title: "The Club, After Hours" },
 ];
 
 export default function OrderOfPhoenix() {
@@ -23,35 +24,19 @@ export default function OrderOfPhoenix() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    let fadeTimer: ReturnType<typeof setTimeout> | undefined;
-    const nextIndex = (activeIndex + 1) % committees.length;
-    const nextImage = new Image();
-    nextImage.src = committees[nextIndex].image;
-    // Start loading immediately and handle failures before the display timer fires.
-    const imageReady = nextImage.decode().then(() => true, () => false);
-
-    const timer = setTimeout(async () => {
-      const ready = await imageReady;
-      if (cancelled || !ready) return;
-
+    const timer = setInterval(() => {
       setIsTransitioning(true);
-      fadeTimer = setTimeout(() => {
-        if (cancelled) return;
-        setActiveIndex(nextIndex);
+      setTimeout(() => {
+        setActiveIndex((prev) => (prev + 1) % committees.length);
         setIsTransitioning(false);
-      }, 300);
-    }, 1700);
+      }, 500);
+    }, 5000);
 
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-      clearTimeout(fadeTimer);
-    };
-  }, [activeIndex]);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <div className="homepage-section relative overflow-hidden bg-[#050507]">
+    <div className="relative py-20 overflow-hidden bg-[#183331]">
       {/* Background Effects */}
       {/*<div className="absolute inset-0">
         <div className="absolute inset-0 bg-radial-glow from-orange-500/20 via-orange-700/10 to transparent"></div>
@@ -59,35 +44,35 @@ export default function OrderOfPhoenix() {
       
       <div className="relative z-10">
         {/* Title with Phoenix Wings */}
-        <header className="homepage-section-header max-w-7xl mx-auto px-5 sm:px-8">
-          <p>Meet the organizers</p>
-          <h2>The Party</h2>
-        </header>
+        <div className="text-center mb-12 md:mb-20 relative px-4">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[120px]">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[30%] h-[2px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[30%] h-[2px] bg-gradient-to-l from-transparent via-orange-500/50 to-transparent"></div>
+          </div>
+          <h2 className="text-6xl md:text-7xl font-edwardian text-center text-white mb-16 glow-text-intense mx-auto"
+          style={{ wordSpacing: '0.1em' }}>
+          The Council
+          </h2>
+        </div>
 
         {/* Committee Display */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="relative">
             {/* Content Container */}
-            <div className="party-feature relative overflow-hidden">
+            <div className="relative bg-black/50 rounded-xl overflow-hidden">
               <div className="flex flex-col md:flex-row">
                 {/* Image Display */}
                 <div className="relative w-full md:w-2/3 order-1 md:order-2">
-                  <div className={`transform transition-all duration-300 
+                  <div className={`transform transition-all duration-500 
                     ${isTransitioning ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}
                   >
                     {/* Image Container with Dynamic Aspect Ratio */}
                     <div className="relative pt-[100%] md:pt-[75%]">
-                      {committees.map((committee, index) => (
-                        <img
-                          key={committee.name}
-                          src={committee.image}
-                          alt={committee.name}
-                          aria-hidden={index !== activeIndex}
-                          className={`absolute inset-0 w-full h-full object-cover ${
-                            index === activeIndex ? 'visible' : 'invisible'
-                          }`}
-                        />
-                      ))}
+                      <img 
+                        src={committees[activeIndex].image}
+                        alt={committees[activeIndex].name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
                       {/* Image Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
                     </div>
@@ -95,20 +80,29 @@ export default function OrderOfPhoenix() {
                 </div>
 
                 {/* Committee Info */}
-                <div className="relative w-full md:w-1/3 min-w-0 overflow-hidden p-7 md:p-10 flex flex-col justify-center order-2 md:order-1 bg-[#0b0b0d]">
-                  <div className={`transform transition-all duration-300 ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
-                    <p className="party-index">{String(activeIndex + 1).padStart(2, '0')} / {String(committees.length).padStart(2, '0')}</p>
-                    <h3 className="committee-title font-cormorant text-white mb-4">
+                <div className="relative w-full md:w-1/3 p-6 md:p-8 flex flex-col justify-center order-2 md:order-1 bg-gradient-to-r from-black/60 via-black/40 to-transparent">
+                  <div className={`transform transition-all duration-500 ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
+                    <h3 className="text-5xl md:text-6xl font-edwardian text-white glow-text-intense mb-4">
                       {committees[activeIndex].name}
                     </h3>
-                    <p className="text-base xl:text-lg leading-snug text-white/60 font-sans">
+                    <p className="text-1xl md:text-2xl text-orange-300/90 font-cormorant">
                       {committees[activeIndex].title}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute inset-0 border border-white/10 pointer-events-none" />
+              {/* Decorative Border */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-0 border border-orange-500/20"></div>
+                <div className="absolute inset-[3px] border border-white/10"></div>
+                
+                {/* Corner Decorations - Responsive Sizes */}
+                <div className="absolute top-0 left-0 w-[10%] max-w-16 aspect-square border-t-2 border-l-2 border-orange-400/40"></div>
+                <div className="absolute top-0 right-0 w-[10%] max-w-16 aspect-square border-t-2 border-r-2 border-orange-400/40"></div>
+                <div className="absolute bottom-0 left-0 w-[10%] max-w-16 aspect-square border-b-2 border-l-2 border-orange-400/40"></div>
+                <div className="absolute bottom-0 right-0 w-[10%] max-w-16 aspect-square border-b-2 border-r-2 border-orange-400/40"></div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,36 +1,11 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
-    "users": {
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
-        ".write": false
-      }
-    },
+    ".read": true,
+    ".write": true,
     "teams": {
       "$teamId": {
-        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'judge' || root.child('users').child(auth.uid).child('role').val() === 'reps' || ((root.child('users').child(auth.uid).child('role').val() === 'team' || root.child('users').child(auth.uid).child('role').val() === 'liaison') && root.child('users').child(auth.uid).child('teamId').val() === $teamId))",
-        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
         ".validate": "newData.hasChildren(['displayName'])"
-      }
-    },
-    "portalSchedules": {
-      ".read": "auth != null",
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
-    },
-    "publicSettings": {
-      ".read": true,
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      "teamApplicationUrl": {
-        ".validate": "!newData.exists() || newData.isString()"
-      }
-    },
-    "reports": {
-      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      "$reportId": {
-        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'team' && newData.child('teamId').val() === root.child('users').child(auth.uid).child('teamId').val()"
       }
     }
   }
-}
+} 
